@@ -1,11 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home - Betula</title>
-</head>
-<body>
-  <h1>Hello World!</h1>
-</body>
-</html>
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Betula{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+  <div style="position: relative; color: black; font-size: 40px; font-family: Actor; font-weight: 400; word-wrap: break-word">Welcome to Betula, UofT’s Events Dashboard</div>
+</div>
+{{ wtf.quick_form(form) }}
+{% endblock %}
