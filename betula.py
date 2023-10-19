@@ -3,7 +3,7 @@ from flask import Flask, render_template, session, redirect, url_for, flash
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, SelectField
 from wtforms.validators import DataRequired, Email
 
 app = Flask(__name__)
@@ -13,18 +13,49 @@ bootstrap = Bootstrap(app)
 moment = Moment(app)
 
 
-class NameForm(FlaskForm):
-    email = StringField('Username (your UofT Email address)', validators=[DataRequired(), Email()])
+class LoginForm(FlaskForm):
+    email = StringField('Email Address', validators=[DataRequired(), Email()])
     password = StringField('Password', validators=[DataRequired()])
     login = SubmitField('Login')
+
+class JoinForm(FlaskForm):
+    email = StringField('Email Address', validators=[DataRequired(), Email()])
+    username = StringField('Username', validators=[DataRequired()])
+    password = StringField('Create Password', validators=[DataRequired()])
+    rePassword = StringField('Re-enter Password', validators=[DataRequired()])
+    accountType = SelectField('Account Type', choices=[('club','Club'), ('regular', 'Event-Goer')], validators=[DataRequired()])
+    login = SubmitField('Join')
+
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    return render_template('index.html')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
     email = None
     password = None
-    form = NameForm()
+    form = LoginForm()
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
-    return render_template('index.html', form=form, email=email, password=password)
+    return render_template('login.html', form=form, email=email, password=password)
+
+
+@app.route('/join', methods=['GET', 'POST'])
+def join():
+    email = None
+    username = None
+    password = None
+    rePassword = None
+    accountType = None
+    form = JoinForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        username = form.username.data
+        password = form.password.data
+        rePassword = form.rePassword.data
+        accountType = form.accountType.data
+    return render_template('join.html', form=form, email=email, username=username, password=password, rePassword=rePassword, accountType=accountType)

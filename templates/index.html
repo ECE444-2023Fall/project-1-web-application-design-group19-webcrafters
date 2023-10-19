@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}Betula{% endblock %}
 
@@ -9,6 +8,24 @@
 <head>
   <style>
     /* will add styles here */
+  .button {
+    border: none;
+    padding: 10px;
+    margin: 4px 2px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    color: white;
+    font-size: 30px;
+    font-family: Inter;
+    font-weight: 700;
+    word-wrap: break-word;
+    width: 147px;
+    height: 59px;
+  }
+
+  .join {background-color: #5078A9; left: 467px; top: 624px; position:absolute;}
+  .login {background-color: #5078A9; left: 782px; top: 624px; position: absolute;}
   </style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,16 +36,21 @@
     <!-- <div style="position: relative; color: black; font-size: 40px; font-family: Sora; font-weight: 400; word-wrap: break-word">Welcome to Betula, UofT’s Events Dashboard</div> -->
     <div style="width: 100%; height: 100%; position: relative; background: linear-gradient(243deg, rgba(76, 121, 151, 0.64) 0%, rgba(76, 121, 151, 0) 100%)">
       <div style="left: 243px; top: 487px; position: absolute; color: black; font-size: 40px; font-family: Sora; font-weight: 400; word-wrap: break-word">Welcome to Betula, UofT’s Events Dashboard</div>
-      <div style="width: 147px; height: 59px; padding: 10px; left: 467px; top: 624px; position: absolute; background: #5078A9; border-radius: 6px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
+      
+      <button class="button join">Join</button>
+      <button class="button login">Login</button>
+
+      <!-- <div style="width: 147px; height: 59px; padding: 10px; left: 467px; top: 624px; position: absolute; background: #5078A9; border-radius: 6px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
         <div style="color: white; font-size: 30px; font-family: Inter; font-weight: 700; word-wrap: break-word">Join</div>
-      </div>
-      <div style="width: 147px; height: 59px; padding: 10px; left: 782px; top: 624px; position: absolute; background: #5078A9; border-radius: 6px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
+      </div> -->
+      
+      <!-- <div style="width: 147px; height: 59px; padding: 10px; left: 782px; top: 624px; position: absolute; background: #5078A9; border-radius: 6px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
         <div style="color: white; font-size: 30px; font-family: Inter; font-weight: 700; word-wrap: break-word">Login</div>
-      </div>
+      </div> -->
+
       <div style="width: 338px; height: 51px; left: 551px; top: 315px; position: absolute; text-align: center; color: #25355A; font-size: 100px; font-family: Raleway; font-weight: 600; text-transform: capitalize; word-wrap: break-word">Betula</div>
     </div>
   </div>
 </body>
 </html>
-{{ wtf.quick_form(form) }}
 {% endblock %}
