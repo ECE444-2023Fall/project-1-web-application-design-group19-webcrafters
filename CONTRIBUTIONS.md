@@ -1,12 +1,12 @@
 # Contributing to the Repo
 
 Welcome to the GitHub Repo for Betula. We would love to hear your feedback! 
-Here are the rules to contribute our repo: 
+Here are the rules to contribute to our repo: 
 
 1. Develop on a separate branch for each user story.
 2. When completed and you have code that is functioning as it should, make a pull request.
 3. Once pull request is approved, then merge your branch into the main branch and delete the separate branch.
-4. If code is not completed and you need help with debugging / further clarification, create a Git Issue and explain your progress so far and the issue in detail.
+4. If code is not completed and you need help with debugging / need further clarification, create a Git Issue and explain your progress so far and the issue in detail.
 
 ## For Pull Requests 
 
