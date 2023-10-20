@@ -82,7 +82,7 @@ Currently, we are not a stage in the development process where we are able to gi
 <!-- CONTRIBUTING -->
 ## Contributing
 
-To view our protocols on contributing, please refer to our [contribution instructions](https://github.com/ECE444-2023Fall/project-1-web-application-design-group19-webcrafters/Contribution.md)
+To view our protocols on contributing, please refer to our [contribution instructions](https://github.com/ECE444-2023Fall/project-1-web-application-design-group19-webcrafters/blob/main/CONTRIBUTIONS.md)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
