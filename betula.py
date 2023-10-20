@@ -59,3 +59,8 @@ def join():
         rePassword = form.rePassword.data
         accountType = form.accountType.data
     return render_template('join.html', form=form, email=email, username=username, password=password, rePassword=rePassword, accountType=accountType)
+
+
+@app.route('/dashboard', methods=['GET', 'POST'])
+def dashboard():
+    return render_template('dashboard.html')
