@@ -15,6 +15,7 @@ We use GitHub to host code, to track issues and feature requests, as well as acc
 ## For Pull Requests 
 
 Tag @AniqaT for pull requests of backend features, or @jessicawong3 for pull requests of frontend features. 
+For @AniqaT or @jessicawong3, tag members of backend/frontend team accordingly.
 
 ## For Git Issues 
 
