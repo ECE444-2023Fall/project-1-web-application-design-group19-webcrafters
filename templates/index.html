@@ -1,11 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Betula{% endblock %}
+
+{% block page_content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <style>
+  .welcome-page {
+    background: linear-gradient(243deg, rgba(76, 121, 151, 0.64) 0%, rgba(76, 121, 151, 0) 100%);
+  }
+
+  .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .button {
+    border: none;
+    padding: 10px;
+    margin: 4px 2px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    color: white;
+    font-size: 30px;
+    font-family: Inter;
+    font-weight: 700;
+    word-wrap: break-word;
+    width: 147px;
+    height: 59px;
+    background-color: #5078A9;
+  }
+
+  .join {position: relative;}
+  .login {position: relative;}
+  </style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home - Betula</title>
 </head>
 <body>
-  <h1>Hello World!</h1>
+  <!-- <div style="width: 100%; height: 100%; position: relative; background: linear-gradient(243deg, rgba(76, 121, 151, 0.64) 0%, rgba(76, 121, 151, 0) 100%)"></div> -->
+  <div class="welcome-page">
+    <div style="text-align: center; position: relative; color: #25355A; font-size: 100px; font-family: Raleway; font-weight: 600; text-transform: capitalize; word-wrap: break-word">Betula</div><br>
+    <br>
+    <div style="text-align: center; position: relative; color: black; font-size: 40px; font-family: Sora; font-weight: 400; word-wrap: break-word">Welcome to Betula, UofT’s Events Dashboard</div><br>
+    <br><br>
+    <br>
+    <div class="center">
+      <button class="button join", onclick="window.location.href ='join';">Join</button>
+      <button class="button login", onclick="window.location.href ='login';">Login</button>
+    </div>
+  </div>
 </body>
 </html>
+{% endblock %}
