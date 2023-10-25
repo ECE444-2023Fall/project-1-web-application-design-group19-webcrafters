@@ -72,3 +72,7 @@ def events():
     events = [['Event Name', 'Host Name' , "Social, Sports", "Description"], ['Event Name 2', 'Host Name 2' , "Free, Food", "Description 2"], ['Event Name 3', 'Host Name 3' , "Professional", "Description 3"]]
     return render_template('event.html', events=events)
 
+@app.route('/userprofile', methods=['GET', 'POST'])
+def userprofile():
+    return render_template('userprofile.html')
+

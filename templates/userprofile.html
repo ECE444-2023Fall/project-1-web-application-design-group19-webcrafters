@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/>
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box;}
+
+/* Button used to open the contact form - fixed at the bottom of the page */
+/* Updated styles for the .open-button class */
+.open-button {
+  color: #000000; /* Typical link color */
+  background-color: transparent; /* No background */
+  padding: 0; /* Remove padding */
+  border: none; /* No border */
+  cursor: pointer; /* Cursor style */
+  text-decoration: underline; /* Underline to indicate clickability */
+  display: inline; /* Inline element, not block */
+  font-size: inherit; /* Inherit font size from parent */
+  position: fixed; /* Keep it positioned */
+  bottom: 23px; /* Position from bottom */
+  right: 28px; /* Position from right */
+  z-index: 10;
+  border-radius: 15px;
+}
+
+
+/* The popup form - hidden by default */
+.form-popup {
+  display: none;
+  position: fixed; /* unchanged, position it relative to the viewport */
+  bottom: 20%;  /* adjust as needed */
+  right: 20%;   /* adjust as needed */
+  border: 3px solid #f1f1f1;
+  z-index: 9999; /* high value to ensure it's on top of other elements */
+  width: 250px;  /* width of the popup */
+  height: 100px; /* height of the popup */
+  border-radius: 15px; /* <--- Add this line to round the corners */
+}
+
+
+/* Add styles to the form container */
+.form-container {
+  max-width: 480px;  /* max-width less than or equal to width of form-popup */
+  padding: 10px;
+  background-color: white;
+  border-radius: 15px;
+}
+
+
+/* Full-width input fields */
+.form-container input[type=text], .form-container input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+  border-radius: 15px;
+}
+
+/* When the inputs get focus, do something */
+.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+  border-radius: 15px;
+}
+
+/* Set a style for the submit/login button */
+.form-container .btn {
+  background-color: #04AA6D;
+  color: #F5F5F5;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom:10px;
+  opacity: 0.8;
+  border-radius: 15px;
+  
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: red;
+  margin-top: 10px;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+  opacity: 1;
+}
+/* Adjust the size of the submit button */
+  .form-container input[type=submit] {
+    width: 100%; /* Make the button fill the container */
+    padding: 16px 20px; /* Increase padding */
+    margin-top: 10px; /* Add some margin at the top */
+    background-color: #5078A9; /* Background color */
+    color: white; /* Text color */
+    border: none; /* Remove border */
+    cursor: pointer; /* Cursor style */
+    opacity: 0.8; /* Add some opacity */
+    border-radius: 15px;
+  }
+
+  /* Add some hover effects to submit button */
+  .form-container input[type=submit]:hover {
+    opacity: 1; /* Full opacity on hover */
+    border-radius: 15px;
+  }
+
+  /* Style adjustments for the select element */
+ .chosen-select {
+    width: 100%; /* Ensure width is 100% */
+    padding: 20px; /* Increase padding to increase height */
+    margin: 5px 0 22px 0; /* Consistent margin with other input elements */
+    border: 1px solid #ccc; /* Border to match other input elements */
+    border-radius: 15px;
+  }
+</style>
+</head>
+<body style="margin: 0; height: 100vh; overflow: hidden;">
+
+<div style="width: 100%; height: 100%; position: relative; background: #F5F5F5">
+    <div style="height: 672px; left: 286px; top: 193px; position: absolute; flex-direction: column; justify-content: flex-end; align-items: center; gap: 40px; display: inline-flex">
+        <div style="height: 68.02px; padding-top: 29.02px; padding-right: 834.86px; justify-content: flex-start; align-items: center; display: inline-flex">
+            <div style="width: 300px; height: 41px; color: #484848; font-size: 32px; font-family: Sora; font-weight: 800; line-height: 36px; word-wrap: break-word; margin-top: -285px;">Welcome Jane Doe</div>
+        </div>
+        
+        <div style="align-self: stretch; height: 814.59px; padding-bottom: 250.59px; padding-right: 436.67px; justify-content: flex-start; align-items: center; display: inline-flex">
+            <div style="width: 611.33px; align-self: stretch; padding-left: 8px; padding-right: 8px; flex-direction: column; justify-content: center; align-items: flex-start; display: inline-flex">
+                <!-- ... more of your provided HTML content ... -->
+                
+
+                    <div style="align-self: stretch; height: 50px; padding-top: 14px; padding-bottom: 10px; border-bottom: 1px #F5F5F5 solid; justify-content: center; align-items: center; display: inline-flex">
+                    <div style="width: 595.33px; height: 42px; position: relative; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
+                    <div style="width: 84.45px; height: 21px; color: #222222; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 20px; word-wrap: break-word; margin-top: -225px;">Legal name</div>
+                    <div style="width: 26.12px; height: 18px; text-align: right; color: #222222; font-size: 14px; font-family: Roboto; font-weight: 600; text-decoration: underline; line-height: 20.02px; word-wrap: break-word; margin-left: 700px;">Edit</div> <!-- Added margin-left here -->
+                    <div style="color: #717171; font-size: 14px; font-family: Roboto; font-weight: 400; line-height: 18px; word-wrap: break-word">Jane Doe</div>
+                    </div>
+                    </div>
+                    <div style="align-self: stretch; height: 50px; padding-top: 14px; padding-bottom: 25px; border-bottom: 1px #F5F5F5 solid; justify-content: center; align-items: center; display: inline-flex">
+                    <div style="width: 595.33px; height: 42px; position: relative; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
+                    <div style="width: 101.01px; height: 21px; color: #222222; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 20px; word-wrap: break-word; margin-top: -175px;">Email address</div>
+                    <div style="width: 26.12px; height: 18px; text-align: right; color: #222222; font-size: 14px; font-family: Roboto; font-weight: 600; text-decoration: underline; line-height: 20.02px; word-wrap: break-word; margin-left: 700px;">Edit</div> <!-- Added margin-left here -->
+                    <div style="color: #717171; font-size: 13px; font-family: Roboto; font-weight: 400; line-height: 18px; word-wrap: break-word">JaneDoe@gmail.com</div>
+                    </div>
+                    </div>
+                    <div style="align-self: stretch; height: 50px; padding-top: 14px; padding-bottom: 25px; border-bottom: 1px #F5F5F5 solid; justify-content: center; align-items: center; display: inline-flex">
+                    <div style="width: 595.33px; height: 42px; position: relative; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
+                    <div style="width: 115.14px; height: 21px; color: #222222; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 20px; word-wrap: break-word; margin-top: -125px;">Phone number</div>
+                    <div style="width: 26.12px; height: 18px; text-align: right; color: #222222; font-size: 14px; font-family: Roboto; font-weight: 600; text-decoration: underline; line-height: 20.02px; word-wrap: break-word; margin-left: 700px;">Add</div> <!-- Added margin-left here -->
+                    <div style="width: 528.97px; height: 36px; color: #717171; font-size: 14px; font-family: Roboto; font-weight: 400; line-height: 18px; word-wrap: break-word">Add a number so confirmed attendees and event coordinators can get in touch.</div>
+                    </div>
+                    </div>
+                    
+                    
+                    <div style="align-self: stretch; height: 50px; padding-top: 14px; padding-bottom: 25px; border-bottom: 1px #F5F5F5 solid; justify-content: center; align-items: center; display: inline-flex">
+                    <div style="width: 595.33px; height: 42px; position: relative; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
+                    <div style="width: 60.90px; height: 21px; color: #222222; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 20px; word-wrap: break-word; margin-top: -75px;">Tags</div>
+                    <a href="javascript:void(0);" class="open-button" onclick="openForm()" style="idth: 26.12px; height: 18px; text-align: right; color: #222222; font-size: 14px; font-family: Roboto; font-weight: 600; text-decoration: underline; line-height: 20.02px; position: absolute; top: -60px; right: -130px;">Edit</a>
+
+                <div class="form-popup" id="myForm">
+                <form action="/action_page.php" class="form-container">
+                    
+                    <select data-placeholder="Begin typing a name to filter..." multiple class="chosen-select" name="test">
+                    <option value=""></option>
+                    <option>American Black Bear</option>
+                    <option>Asiatic Black Bear</option>
+                    <option>Brown Bear</option>
+                    <option>Giant Panda</option>
+                    <option>Sloth Bear</option>
+                    <option>Sun Bear</option>
+                    <option>Polar Bear</option>
+                    <option>Spectacled Bear</option>
+                </select>
+                    <input type="submit">
+                    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+                </form>
+                </div>
+
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+                <script>
+                function openForm() {
+                document.getElementById("myForm").style.display = "block";
+                }
+
+                function closeForm() {
+                document.getElementById("myForm").style.display = "none";
+                }
+
+                $(function() {
+                    $(".chosen-select").chosen({width: "100%"}); // Explicitly set the width
+                });
+                </script>
+
+                   <!-- <a href="/tags" style="width: 26.12px; height: 18px; text-align: right; color: #222222; font-size: 14px; font-family: Roboto; font-weight: 600; text-decoration: underline; line-height: 20.02px; word-wrap: break-word; margin-left: 700px;">Edit</a> -->
+
+                    <div style="width: 84.95px; height: 18px; color: #717171; font-size: 14px; font-family: Roboto; font-weight: 400; line-height: 18px; word-wrap: break-word">Not provided</div>
+                    </div>
+                    </div>
+                   
+                    </div>
+                    </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div style="width: 150px; height: 954px; left: 0px; top: 40px; position: absolute; background: #5078A9"></div>
+    <div style="left: 25px; top: 100px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-end; gap: 30px; display: inline-flex">
+        <div style="width: 79px; color: white; font-size: 25px; font-family: Actor; font-weight: 500; word-wrap: break-word">Filters</div>
+        <div style="width: 79px; color: white; font-size: 15px; font-family: Actor; font-weight: 400; word-wrap: break-word">Faculty</div>
+        <div style="width: 79px; color: white; font-size: 15px; font-family: Actor; font-weight: 400; word-wrap: break-word">Topics</div>
+        <div style="width: 79px; color: white; font-size: 15px; font-family: Actor; font-weight: 400; word-wrap: break-word">Price</div>
+    </div>
+    <div style="width: 1440px; height: 60px; left: 0px; top: 0px; position: absolute; background: #012A5C"></div>
+    <div style="width: 1316px; height: 52px; left: 53px; top: 9px; position: absolute">
+        <div style="width: 165px; height: 51px; left: 0px; top: 1px; position: absolute; color: white; font-size: 30px; font-family: Sora; font-weight: 600; text-transform: capitalize; word-wrap: break-word">Betula</a>
+        <div style="width: 200px; height: 28px; left: 200px; top: 10px; position: absolute; text-align: right; color: white; font-size: 20px; font-family: Sora; font-weight: 500; word-wrap: break-word">Dashboard</div>
+        <div style="width: 192px; height: 28px; left: 571px; top: 10px; position: absolute; text-align: center; color: white; font-size: 20px; font-family: Sora; font-weight: 500; word-wrap: break-word">Recommended</div>
+        <div style="width: 155px; height: 28px; left: 851px; top: 10px; position: absolute; text-align: center; color: white; font-size: 20px; font-family: Sora; font-weight: 500; word-wrap: break-word">My Events</div>
+        <img style="width: 49px; height: 49px; left: 1267px; top: 0px; position: absolute" src="https://via.placeholder.com/49x49" />
+    </div>
+</div>
+
+</body>
+</html> 
