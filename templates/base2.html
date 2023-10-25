@@ -1,0 +1,178 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Betula{% endblock %}
+
+{% block navbar %}
+    <div style="width: 100%; height: 70px; left: 0px; top: 0px; position: absolute; background: #012A5C"></div>
+    <!-- <div style="width: 165px; height: 51px; left: 53px; top: 10px; position: absolute; color: white; font-size: 40px; font-family: Sora; font-weight: 600; text-transform: capitalize; word-wrap: break-word">Betula</div> -->
+        
+    <!-- Shortcuts to Other Pages -->
+
+    <!-- Style for Betula text -->
+    <style>
+
+        .betulaShort 
+        {
+            width: 165px;
+            height: 51px;
+            left: 53px;
+            top: 10px;
+            position: absolute;
+            color: white;
+            font-size: 40px;
+            font-family: Sora;
+            font-weight: 600;
+            text-transform: capitalize;
+            word-wrap: break-word;
+        }
+
+        .betulaShort a 
+        {
+            color: white;
+            text-decoration: none; /* Remove underlines from the link */
+        }
+
+    </style>
+
+    <div id="betulaShort" class="betulaShort" onclick="betula()">
+        <a href="#">Betula</a>
+    </div>
+    
+    <!-- Functions for dashboard text -->
+    <script>
+        // Define the function to be called
+        function betula() 
+        {
+            window.location.href ='dashboard';
+        }
+    </script>
+
+
+
+    <!-- Style for dashboard text -->
+    <style>
+
+        .dashboardShort 
+        {
+            width: 146px; 
+            height: 28px; 
+            left: 900px; 
+            top: 17px; 
+            position: absolute; 
+            text-align: center; 
+            color: white; 
+            font-size: 30px; 
+            font-family: Alegreya Sans; 
+            font-weight: 500; 
+            word-wrap: break-word
+        }
+
+        .dashboardShort a 
+        {
+            color: white;
+            text-decoration: none; /* Remove underlines from the link */
+        }
+
+    </style>
+
+    <div id="dashShort" class="dashboardShort" onclick="dashboard()">
+        <a href="#">Dashboard</a>
+    </div>
+    
+    <!-- Functions for dashboard text -->
+    <script>
+        // Define the function to be called
+        function dashboard() 
+        {
+            window.location.href ='dashboard';
+        }
+    </script>
+
+
+    <!-- Style for events text -->
+    <style>
+        .myEventsShort 
+        {
+            width: 155px; 
+            height: 28px; 
+            left: 1125px; 
+            top: 17px; 
+            position: absolute; 
+            text-align: center; 
+            color: white; 
+            font-size: 30px; 
+            font-family: Alegreya Sans; 
+            font-weight: 500; 
+            word-wrap: break-word
+        }
+    
+        .myEventsShort a 
+        {
+            color: white;
+            text-decoration: none; /* Remove underlines from the link */
+        }
+    
+    </style>
+    
+    <div id="eventShort" class="myEventsShort" onclick="myEvent()">
+        <a href="#">My Events</a>
+    </div>
+
+    <!-- Functions for event text -->
+    <script>
+        // Define the function to be called
+        function myEvent()
+        {
+            alert("Go to my events");
+        }
+    </script>
+
+    <style>
+        .userShort 
+        {
+            width: 49px; 
+            height: 49px; 
+            left: 1350px; 
+            top: 0px;
+            position: absolute;
+        }
+    
+        .userShort a 
+        {
+            color: white;
+            text-decoration: none; /* Remove underlines from the link */
+        }
+    </style>
+
+    <div id="usrShort" class="userShort">
+        <img href="#" src="your-image-source.jpg" alt="Clickable Image" onclick="myUser()">
+    </div>
+
+    <script>
+        // Define the function to be called
+        function myUser() 
+        {
+            alert("Go to user page");
+        }
+    </script>
+
+</div>
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+    
+    {% block page_content %}{% endblock %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% endblock %}

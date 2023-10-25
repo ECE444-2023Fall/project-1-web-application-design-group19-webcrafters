@@ -4,7 +4,7 @@ from flask import Flask, render_template, session, redirect, url_for, flash
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, SelectMultipleField, DateField, PasswordField, TextAreaField, TimeField
+from wtforms import widgets, StringField, SubmitField, SelectField, SelectMultipleField, DateField, PasswordField, TextAreaField, TimeField
 from wtforms.validators import DataRequired, Email
 
 app = Flask(__name__)
@@ -29,7 +29,7 @@ class JoinForm(FlaskForm):
 
 class PostingForm(FlaskForm):
     organization = StringField('Organization Name', validators=[DataRequired()])
-    campus = SelectMultipleField('Campus', choices=[('stgeorge','St. George'), ('utm', 'Mississagua'), ('uts', 'Scarborough')], validators=[DataRequired()])
+    campus = SelectMultipleField('Campus', choices=[('stgeorge','St. George'), ('utm', 'Mississauga'), ('uts', 'Scarborough')], validators=[DataRequired()])
     event = StringField('Event Name', validators=[DataRequired()])
     description = TextAreaField('Event Description', validators=[DataRequired()])
     date = DateField('Date and Time', validators=[DataRequired()])
@@ -39,7 +39,7 @@ class PostingForm(FlaskForm):
     city = StringField('City')
     postal = StringField('Postal Code')
     commonName = StringField('Commonly Referred to as (i.e. if space has a student-given name like "the pit" or "Back Campus")')
-    college = SelectMultipleField('College', choices=[('innis','Innis College'), ('new', 'New College'), ('stmikes', "St. Michael's College"), ('trinity', 'Trinity College'), ('uc','University College'), ('vic', 'Victoria College'), ('woodsworth', 'Woodsworth College'), ('none', 'None')], validators=[DataRequired()])
+    college = SelectField('College', choices=[('none', 'None'), ('innis','Innis College'), ('new', 'New College'), ('stmikes', "St. Michael's College"), ('trinity', 'Trinity College'), ('uc','University College'), ('vic', 'Victoria College'), ('woodsworth', 'Woodsworth College')], validators=[DataRequired()])
     faculty = SelectMultipleField('Faculty', choices=[('engineering','Applied Science and Engineering'), ('architecture', 'Architecture, Landscape and Design'), ('artsci', 'Arts and Science'), ('continuing', "Continuing Studies"), ('dentistry','Dentistry'), ('edu', 'Education'), ('info', 'Information'), ('kpe', 'Kinesiology and Physical Education'), ('law', 'Law'), ('management', 'Management'), ('med', 'Medicine'), ('music', 'Music'), ('nursing', 'Nursing'), ('pharm', 'Pharmacy'), ('publichealth', 'Public Health'), ('socwork', "Social Work")], validators=[DataRequired()])
     cost = SelectField('Cost', choices=[('free','Free'), ('under5', 'Under $5'), ('under10', 'Under $10'), ('under20', 'Under $20'), ('above20','$20+')], validators=[DataRequired()])
     tags = StringField('Tags')

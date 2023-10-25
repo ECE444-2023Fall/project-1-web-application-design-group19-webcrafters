@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base2.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}Betula{% endblock %}
@@ -8,14 +8,21 @@
 <html lang="en">
 <head>
   <style>
-    /* will add styles here */
+  .page-content {
+    position: relative;
+    top: 90px;
+  }
   </style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home - Betula</title>
 </head>
 <body>
+  <div class="page-content">
+    <div style="text-align: center; position: relative; color: black; font-size: 30px; font-family: Sora; font-weight: 400; word-wrap: break-word">Fill in the following information to make your post:</div><br>
     {{ wtf.quick_form(form) }}
+    <br>
+  </div>
 </body>
 </html>
 {% endblock %}
