@@ -1,5 +1,6 @@
 '''
 References Below
+
 Videos:
 https://www.youtube.com/watch?v=6joGkZMVX4o 
 https://www.youtube.com/watch?v=JVtGKA6OVvM 
@@ -11,7 +12,7 @@ https://www.mssqltips.com/sqlservertip/4037/storing-passwords-in-a-secure-way-in
 from pypyodbc_main import pypyodbc as odbc # Run if on Mac Apple Silicon
 #import pypyodbc as odbc # Run if on Windows
 import pandas as pd
-from credential import username, password
+from credentials import username, password
 
 #server = "betula-server.database.windows.net"
 #db = "BetulaDB"
@@ -28,9 +29,23 @@ create_user_table_query = '''
         )
     '''
 
+check_table_exists_query = '''
+        IF EXISTS (SELECT * 
+                    FROM USER_DATA)
+    '''
+
 create_cursor = connection.cursor()
+check_cursor = connection.cursor()
+
 try:
+    '''
+    if (check_cursor.execute(check_table_exists_query)):
+        print("Table already exists")
+        pass
+    '''
+
     create_cursor.execute(create_user_table_query)
+    create_cursor.commit()
     print("User Table created successfully")
 except:
     print("User Table not created")
@@ -46,5 +61,15 @@ headers = [column[0] for column in select_cursor.description]
 
 df = pd.DataFrame(columns=headers, data=dataset)
 print(df)
+
+
+create_cursor.close()
+check_cursor.close()
+select_cursor.close()
+connection.close()
+
+print("Cursors and DB Closed")
+
+
 
 
