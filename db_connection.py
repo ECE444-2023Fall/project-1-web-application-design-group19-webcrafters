@@ -20,17 +20,43 @@ connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-se
 connection = odbc.connect(connection_string)
 
 create_user_table_query = '''
-        CREATE TABLE USER_DATA(
-        UserID INT IDENTITY NOT NULL PRIMARY KEY,
-        FirstName VARCHAR(255),
-        LastName VARCHAR(255),
-        Email VARCHAR(255),
-        Username VARCHAR(255),
-        Password BINARY(64),
-        Tags VARCHAR(255),
-        RecsMustMatch BIT
-        )
-    '''
+            CREATE TABLE EVENT_DATA(
+                Event_ID INT IDENTITY NOT NULL PRIMARY KEY,
+                Event_Name VARCHAR(255),
+                Coordinator_Name VARCHAR(255),
+                Coordinator_Email VARCHAR(255),
+                Coordinator_Username VARCHAR(255),
+                Organization_Name VARCHAR(255),
+                Target_Campus VARCHAR(255),
+                Event_Description TEXT,
+                Event_Month VARCHAR(255),
+                Event_Date INT,
+                Event_Year INT,
+                Event_Start_Time TIME,
+                Event_End_Time TIME,
+                Event_Street_Address VARCHAR(255),
+                Event_City VARCHAR(255),
+                Event_Postal_Code VARCHAR(255),
+                Event_Location_Common_Name VARCHAR(255),
+                Target_College VARCHAR(255),
+                Target_Faculty VARCHAR(255),
+                Event_Cost DECIMAL,
+                Tags VARCHAR(255)
+            )
+'''
+
+# create_user_table_query = '''
+#         CREATE TABLE USER_DATA(
+#         UserID INT IDENTITY NOT NULL PRIMARY KEY,
+#         FirstName VARCHAR(255),
+#         LastName VARCHAR(255),
+#         Email VARCHAR(255),
+#         Username VARCHAR(255),
+#         Password BINARY(64),
+#         Tags VARCHAR(255),
+#         RecsMustMatch BIT
+#         )
+#     '''
 
 check_table_exists_query = '''
         IF EXISTS (SELECT * 
