@@ -8,10 +8,36 @@
 <html lang="en">
 <head>
   <style>
-  .page-content {
-    position: relative;
-    top: 90px;
-  }
+    body {
+      margin: 0;
+    }
+    .page-content {
+      position: relative;
+      margin-top: 70px;
+      margin-left: 223px;
+      overscroll-behavior-y: contain;
+      z-index: 1;
+      max-height: calc(100vh - 70px);
+      max-width: calc(100vw - 223px);
+    }
+    .button {
+      border: none;
+      padding: 10px;
+      margin: 4px 2px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      color: #012a5c;
+      font-size: 15px;
+      font-family: system-ui;
+      font-weight: 600;
+      word-wrap: break-word;
+      width: 147px;
+      height: 59px;
+      background-color: #d5e2f3;
+      border-radius: 15px
+    }
+    .back {left: 53px; top: 100px; position: absolute;}
   </style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,10 +45,12 @@
 </head>
 <body>
   <div class="page-content">
-    <div style="text-align: center; position: relative; color: black; font-size: 30px; font-family: Sora; font-weight: 400; word-wrap: break-word">Fill in the following information to make your post:</div><br>
+    <br>
+    <div style="text-align: center; position: relative; color: black; font-size: 30px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Fill in the following information to make your post:</div><br>
     {{ wtf.quick_form(form) }}
     <br>
   </div>
+  <!-- <button class="button back", onclick="history.back()">Back</button> -->
 </body>
 </html>
 {% endblock %}
