@@ -10,6 +10,8 @@ from wtforms.validators import DataRequired, Email
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
 
+app.add_url_rule('/custom_static/images/user.png', endpoint='custom_static', view_func=app.send_static_file)
+
 bootstrap = Bootstrap(app)
 moment = Moment(app)
 
@@ -65,8 +67,12 @@ def join():
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
+    # need to create db object from sql database and import models.py file into this file
+    #events = db.session.query(models.Event)
+    #user = db.session.query(models.User)
     events = [['Event Name', 'Host Name' , "Social, Sports", "Description"], ['Event Name 2', 'Host Name 2' , "Free, Food", "Description 2"], ['Event Name 3', 'Host Name 3' , "Professional", "Description 3"]]
     return render_template('dashboard.html', events = events)
+    #return render_template('dashboard.html', events = events, user = user)
 
 @app.route('/eventsdemo', methods=['GET', 'POST'])
 def events():
