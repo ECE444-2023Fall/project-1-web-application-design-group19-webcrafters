@@ -43,6 +43,7 @@ def login():
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
+        flash("You were logged in")
     return render_template('login.html', form=form, email=email, password=password)
 
 
@@ -60,6 +61,7 @@ def join():
         password = form.password.data
         rePassword = form.rePassword.data
         accountType = form.accountType.data
+        flash("Successfully joined")
     return render_template('join.html', form=form, email=email, username=username, password=password, rePassword=rePassword, accountType=accountType)
 
 

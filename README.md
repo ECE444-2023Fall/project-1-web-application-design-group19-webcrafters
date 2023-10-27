@@ -24,6 +24,7 @@
     <li>
       <a href="#getting-started">Getting Started</a>
     </li>
+    <li><a href="#test-functions">Test Functions</a></li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -70,6 +71,14 @@ Currently our project has not been deployed. To use this project you must:
 * Open [http://localhost:5000](http://localhost:5000)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Test Functions
+
+Our test functions are in **betula_test.py**, and have been created by the following people:
+
+ * Gordon: test_login, test_join
+
+ <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
 ## Usage
