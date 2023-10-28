@@ -7,6 +7,10 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField
 from wtforms.validators import DataRequired, Email
 
+from pypyodbc_main import pypyodbc as odbc
+#import pypyodbc as odbc
+from credentials import db_username, db_password
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
 
@@ -60,6 +64,28 @@ def join():
         password = form.password.data
         rePassword = form.rePassword.data
         accountType = form.accountType.data
+    
+    # Link form to User_Data Table in DB
+    connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+    connection = odbc.connect(connection_string)
+
+    create_user_query = '''
+                        INSERT INTO USER_DATA (User_Email, Username, Password, Account_Type)
+                        VALUES (%s, %s, %s, %s)
+                        '''
+    cursor = connection.cursor()
+    try:
+        cursor.execute(create_user_query, {email}, {username}, {password}, {accountType})
+        cursor.commit()
+        print("User added successfully")
+    except:
+        print("User not added")
+    
+    cursor.close()
+    connection.close()
+
+    print("Cursors and DB Closed")
+
     return render_template('join.html', form=form, email=email, username=username, password=password, rePassword=rePassword, accountType=accountType)
 
 
