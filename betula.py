@@ -84,7 +84,7 @@ def join():
 
     try:
         cursor.execute(create_user_query)
-        cursor.commit()
+        cursor.commit() # Line needed to ensure DB on server is updated
         print("User added successfully")
     except:
         print("User not added")

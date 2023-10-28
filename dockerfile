@@ -10,7 +10,7 @@ COPY . .
 # To print out stdout to docker logs
 ENV PYTHONUNBUFFERED=1
 
-# Install ODBC Driver Version 18 
+# Install ODBC Driver Version 18 and Debian Version 10
 ENV DOCKER_CONTENT_TRUST 1
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 
