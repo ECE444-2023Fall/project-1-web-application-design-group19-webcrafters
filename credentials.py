@@ -1,2 +1,2 @@
-username = "betula_admin"
-password = "Ece4442023"
+db_username = "betula_admin"
+db_password = "Ece4442023"

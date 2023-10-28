@@ -12,11 +12,11 @@ https://www.mssqltips.com/sqlservertip/4037/storing-passwords-in-a-secure-way-in
 from pypyodbc_main import pypyodbc as odbc # Run if on Mac Apple Silicon
 #import pypyodbc as odbc # Run if on Windows
 import pandas as pd
-from credentials import username, password
+from credentials import db_username, db_password
 
 #server = "betula-server.database.windows.net"
 #db = "BetulaDB"
-connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
 connection = odbc.connect(connection_string)
 
 create_user_table_query = '''
@@ -46,15 +46,19 @@ create_user_table_query = '''
 '''
 
 # create_user_table_query = '''
+#     DROP TABLE EVENT_DATA
+# '''
+# create_user_table_query = '''
 #         CREATE TABLE USER_DATA(
-#         UserID INT IDENTITY NOT NULL PRIMARY KEY,
-#         FirstName VARCHAR(255),
-#         LastName VARCHAR(255),
-#         Email VARCHAR(255),
+#         User_ID INT IDENTITY NOT NULL PRIMARY KEY,
+#         User_First_Name VARCHAR(255),
+#         User_Last_Name VARCHAR(255),
+#         User_Email VARCHAR(255),
 #         Username VARCHAR(255),
 #         Password BINARY(64),
-#         Tags VARCHAR(255),
-#         RecsMustMatch BIT
+#         Account_Type VARCHAR(255),
+#         User_Tags VARCHAR(255),
+#         Recs_Must_Match BIT
 #         )
 #     '''
 
