@@ -1,0 +1,174 @@
+{% extends "base2.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Betula{% endblock %}
+
+{% block page_content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    body {
+      margin: 0;
+    }
+    .page-content {
+      position: relative;
+      margin-top: 70px;
+      margin-left: 223px;
+      overscroll-behavior-y: contain;
+      z-index: 1;
+      max-height: calc(100vh - 70px);
+      max-width: calc(100vw - 223px);
+    }
+
+    .button {
+      border: none;
+      padding: 10px;
+      margin: 4px 2px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      color: #012a5c;
+      font-size: 15px;
+      font-family: system-ui;
+      font-weight: 600;
+      word-wrap: break-word;
+      width: 147px;
+      height: 59px;
+      background-color: #d7e6f8;
+      border-radius: 15px
+    }
+    .button:hover {
+      background-color: #b1d4ff;
+      transition: 0.1s;
+    }
+    .back {left: 38px; top: 100px; position: fixed;}
+
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-control {
+      width: 100%;
+      /* padding: 10px; */
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    .checkbox-group {
+      display: block;
+    }
+
+    .checkbox {
+      margin-bottom: 10px;
+    }
+
+    .checkbox input[type="checkbox"] {
+      margin-right: 5px;
+    }
+
+  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - Betula</title>
+</head>
+  <button class="button back", onclick="history.back()">Back</button>
+<body>
+  <div class="page-content">
+
+    <br>
+    <div style="text-align: center; position: relative; color: black; font-size: 30px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Fill in the following information to make your post:</div>
+    <div style="text-align: center; position: relative; color: black; font-size: 15px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Fields with a * are required fields</div><br>
+
+    <br>
+    <form method="POST">
+      {{ form.hidden_tag() }}
+      <div class="form-group">
+          <label for="organization">Organization Name *</label>
+          {{ form.organization(size=30, class="form-control") }}
+      </div>
+      <div class="form-group">
+        <label for="campus">Campus *</label>
+        <div class="checkbox-group">
+            {% for value, label in form.campus.choices %}
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="campus" value="{{ value }}">
+                        {{ label }}
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+      </div>
+      <div class="form-group">
+          <label for="event">Event Name *</label>
+          {{ form.event(size=30, class="form-control") }}
+      </div>
+      <div class="form-group">
+          <label for="description">Event Description *</label>
+          {{ form.description(class="form-control") }}
+      </div>
+      <div class="form-group">
+          <label for="date">Date *</label>
+          {{ form.date(class="form-control") }}
+      </div>
+      <div class="form-group">
+          <label for="startTime">Start Time *</label>
+          {{ form.startTime(class="form-control") }}
+      </div>
+      <div class="form-group">
+          <label for="endTime">End Time *</label>
+          {{ form.endTime(class="form-control") }}
+      </div>
+      <div class="form-group">
+          <label for="street">Street Address</label>
+          {{ form.street(size=30, class="form-control") }}
+      </div>
+      <div class="form-group">
+          <label for="city">City</label>
+          {{ form.city(size=30, class="form-control") }}
+      </div>
+      <div class="form-group">
+          <label for="postal">Postal Code</label>
+          {{ form.postal(size=10, class="form-control") }}
+      </div>
+      <div class="form-group">
+          <label for="commonName">Commonly Referred to as</label>
+          {{ form.commonName(size=30, class="form-control") }}
+      </div>
+      <div class="form-group">
+          <label for="college">College *</label>
+          {{ form.college(class="form-control") }}
+      </div>
+      <div class="form-group">
+        <label for="faculty">Faculty</label>
+        <div class="checkbox-group">
+            {% for value, label in form.faculty.choices %}
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="faculty" value="{{ value }}">
+                        {{ label }}
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+      </div>
+      <div class="form-group">
+          <label for="cost">Cost *</label>
+          {{ form.cost(class="form-control") }}
+      </div>
+      <div class="form-group">
+          <label for="tags">Tags</label>
+          {{ form.tags(size=30, class="form-control") }}
+      </div>
+      <div class="form-group" style="text-align: center;">
+          {{ form.post(class="button") }}
+      </div>
+    </form>
+    <br>
+  </div>
+</body>
+</html>
+{% endblock %}
