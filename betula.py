@@ -11,6 +11,12 @@ from pypyodbc_main import pypyodbc as odbc
 #import pypyodbc as odbc
 from credentials import db_username, db_password
 
+import logging
+from logging import handlers
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger()
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
 
@@ -69,13 +75,15 @@ def join():
     connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
     connection = odbc.connect(connection_string)
 
-    create_user_query = '''
+    create_user_query = f'''
                         INSERT INTO USER_DATA (User_Email, Username, Password, Account_Type)
-                        VALUES (%s, %s, %s, %s)
+                        VALUES ('{email}', '{username}', '{password}', '{accountType}')
                         '''
+    
     cursor = connection.cursor()
+
     try:
-        cursor.execute(create_user_query, {email}, {username}, {password}, {accountType})
+        cursor.execute(create_user_query)
         cursor.commit()
         print("User added successfully")
     except:
