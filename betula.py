@@ -7,6 +7,16 @@ from flask_wtf import FlaskForm
 from wtforms import widgets, StringField, SubmitField, SelectField, SelectMultipleField, DateField, PasswordField, TextAreaField, TimeField
 from wtforms.validators import DataRequired, Email
 
+from pypyodbc_main import pypyodbc as odbc
+#import pypyodbc as odbc
+from credentials import db_username, db_password
+
+import logging
+from logging import handlers
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger()
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
 
@@ -77,7 +87,30 @@ def join():
         password = form.password.data
         rePassword = form.rePassword.data
         accountType = form.accountType.data
-        return redirect(url_for('dashboard'))
+    
+    # Link form to User_Data Table in DB
+    connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+    connection = odbc.connect(connection_string)
+
+    create_user_query = f'''
+                        INSERT INTO USER_DATA (User_Email, Username, Password, Account_Type)
+                        VALUES ('{email}', '{username}', '{password}', '{accountType}')
+                        '''
+    
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute(create_user_query)
+        cursor.commit() # Line needed to ensure DB on server is updated
+        print("User added successfully")
+    except:
+        print("User not added")
+    
+    cursor.close()
+    connection.close()
+
+    print("Cursors and DB Closed")
+
     return render_template('join.html', form=form, email=email, username=username, password=password, rePassword=rePassword, accountType=accountType)
 
 
