@@ -7,6 +7,17 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField
 from wtforms.validators import DataRequired, Email
 
+#Event class for easy access of event information when rendering
+class Event():
+    def __init__(self, name, organization, where, when, tags, description, contact):
+        self.name = name
+        self.organization = organization
+        self.where = where
+        self.when = when
+        self.tags = tags
+        self.description = description
+        self.contact = contact
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
 
