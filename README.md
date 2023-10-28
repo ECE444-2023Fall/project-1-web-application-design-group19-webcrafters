@@ -71,14 +71,7 @@ Currently our project has not been deployed. To use this project you must:
 
 To set up the database, you must:
 * Send your IP address to our Software Lead at aniqa.tahseen@mail.utoronto.ca so that it can be added on the list of safe client IP addresses that can access the database
-* Download the ODBC Driver:
-  * WINDOWS: [https://learn.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server?view=sql-server-ver16](https://learn.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server?view=sql-server-ver16)
-  * MAC SILICON: Download this repo and add it to your workspace: [https://github.com/pypyodbc/pypyodbc](https://github.com/pypyodbc/pypyodbc)
-* In the db_connection.py file, use the import pypyodbc line that is most relevant to your device
-* Run ```pip install pypyodbc``` and ```pip install pandas``` to install the respective libraries
-* Create a credential.py file with the username and password of the database - Reach out to aniqa.tahseen@mail.utoronto.ca or ava.jakob@mail.utoronto.ca for the credentials of the database
-* Run the db_connection.py file only to connect to the database and get it up and running
-* The database is being further refined and organized, the direct connection to the web app is still in progress, stay tuned for more instructions to come!
+* Run the db_connection.py file only to create/drop tables from the database only when needed
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
