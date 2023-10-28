@@ -19,7 +19,7 @@ from credentials import db_username, db_password
 connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
 connection = odbc.connect(connection_string)
 
-# create_user_table_query = '''
+# query = '''
 #             CREATE TABLE EVENT_DATA(
 #                 Event_ID INT IDENTITY NOT NULL PRIMARY KEY,
 #                 Event_Name VARCHAR(255),
@@ -45,11 +45,11 @@ connection = odbc.connect(connection_string)
 #             )
 # '''
 
-# create_user_table_query = '''
+# query = '''
 #     DROP TABLE USER_DATA
 # '''
 
-create_user_table_query = '''
+query = '''
         CREATE TABLE USER_DATA(
         User_ID INT IDENTITY NOT NULL PRIMARY KEY,
         User_First_Name VARCHAR(255),
@@ -77,7 +77,7 @@ try:
         print("Table already exists")
         pass
     '''
-    create_cursor.execute(create_user_table_query)
+    create_cursor.execute(query)
     create_cursor.commit()
     print("User Table created successfully")
 except:
