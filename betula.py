@@ -127,3 +127,13 @@ def posting():
         cost = form.cost.data
         tags = form.tags.data
     return render_template('posting.html', form=form)
+
+@app.route('/myEvents', methods=['GET', 'POST'])
+def myEvents():
+    # need to create db object from sql database and import models.py file into this file
+    # need to figure out how to have user store specefic events they saved in the database
+    #events = db.session.query(models.Event)
+    #user = db.session.query(models.User)
+    events = [['Event Name', 'Host Name' , "Social, Sports", "Description"], ['Event Name 2', 'Host Name 2' , "Free, Food", "Description 2"], ['Event Name 3', 'Host Name 3' , "Professional", "Description 3"]]
+    return render_template('saved.html', events = events)
+    #return render_template('dashboard.html', events = events, user = user)
