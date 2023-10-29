@@ -51,22 +51,23 @@ def test_club_user_post(client):
     res = join(client, "email@email.com", "reg", "admin", "regular")
     rv = client.post(
         "/posting",
-        data=dict(organization = "organization",
-                    campus = "campus",
-                    event = "event",
-                    description = "description",
-                    date = "date",
-                    startTime = 1,
-                    endTime = 2,
-                    street = "street",
-                    city = "city",
-                    postal = "postal",
-                    commonName = "commonName",
-                    college = "college",
-                    faculty = "faculty",
-                    cost = 20,
-                    tags = "tags"),
-        follow_redirects=True,
+        data={      
+                'organization': 'organization',
+                'campus': 'campus',
+                'event': 'event',
+                'description': 'description',
+                'date': 'date',
+                'startTime': '1',
+                'endTime': '2',
+                'street': 'street',
+                'city': 'city',
+                'postal': 'postal',
+                'commonName': 'commonName',
+                'college': 'college',
+                'faculty': 'faculty',
+                'cost': '20',
+                'tags': 'tags'
+            }
     )
     assert b"No events here so far" in rv.data
     assert b"organization" not in rv.data
@@ -77,22 +78,23 @@ def test_club_user_post(client):
     res = join(client, "email@email.com", "reg", "admin", "club")
     rv = client.post(
         "/posting",
-        data=dict(organization = "organization",
-                    campus = "campus",
-                    event = "event",
-                    description = "description",
-                    date = "date",
-                    startTime = 1,
-                    endTime = 2,
-                    street = "street",
-                    city = "city",
-                    postal = "postal",
-                    commonName = "commonName",
-                    college = "college",
-                    faculty = "faculty",
-                    cost = 20,
-                    tags = "tags"),
-        follow_redirects=True,
+        data={      
+                'organization': 'organization',
+                'campus': 'campus',
+                'event': 'event',
+                'description': 'description',
+                'date': 'date',
+                'startTime': '1',
+                'endTime': '2',
+                'street': 'street',
+                'city': 'city',
+                'postal': 'postal',
+                'commonName': 'commonName',
+                'college': 'college',
+                'faculty': 'faculty',
+                'cost': '20',
+                'tags': 'tags'
+            }
     )
     assert b"No events here so far" not in rv.data
     assert b"organization" in rv.data
