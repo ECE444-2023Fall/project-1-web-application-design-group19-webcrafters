@@ -65,11 +65,16 @@ def join():
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
-    events = [['Event Name', 'Host Name' , "Social, Sports", "Description"], ['Event Name 2', 'Host Name 2' , "Free, Food", "Description 2"], ['Event Name 3', 'Host Name 3' , "Professional", "Description 3"]]
-    return render_template('dashboard.html', events = events)
+    facultyTags = ["Faculty of Applied Science and Engineering", "Trinity College", "University College", "St. Michael's College", "Victoria College"]
+    topicTags = ["Professional", "Cultural", "Social Work/Charity", "Fitness", "Social", "Sports"]
+    priceTags = ["Free", "Paid", "Free Food"]
+
+    
+    events = [['Event Name', 'Host Name' , "Social, Sports", "Description"], ['Event Name 2', 'Host Name 2' , "Free, Free Food", "Description 2"], ['Event Name 3', 'Host Name 3' , "Professional", "Description 3"]]
+    return render_template('dashboard.html', events=events, facultyTags=facultyTags, topicTags=topicTags, priceTags=priceTags)
 
 @app.route('/eventsdemo', methods=['GET', 'POST'])
 def events():
     events = [['Event Name', 'Host Name', 'UofT', 'October 31st', "Social, Sports", "Description", "sean.pourgoutzidis@mail.utoronto.ca"], ['Event Name 2', 'Host Name 2' , "UofT", "October 31st", "Free, Food", "Description 2", "sean.pourgoutzidis@mail.utoronto.ca"], ['Event Name 3', 'Host Name 3' , "UofT", "October 31st", "Professional", "Description 3", "sean.pourgoutzidis@mail.utoronto.ca"]]
-    return render_template('event.html', events=events)
+    return render_template('event.html', events=events, tags=tags)
 

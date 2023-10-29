@@ -1,106 +1,105 @@
 {% extends "bootstrap/base.html" %}
 
+
 {% block content %}
 <div style="width: 100%; height: auto; position: relative; background: #F5F5F5; min-height: 100%">
-    <!--<div style="width: 345px; height: 228px; left: 668px; top: 659px; position: absolute; background: #D9D9D9; border-radius: 30px"></div>-->
-    <!--<div style="width: 345px; height: 228px; left: 1074px; top: 351px; position: absolute; background: #D9D9D9; border-radius: 30px"></div>-->
-    <div style="left: 240px; top: 113px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex">
-        <div style="color: black; font-size: 24px; font-family: Roboto; font-weight: 400; text-transform: uppercase; letter-spacing: 2.40px; word-wrap: break-word">Search</div>
-        <style>
+    <div style="width:100%; display:flex; flex-wrap:wrap">
+        <div style="left: 240px; top: 113px; position:absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex">
+            <div style="color: black; font-size: 24px; font-family: Roboto; font-weight: 400; text-transform: uppercase; letter-spacing: 2.40px; word-wrap: break-word">Search</div>
+            <style>
+    
+                /* Style for the dropdown content */
+                .dropdown-content {
+                    display: none;
+                    position: absolute;
+                    background-color: #f1f1f1;
+                    min-width: 300px;
+                    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                    z-index: 1;
+                }
+    
+                /* Style for the dropdown options */
+                .dropdown-content a {
+                    padding: 12px 16px;
+                    display: block;
+                    text-decoration: none;
+                    color: #333;
+                }
+    
+                /* Change the background color of dropdown options when hovered */
+                .dropdown-content a:hover {
+                    background-color: #ddd;
+                }
+    
+                /* Set sizing for search bar */
+                .searching input{
+                    width: 300px;
+                    height: 40px;
+                    font-size: 16px;
+                }
+            </style>
+    
+            <!-- Text input box -->
+            <div id = "search" class = "searching">
+                <input type="text" id="searchTextInput" oninput="searchDropdown()" onblur="onBlur()" placeholder="Event Name">
+                    
+                    <!-- Dropdown content -->
+                    <div id="searchDrop" class="dropdown-content">
+                    <!-- Can choose which events to show add links to top searchs here -->
+                    <a href="#">Option 1</a>
+                    <a href="#">Option 2</a>
+                    <a href="#">Option 3</a>
+                </div>
+            </div>
+        
+            <!-- Functions for the search bar -->
+            <script>
+                function searchDropdown() 
+                {
+                    // Get the text input and the dropdown content elements
+                    var input = document.getElementById("searchTextInput");
+                    var dropdown = document.getElementById("searchDrop");
+            
+                    // Show the dropdown if there is text in the input
+                    if (input.value.length > 0) {
+                        dropdown.style.display = "block";
+                    } else{
+                        dropdown.style.display = "none";
+                    }
+                }
+            
+                function onBlur()
+                {
+                    // If the search bar loses focus, hide the drop down menu
+                    var dropdown = document.getElementById("searchDrop");
+                    dropdown.style.display = "none";
+                }
+            </script>
+        </div>
 
-        /* Style for the dropdown content */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f1f1f1;
-            min-width: 300px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-        }
-
-        /* Style for the dropdown options */
-        .dropdown-content a {
-            padding: 12px 16px;
-            display: block;
-            text-decoration: none;
-            color: #333;
-        }
-
-        /* Change the background color of dropdown options when hovered */
-        .dropdown-content a:hover {
-            background-color: #ddd;
-        }
-
-        /* Set sizing for search bar */
-        .searching input{
-            width: 300px;
-            height: 40px;
-            font-size: 16px;
-        }
-    </style>
-
-    <!-- Text input box -->
-    <div id = "search" class = "searching">
-        <input type="text" id="searchTextInput" oninput="searchDropdown()" onblur="onBlur()" placeholder="Event Name">
-
-        <!-- Dropdown content -->
-        <div id="searchDrop" class="dropdown-content">
-            <!-- Can choose which events to show add links to top searchs here -->
-            <a href="#">Option 1</a>
-            <a href="#">Option 2</a>
-            <a href="#">Option 3</a>
+        <div style="left: 700px; top: 113px; position:absolute;">
+            <div style="color: black; font-size: 24px; font-family: Roboto; font-weight: 400; text-transform: uppercase; letter-spacing: 2.40px; word-wrap: break-word">Tags</div>
+            <select name="Tags" class="form-select" multiple aria-label="Tag selection">
+                <!-- <option selected>Select Tags</option> -->
+                <option value="food">Has Food</option>
+                <option value="free">Free</option>
+                <option value="career">Career/Professional Development</option>
+                <option value="cultural">Cultural</option>
+                <option value="social-work">Social Work/Charity</option>
+                <option value="fitness">Fitness</option>
+                <option value="social">Social</option>
+                <option value="dept-trinity">Department - Trinity College</option>
+                <option value="dept-fase">Department - FASE</option>
+                <option value="dept-uc">Department - University College</option>
+              </select>
         </div>
     </div>
-
-    <!-- Functions for the search bar -->
-    <script>
-    function searchDropdown() 
-    {
-        // Get the text input and the dropdown content elements
-        var input = document.getElementById("searchTextInput");
-        var dropdown = document.getElementById("searchDrop");
-
-        // Show the dropdown if there is text in the input
-        if (input.value.length > 0) {
-            dropdown.style.display = "block";
-        } else{
-            dropdown.style.display = "none";
-        }
-    }
-
-    function onBlur()
-    {
-        // If the search bar loses focus, hide the drop down menu
-        var dropdown = document.getElementById("searchDrop");
-        dropdown.style.display = "none";
-    }
-    </script>
-
-        <!--<div style="align-self: stretch; height: 167px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-            <div style="width: 628px; padding: 8px; background: white; border-radius: 4px; border: 2px #73A2FF solid; justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
-                <div style="flex: 1 1 0; align-self: stretch; color: #404040; font-size: 24px; font-family: Roboto; font-weight: 400; word-wrap: break-word">Dropdown field data</div>
-                <div style="width: 10px; height: 10px; position: relative">
-                    <div style="width: 8px; height: 4px; left: 1px; top: 7px; position: absolute; border: 1px #404040 solid"></div>
-                </div>
-            </div>
-            <div style="width: 628px; padding-left: 8px; padding-right: 8px; padding-top: 12px; padding-bottom: 12px; background: white; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15); border-radius: 4px; border: 1px #DBDBDB solid; justify-content: flex-start; align-items: flex-start; gap: 8px; display: inline-flex">
-                <div style="flex: 1 1 0; align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 16px; display: inline-flex">
-                    <div style="align-self: stretch; color: #404040; font-size: 18px; font-family: Roboto; font-weight: 400; word-wrap: break-word">Option data</div>
-                    <div style="align-self: stretch; color: #404040; font-size: 18px; font-family: Roboto; font-weight: 400; word-wrap: break-word">Option data</div>
-                    <div style="align-self: stretch; color: #404040; font-size: 18px; font-family: Roboto; font-weight: 400; word-wrap: break-word">Option data</div>
-                </div>
-                <div style="width: 4px; height: 40px; background: #DBDBDB; border-radius: 2px"></div>
-            </div>
-        </div>-->
-    </div>
-    <!--<div style="width: 345px; height: 228px; left: 262px; top: 351px; position: absolute; background: #D9D9D9; border-radius: 30px"></div>-->
-    <!--<div style="width: 345px; height: 228px; left: 668px; top: 351px; position: absolute; background: #D9D9D9; border-radius: 30px"></div>-->
     
     <!-- Show Events -->
-
+    
     <table style="display: flex; justify-content: center; align-items: center; height: 100%; padding-top: 250px; padding-left: 30px">
         {% for event in events %}
-        <td style="display: flex; justify-content: center; align-items: center; height: 100%">
+        <td id="{{event[0]|lower|replace(' ', '-')}}" style="display: flex; justify-content: center; align-items: center; height: 100%">
             <div style="width: 623px; height: 451px; position: relative; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 30px; overflow: hidden">
                 <div style="width: 623px; height: 98px; left: 0px; top: 0px; position: absolute; background: #061945"></div>
                 <div style="width: 356px; height: 39px; left: 15px; top: 27px; position: absolute; color: white; font-size: 28px; font-family: Inter; font-weight: 400; word-wrap: break-word">{{ event[0] }}</div>
@@ -125,47 +124,11 @@
                 <div style="width: 212px; height: 26px; left: 380px; top: 64px; position: absolute; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
                 <div style="width: 184px; height: 23px; left: 392px; top: 67px; position: absolute; text-align: center; color: #061945; font-size: 16px; font-family: Inter; font-weight: 400; word-wrap: break-word">Follow</div>
             </div>
-
-            <!--<div style="width: 623px; height: 451px; position: relative; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 30px; overflow: hidden; margin-bottom: 30px">
-                <div style="width: 623px; height: 98px; left: 0px; top: 0px; position: absolute; background: #061945"></div>
-                <div style="width: 356px; height: 39px; left: 15px; top: 27px; position: absolute; color: white; font-size: 28px; font-family: Inter; font-weight: 400; word-wrap: break-word">{{ event[0] }}</div>
-                <div style="width: 579px; height: 60px; padding: 10px; left: 21px; top: 368px; position: absolute; background: #061945; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
-                  <div style="width: 96px; height: 29px; color: white; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">Register</div>
-                </div>
-                <div style="padding-top: 9px; padding-bottom: 6px; padding-left: 6px; padding-right: 10px; left: 388px; top: 11px; position: absolute; background: white; justify-content: flex-start; align-items: center; display: inline-flex">
-                  <div style="width: 196px; height: 55px; color: #061945; font-size: 16px; font-family: Inter; font-weight: 400; word-wrap: break-word">Hosted by: {{ event[1] }}</div>
-                </div>
-                <div style="height: 136px; padding-top: 11px; padding-bottom: 10px; padding-left: 9px; padding-right: 35px; left: 20px; top: 186px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; overflow: hidden; justify-content: flex-start; align-items: center; display: inline-flex">
-                  <div style="width: 535px; height: 115px; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Description: {{ event[5] }}</div>
-                </div>
-                <div style="padding-top: 3px; padding-bottom: 6px; padding-left: 12px; padding-right: 14px; left: 20px; top: 143px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; overflow: hidden; justify-content: center; align-items: center; display: inline-flex">
-                  <div style="width: 553px; height: 24px; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Tags: {{ event[4] }}</div>
-                </div>
-                <div style="width: 579px; height: 26px; left: 21px; top: 330px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50)"></div>
-                <div style="width: 94px; height: 25px; left: 31px; top: 331px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Contact: {{ event[6] }}</div>
-                <div style="width: 272px; height: 25px; left: 21px; top: 108px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                <div style="width: 264px; height: 24px; left: 33px; top: 109px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Where: {{ event[2] }}</div>
-                <div style="width: 287px; height: 24px; left: 312px; top: 109px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                <div style="width: 273px; height: 25px; left: 319px; top: 108px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">When: {{ event[3] }}</div>
-              </div>-->
         </td>
         {% endfor %}
     </table>
 
-
     <!-- End of Showing Events-->
-
-    <!-- Old event rendering
-    <div style="width: 121px; height: 57px; left: 1186px; top: 436px; position: absolute; text-align: center; color: black; font-size: 30px; font-family: Raleway; font-weight: 600; text-transform: capitalize; word-wrap: break-word">Event </div>
-    <div style="width: 121px; height: 57px; left: 780px; top: 436px; position: absolute; text-align: center; color: black; font-size: 30px; font-family: Raleway; font-weight: 600; text-transform: capitalize; word-wrap: break-word">Event </div>
-    <div style="width: 345px; height: 228px; left: 262px; top: 659px; position: absolute; background: #D9D9D9; border-radius: 30px"></div>
-    <div style="width: 121px; height: 57px; left: 374px; top: 744px; position: absolute; text-align: center; color: black; font-size: 30px; font-family: Raleway; font-weight: 600; text-transform: capitalize; word-wrap: break-word">Event </div>
-    <div style="width: 121px; height: 57px; left: 789px; top: 744px; position: absolute; text-align: center; color: black; font-size: 30px; font-family: Raleway; font-weight: 600; text-transform: capitalize; word-wrap: break-word">Event </div>
-    <div style="width: 345px; height: 228px; left: 1074px; top: 659px; position: absolute; background: #D9D9D9; border-radius: 30px"></div>
-    <div style="width: 121px; height: 57px; left: 374px; top: 436px; position: absolute; text-align: center; color: black; font-size: 30px; font-family: Raleway; font-weight: 600; text-transform: capitalize; word-wrap: break-word">Event </div>
-    <div style="width: 121px; height: 57px; left: 1186px; top: 744px; position: absolute; text-align: center; color: black; font-size: 30px; font-family: Raleway; font-weight: 600; text-transform: capitalize; word-wrap: break-word">Event </div>
-    -->
-
 
     <div style="width: 1440px; height: 70px; left: 0px; top: 0px; position: absolute; background: #012A5C"></div>
     <div style="width: 223px; height: 954px; left: 0px; top: 70px; position: absolute; background: #5078A9"></div>
@@ -315,14 +278,12 @@
                 alert("Go to user page");
             }
         </script>
-                <!--<div style="width: 146px; height: 28px; left: 337px; top: 12px; position: absolute; text-align: center; color: white; font-size: 30px; font-family: Alegreya Sans; font-weight: 500; word-wrap: break-word">Dashboard</div>
-                <div style="width: 192px; height: 28px; left: 571px; top: 11px; position: absolute; text-align: center; color: white; font-size: 30px; font-family: Alegreya Sans; font-weight: 500; word-wrap: break-word">Recommended</div>
-                <div style="width: 155px; height: 28px; left: 851px; top: 10px; position: absolute; text-align: center; color: white; font-size: 30px; font-family: Alegreya Sans; font-weight: 500; word-wrap: break-word">My Events</div>
-                <img style="width: 49px; height: 49px; left: 1267px; top: 0px; position: absolute" src="https://via.placeholder.com/49x49" /> -->
                 
     </div>
     <div style="height: 100%; left: 32px; top: 113px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-end; gap: 30px; display: inline-flex">
     <div style="color: white; font-size: 24px; font-family: Plus Jakarta Sans; font-weight: 500; word-wrap: break-word">Filters</div>
+
+        
         
         <!-- Styling for Events Filter -->
         <style>
@@ -382,39 +343,14 @@
             }
         </style>
 
-        <div id="facFilter" class="facultyFilter" onclick="facultyDropdown()">
+        <div id="facFilter" class="dropdown facultyFilter" onclick="facultyDropdown()">
             <a href="#">Faculty<span class="down-arrow"></span></a>
             <div class="facultyDropdown" id="facultyDrop">
+                {% for faculty in facultyTags %}
                 <label class="checkbox-label">
-                    <input type="checkbox"> Option 1
+                    <input id="{{faculty|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{faculty}}', '{{events|tojson|safe|tojson}}')">{{faculty}}
                 </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 2
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 3
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 4
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 5
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 6
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 7
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 8
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 9
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 10
-                </label>
+                {% endfor %}
             </div>
         </div>
         
@@ -429,6 +365,8 @@
                 var dropdownThree = document.getElementById("priceDrop");
                 dropdownThree.style.display = "none";
             }
+
+            
         </script>
 
         <!-- Styling for Topics Filter -->
@@ -485,41 +423,18 @@
         <div id="topFilter" class="topcisFilter" onclick="topicDropdown()">
             <a href="#">Topics<span class="down-arrow"></span></a>
             <div class="topicsDropdown" id="topicsDrop">
+                {% for topic in topicTags %}
                 <label class="checkbox-label">
-                    <input type="checkbox"> Option 1
+                    <input id="{{topic|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{topic}}', '{{events|tojson|safe|tojson}}')">{{topic}}
                 </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 2
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 3
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 4
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 5
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 6
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 7
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 8
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 9
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 10
-                </label>
+                {% endfor %}
             </div>
         </div>
 
         <!-- Functions for Topic Filter -->
         <script>
+            
+
             function topicDropdown() 
             {
                     var dropdown = document.getElementById("topicsDrop");
@@ -528,6 +443,21 @@
                     dropdownTwo.style.display = "none";
                     var dropdownThree = document.getElementById("priceDrop");
                     dropdownThree.style.display = "none";
+            }
+
+            function changeTopicTag(checkboxObject, selectedTag, allEvents) {
+                // const allEvents = {{events|tojson|safe}};
+                allEvents.forEach(event => {
+                    const tags = event[4].split(", ");
+                    if (tags.includes(selectedTag)) {
+                        var currentEventElement = document.getElementById(event[0]);
+                        if (checkboxObject.checked) {
+                            currentEventElement.style.display = "flex";
+                        } else {
+                            currentEventElement.style.display = "none";
+                        }
+                    }
+                });
             }
         </script>
 
@@ -582,39 +512,14 @@
             }
         </style>
 
-        <div id="priFilter" class="priceFilter" onclick="priceDropdown()">
+        <div id="priFilter dropdown" class="priceFilter" onclick="priceDropdown()">
             <a href="#">Price<span class="down-arrow"></span></a>
             <div class="priceDropdown" id="priceDrop">
+                {% for price in priceTags %}
                 <label class="checkbox-label">
-                    <input type="checkbox"> Option 1
+                    <input id="{{price|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{price}}', '{{events|tojson|safe|tojson}}')">{{price}}
                 </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 2
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 3
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 4
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 5
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 6
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 7
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 8
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 9
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 10
-                </label>
+                {% endfor %}
             </div>
         </div>
 
@@ -632,11 +537,24 @@
             }
         </script>
 
-<!--
-        <div style="width: 79px; color: white; font-size: 20px; font-family: Alegreya Sans; font-weight: 400; word-wrap: break-word">Faculty</div>
-        <div style="width: 79px; color: white; font-size: 20px; font-family: Alegreya Sans; font-weight: 400; word-wrap: break-word">Topics</div>
-        <div style="width: 79px; color: white; font-size: 20px; font-family: Alegreya Sans; font-weight: 400; word-wrap: break-word">Price</div>
--->  
     </div>
+    <!-- Filter Universal Functions -->
+    <script>
+        function updateTag(checkboxObject, selectedTag, allEvents) {
+            const allEvents = JSON.parse(allEvents);
+            console.log(allEvents);
+            allEvents.forEach(event => {
+                const tags = event[2].split(", ");
+                if (tags.includes(selectedTag)) {
+                    var currentEventElement = document.getElementById(event[0].toLowerCase().replace(' ', '-'));
+                    if (checkboxObject.checked) {
+                        currentEventElement.style.display = "flex";
+                    } else {
+                        currentEventElement.style.display = "none";
+                    }
+                }
+            });
+        }
+    </script>
 </div>
 {% endblock %}
