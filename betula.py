@@ -217,6 +217,7 @@ def dashboard():
             break
 
     select_user_cursor.close()
+    connection.close()
 
     return render_template('dashboard.html', events = eventsList)
 
