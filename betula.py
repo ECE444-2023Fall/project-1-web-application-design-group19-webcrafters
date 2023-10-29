@@ -156,13 +156,13 @@ def dashboard():
         userTags = user_df['user_tags'].values[0]
     except:
         print('User was not found')
-        
-    if (type(userTags) != None):
+
+    if userTags is not None:
         userTags = userTags.split(',')
         userStringency = user_df['recs_must_match'].values[0]
-    
     else:
         userStringency = 0
+
 
     #Now that we have the user information, let's grab the events
     eventsList = []
