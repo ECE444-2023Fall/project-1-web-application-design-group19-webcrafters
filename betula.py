@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Flask, render_template, session, redirect, url_for, flash
+from flask import Flask, render_template, session, redirect, url_for, flash, request
 
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
@@ -74,20 +74,29 @@ def events():
     events = [['Event Name', 'Host Name' , "Social, Sports", "Description"], ['Event Name 2', 'Host Name 2' , "Free, Food", "Description 2"], ['Event Name 3', 'Host Name 3' , "Professional", "Description 3"]]
     return render_template('event.html', events=events)
 
-# @app.route('/userprofile', methods=['GET', 'POST'])
-# def userprofile():
-#     return render_template('userprofile.html')
+
+
 
 
 class FilterForm(FlaskForm):
     filter = SelectMultipleField('Select Filters', choices=[('Filter 1', 'Filter 1'), ('Filter 2', 'Filter 2'), ('Filter 3', 'Filter 3'), ('Filter 4', 'Filter 4')], widget=widgets.ListWidget(prefix_label=False), option_widget=widgets.CheckboxInput())
     submit = SubmitField('Apply Filters')  
 
+
 @app.route('/userprofile', methods=['GET', 'POST'])
-def filters():
+def userprofile():
+    name = 'Guest'
     selected_filters = []
     form = FilterForm()
-    if form.validate_on_submit():
+
+    # Check if 'filter_form' is submitted (indicating the FilterForm is submitted)
+    if 'filter_form' in request.form and form.validate_on_submit():
         selected_filters = form.filter.data
-    return render_template('userprofile.html', form=form, selected_filters=selected_filters)
+    # Else, check for name updating functionality
+    elif 'name' in request.form:
+        name = request.form.get('name')
+
+    return render_template('userprofile.html', name=name, form=form, selected_filters=selected_filters)
+
+
 
