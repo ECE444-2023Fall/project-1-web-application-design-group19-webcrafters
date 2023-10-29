@@ -2,6 +2,12 @@ import pytest
 
 from betula import app
 
+@pytest.fixture
+def client():
+    app.config['TESTING'] = True
+    with app.test_client() as client:
+        yield client
+
 def login(client, email, password):
     return client.post(
         "/login",
@@ -90,3 +96,49 @@ def test_club_user_post(client):
     assert b"event" in rv.data
     assert b"description" in rv.data
     
+
+# Jessica
+# Test the rendering of posting page
+def test_posting_page_rendering(client):
+    res = client.get('/posting')
+    assert res.status_code == 200
+
+# Jessica
+# Test posting interface with complete input
+def test_posting_complete_submission(client):
+    data = {
+        'organization': 'TestOrg',
+        'campus': 'TestCampus',
+        'event': 'TestEvent',
+        'description': 'TestDescription',
+        'date': 'TestDate',
+        'startTime': 'TestStartTime',
+        'endTime': 'TestEndTime',
+        'street': 'TestStreet',
+        'city': 'TestCity',
+        'postal': 'TestPostal',
+        'commonName': 'TestCommonName',
+        'college': 'TestCollege',
+        'faculty': 'TestFaculty',
+        'cost': 'TestCost',
+        'tags': 'TestTags'
+    }
+    res = client.post('/posting', data=data)
+    assert res.status_code == 200
+
+# Jessica
+# Test posting interface with only required input
+def test_posting_required_submission(client):
+    data = {
+        'organization': 'TestOrg',
+        'campus': 'TestCampus',
+        'event': 'TestEvent',
+        'description': 'TestDescription',
+        'date': 'TestDate',
+        'startTime': 'TestStartTime',
+        'endTime': 'TestEndTime',
+        'college': 'TestCollege',
+        'cost': 'TestCost'
+    }
+    res = client.post('/posting', data=data)
+    assert res.status_code == 200
