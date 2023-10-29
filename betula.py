@@ -150,6 +150,8 @@ def dashboard():
     user_df = pd.DataFrame(columns=headers, data=dataset)
     
     #Get the user's tags and stringency
+    userTags = None
+
     try:    
         userTags = user_df['user_tags'].values[0]
     except:
