@@ -1,9 +1,9 @@
 import pytest
 
 from betula import app
-
 from pypyodbc_main import pypyodbc as odbc
-from betula.credentials import db_username, db_password
+import pandas as pd
+from credentials import db_username, db_password
 
 import json
 
@@ -73,22 +73,23 @@ def test_club_user_post(client):
     res = join(client, "email@email.com", "reg", "admin", "regular")
     rv = client.post(
         "/posting",
-        data=dict(organization = "organization",
-                    campus = "campus",
-                    event = "event",
-                    description = "description",
-                    date = "date",
-                    startTime = 1,
-                    endTime = 2,
-                    street = "street",
-                    city = "city",
-                    postal = "postal",
-                    commonName = "commonName",
-                    college = "college",
-                    faculty = "faculty",
-                    cost = 20,
-                    tags = "tags"),
-        follow_redirects=True,
+        data={      
+                'organization': 'organization',
+                'campus': 'campus',
+                'event': 'event',
+                'description': 'description',
+                'date': 'date',
+                'startTime': '1',
+                'endTime': '2',
+                'street': 'street',
+                'city': 'city',
+                'postal': 'postal',
+                'commonName': 'commonName',
+                'college': 'college',
+                'faculty': 'faculty',
+                'cost': '20',
+                'tags': 'tags'
+            }
     )
     assert b"No events here so far" in rv.data
     assert b"organization" not in rv.data
@@ -99,22 +100,23 @@ def test_club_user_post(client):
     res = join(client, "email@email.com", "reg", "admin", "club")
     rv = client.post(
         "/posting",
-        data=dict(organization = "organization",
-                    campus = "campus",
-                    event = "event",
-                    description = "description",
-                    date = "date",
-                    startTime = 1,
-                    endTime = 2,
-                    street = "street",
-                    city = "city",
-                    postal = "postal",
-                    commonName = "commonName",
-                    college = "college",
-                    faculty = "faculty",
-                    cost = 20,
-                    tags = "tags"),
-        follow_redirects=True,
+        data={      
+                'organization': 'organization',
+                'campus': 'campus',
+                'event': 'event',
+                'description': 'description',
+                'date': 'date',
+                'startTime': '1',
+                'endTime': '2',
+                'street': 'street',
+                'city': 'city',
+                'postal': 'postal',
+                'commonName': 'commonName',
+                'college': 'college',
+                'faculty': 'faculty',
+                'cost': '20',
+                'tags': 'tags'
+            }
     )
     assert b"No events here so far" not in rv.data
     assert b"organization" in rv.data
@@ -188,3 +190,47 @@ def testing_adding_new_user_to_database(client):
     res = get_user_data(email= user_data["email"], username=user_data["username"], password=user_data["password"], accountType=user_data["accountType"])[0]
     assert res == 1
 
+
+#Sean
+#Testing event database access
+def test_event_access(client):
+    # Link form to User_Data Table in DB
+    connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+    
+    couldAccess = False
+
+    #Try to connect to database
+    try:
+        connection = odbc.connect(connection_string)
+        couldAccess = True
+    except:
+        #If we could not, we should get an error
+        couldAccess = False
+        assert couldAccess != False
+
+    #If we could connect to database
+    if (couldAccess):
+        select_user_cursor = connection.cursor()
+        
+        #Now that we have the user information, let's grab the events
+        eventsList = []
+        get_user_table_data_query = f"SELECT * FROM EVENT_DATA"
+        select_user_cursor.execute(get_user_table_data_query)
+        dataset = select_user_cursor.fetchall()
+
+        # Get Column Names and match dataframe
+        headers = [column[0] for column in select_user_cursor.description]
+        events_df = pd.DataFrame(columns=headers, data=dataset)
+        
+        #Count the number of events
+        numEvents = 0
+
+        #Iterate through events and add matches matches
+        for index, row in events_df.iterrows():
+            numEvents += 1
+
+        select_user_cursor.close()
+        connection.close()
+
+        #Assuming we successfully got the events from the database, there should be a non-zero number of events
+        assert numEvents != 0
