@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Flask, render_template, session, redirect, url_for, flash
+from flask import Flask, render_template, session, redirect, url_for, flash, request
 
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
@@ -125,8 +125,29 @@ def events():
     return render_template('event.html', events=events)
 
 
-@app.route('/posting', methods=['GET', 'POST'])
-def posting():
+@app.route('/posting', methods=['GET'])
+def render_posting():
+    form = PostingForm()
+    organization = None
+    campus = None
+    event = None
+    description = None
+    date = None
+    startTime = None
+    endTime = None
+    street = None
+    city = None
+    postal = None
+    commonName = None
+    college = None
+    faculty = None
+    cost = None
+    tags = None
+    return render_template('posting.html', form=form, organization=organization, campus = campus, event = event, description = description, date = date, startTime = startTime, endTime = endTime, street = street, city = city, postal = postal, commonName = commonName, college = college, faculty = faculty, cost = cost, tags = tags)
+
+
+@app.route('/post_success', methods=['POST'])
+def submit_posting():
     organization = None
     campus = None
     event = None
@@ -143,45 +164,47 @@ def posting():
     cost = None
     tags = None
     form = PostingForm()
-    if form.validate_on_submit():
-        organization = form.organization.data
-        campus = form.campus.data
-        event = form.event.data
-        description = form.description.data
-        date = form.date.data
-        startTime = form.startTime.data
-        endTime = form.endTime.data
-        street = form.street.data
-        city = form.city.data
-        postal = form.postal.data
-        commonName = form.commonName.data
-        college = form.college.data
-        faculty = form.faculty.data
-        cost = form.cost.data
-        tags = form.tags.data
 
-    connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
-    connection = odbc.connect(connection_string)
+    if request.method == 'POST':
+        organization = request.form['organization']
+        campus = request.form.getlist('campus')
+        event = request.form['event']
+        description = request.form['description']
+        date = request.form['date']
+        startTime = request.form['startTime']
+        endTime = request.form['endTime']
+        street = request.form['street']
+        city = request.form['city']
+        postal = request.form['postal']
+        commonName = request.form['commonName']
+        college = request.form['college']
+        faculty = request.form.getlist('faculty')
+        cost = request.form['cost']
+        tags = request.form['tags']
 
-    #VALUES ('{event}', '{organization}', '{campus}', '{description}', '{date}', '{startTime}', '{endTime}', '{street}', '{city}', '{postal}', '{commonName}', '{college}', '{faculty}', '{cost}', '{tags}')
-    #how to get Coordinator_Name, Coordinator_Email, Coordinator_Username into database
-    create_user_query = f'''
-                        INSERT INTO EVENT_DATA (Event_name, Organization_Name, Event_Description, Event_Street_Address, Event_City, Event_Postal_Code, Event_Location_Common_Name, Tags)
-                        VALUES ('{event}', '{organization}', '{description}', '{street}', '{city}', '{postal}', '{commonName}', '{tags}')
-                        '''
-    
-    cursor = connection.cursor()
 
-    try:
-        cursor.execute(create_user_query)
-        connection.commit() # Line needed to ensure DB on server is updated
-        print("Event added successfully")
-    except:
-        print("Event not added")
-    
-    cursor.close()
-    connection.close()
+        connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+        connection = odbc.connect(connection_string)
 
-    print("Cursors and DB Closed")
+        #VALUES ('{event}', '{organization}', '{campus}', '{description}', '{date}', '{startTime}', '{endTime}', '{street}', '{city}', '{postal}', '{commonName}', '{college}', '{faculty}', '{cost}', '{tags}')
+        #how to get Coordinator_Name, Coordinator_Email, Coordinator_Username into database
+        create_user_query = f'''
+                            INSERT INTO EVENT_DATA (Event_name, Organization_Name, Event_Description, Event_Street_Address, Event_City, Event_Postal_Code, Event_Location_Common_Name, Tags)
+                            VALUES ('{event}', '{organization}', '{description}', '{street}', '{city}', '{postal}', '{commonName}', '{tags}')
+                            '''
+        
+        cursor = connection.cursor()
 
-    return render_template('posting.html', form=form, organization=organization, campus = campus, event = event, description = description, date = date, startTime = startTime, endTime = endTime, street = street, city = city, postal = postal, commonName = commonName, college = college, faculty = faculty, cost = cost, tags = tags)
+        try:
+            cursor.execute(create_user_query)
+            connection.commit() # Line needed to ensure DB on server is updated
+            print("Event added successfully")
+        except:
+            print("Event not added")
+        
+        cursor.close()
+        connection.close()
+
+        print("Cursors and DB Closed")
+
+    return render_template('post_success.html', form=form, organization=organization, campus = campus, event = event, description = description, date = date, startTime = startTime, endTime = endTime, street = street, city = city, postal = postal, commonName = commonName, college = college, faculty = faculty, cost = cost, tags = tags)

@@ -83,7 +83,7 @@
     <div style="text-align: center; position: relative; color: black; font-size: 15px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Fields with a * are required fields</div><br>
 
     <br>
-    <form method="POST">
+    <form method="POST" action="{{ url_for('submit_posting') }}">
       {{ form.hidden_tag() }}
       <div class="form-group">
           <label for="organization">Organization Name *</label>
