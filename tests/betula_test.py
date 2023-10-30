@@ -2,6 +2,11 @@ import pytest
 
 from betula import app
 
+from pypyodbc_main import pypyodbc as odbc
+from betula.credentials import db_username, db_password
+
+import json
+
 @pytest.fixture
 def client():
     app.config['TESTING'] = True
@@ -21,6 +26,26 @@ def join(client, email, username, password, accountType):
         data=dict(email=email, username=username, password=password, rePassword=password, accountType=accountType),
         follow_redirects=True
     )
+
+def get_user_data(email, username, password, accountType):
+    connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+    connection = odbc.connect(connection_string)
+
+    check_user_exists_query = f'''
+                        SELECT COUNT(*) 
+                        FROM USER_DATA
+                        WHERE User_Email = '{email}' AND Username = '{username}' AND Password = '{password}' AND Account_Type = '{accountType}'
+                    '''
+
+    cursor = connection.cursor()
+    cursor.execute(check_user_exists_query)
+    result = cursor.fetchone()
+
+    cursor.close()
+    connection.close()
+
+    return result
+
 
 # Gordon
 # Test login capability of the system
@@ -142,3 +167,24 @@ def test_posting_required_submission(client):
     }
     res = client.post('/posting', data=data)
     assert res.status_code == 200
+
+
+# Aniqa    
+# Test if user can be added to User_Table in database
+def testing_adding_new_user_to_database(client):
+    
+    user_data = {
+        "email" : "test@betula.ca",
+        "username" : "test",
+        "password" : "test",
+        "accountType" : "club",
+    }
+
+    user_data_json = json.dumps(user_data)
+
+    res = client.post('/join', data=user_data_json)
+    assert res.status_code == 200
+
+    res = get_user_data(email= user_data["email"], username=user_data["username"], password=user_data["password"], accountType=user_data["accountType"])[0]
+    assert res == 1
+
