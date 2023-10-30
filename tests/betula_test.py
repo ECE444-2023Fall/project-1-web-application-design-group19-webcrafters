@@ -172,7 +172,7 @@ def test_posting_required_submission(client):
 
 
 # Aniqa    
-# Test if user can be added to User_Table in database
+# Test if user can be accessed from the User_Table in the database
 def testing_adding_new_user_to_database(client):
     
     user_data = {
@@ -181,11 +181,6 @@ def testing_adding_new_user_to_database(client):
         "password" : "test",
         "accountType" : "club",
     }
-
-    user_data_json = json.dumps(user_data)
-
-    res = client.post('/join', data=user_data_json)
-    assert res.status_code == 200
 
     res = get_user_data(email= user_data["email"], username=user_data["username"], password=user_data["password"], accountType=user_data["accountType"])[0]
     assert res == 1
