@@ -88,6 +88,7 @@
       <div class="form-group">
           <label for="organization">Organization Name *</label>
           {{ form.organization(size=30, class="form-control") }}
+          <p>Current value: {{ organization }}</p>
       </div>
       <div class="form-group">
         <label for="campus">Campus *</label>
@@ -99,48 +100,59 @@
                         {{ label }}
                     </label>
                 </div>
+                <p>Current value: {{ campus }}</p>
             {% endfor %}
         </div>
       </div>
       <div class="form-group">
           <label for="event">Event Name *</label>
           {{ form.event(size=30, class="form-control") }}
+          <p>Current value: {{ event }}</p>
       </div>
       <div class="form-group">
           <label for="description">Event Description *</label>
           {{ form.description(class="form-control") }}
+          <p>Current value: {{ description }}</p>
       </div>
       <div class="form-group">
           <label for="date">Date *</label>
           {{ form.date(class="form-control") }}
+          <p>Current value: {{ date }}</p>
       </div>
       <div class="form-group">
           <label for="startTime">Start Time *</label>
           {{ form.startTime(class="form-control") }}
+          <p>Current value: {{ startTime }}</p>
       </div>
       <div class="form-group">
           <label for="endTime">End Time *</label>
           {{ form.endTime(class="form-control") }}
+          <p>Current value: {{ endTime }}</p>
       </div>
       <div class="form-group">
           <label for="street">Street Address</label>
           {{ form.street(size=30, class="form-control") }}
+          <p>Current value: {{ street }}</p>
       </div>
       <div class="form-group">
           <label for="city">City</label>
           {{ form.city(size=30, class="form-control") }}
+          <p>Current value: {{ city }}</p>
       </div>
       <div class="form-group">
           <label for="postal">Postal Code</label>
           {{ form.postal(size=10, class="form-control") }}
+          <p>Current value: {{ postal }}</p>
       </div>
       <div class="form-group">
           <label for="commonName">Commonly Referred to as</label>
           {{ form.commonName(size=30, class="form-control") }}
+          <p>Current value: {{ commonName }}</p>
       </div>
       <div class="form-group">
           <label for="college">College *</label>
           {{ form.college(class="form-control") }}
+          <p>Current value: {{ college }}</p>
       </div>
       <div class="form-group">
         <label for="faculty">Faculty</label>
@@ -152,16 +164,19 @@
                         {{ label }}
                     </label>
                 </div>
+                <p>Current value: {{ faculty }}</p>
             {% endfor %}
         </div>
       </div>
       <div class="form-group">
           <label for="cost">Cost *</label>
-          {{ form.cost(class="form-control") }}
+          <input type="number" name="cost" step="0.01" class="form-control" placeholder="Enter Cost" pattern="^\d+(\.\d{1,2})?$" title="Please enter a number with up to two decimal places">
+          <p>Current value: {{ cost }}</p>
       </div>
       <div class="form-group">
           <label for="tags">Tags</label>
           {{ form.tags(size=30, class="form-control") }}
+          <p>Current value: {{ tags }}</p>
       </div>
       <div class="form-group" style="text-align: center;">
           {{ form.post(class="button") }}

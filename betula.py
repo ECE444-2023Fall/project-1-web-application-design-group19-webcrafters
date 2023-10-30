@@ -163,17 +163,18 @@ def posting():
     connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
     connection = odbc.connect(connection_string)
 
+    #VALUES ('{event}', '{organization}', '{campus}', '{description}', '{date}', '{startTime}', '{endTime}', '{street}', '{city}', '{postal}', '{commonName}', '{college}', '{faculty}', '{cost}', '{tags}')
     #how to get Coordinator_Name, Coordinator_Email, Coordinator_Username into database
     create_user_query = f'''
-                        INSERT INTO EVENT_DATA (Event_name, Organization_Name, Target_Campus, Event_Description, Event_Date, Event_Start_Time, Event_End_Time, Event_Street_Address, Event_City, Event_Postal_Code, Event_Location_Common_Name, Target_College, Target_Faculty, Event_Cost, Tags)
-                        VALUES ('{event}', '{organization}', '{campus}', '{description}', '{date}', '{startTime}', '{endTime}', '{street}', '{city}', '{postal}', '{commonName}', '{college}', '{faculty}', '{cost}', '{tags}')
+                        INSERT INTO EVENT_DATA (Event_name, Organization_Name, Event_Description, Event_Street_Address, Event_City, Event_Postal_Code, Event_Location_Common_Name, Tags)
+                        VALUES ('{event}', '{organization}', '{description}', '{street}', '{city}', '{postal}', '{commonName}', '{tags}')
                         '''
     
     cursor = connection.cursor()
 
     try:
         cursor.execute(create_user_query)
-        cursor.commit() # Line needed to ensure DB on server is updated
+        connection.commit() # Line needed to ensure DB on server is updated
         print("Event added successfully")
     except:
         print("Event not added")
