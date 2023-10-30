@@ -1,277 +1,335 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/>
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+  <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
 
 
-<!-- jQuery library -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- jQuery library -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Chosen CSS -->
-<link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/>
+  <!-- Chosen CSS -->
+  <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
 
-<!-- Chosen JavaScript library -->
-<script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+  <!-- Chosen JavaScript library -->
+  <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
 
-<!-- Bootstrap CSS (if not already included) -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <!-- Bootstrap CSS (if not already included) -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
-<!-- Bootstrap JavaScript library -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
-
+  <!-- Bootstrap JavaScript library -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 
-<script>
-  $(document).ready(function() {
+  <script>
+    $(document).ready(function () {
       $(".chosen-select").chosen({
-          width: "100%"  // This will make the select box take the full width of its container
+        width: "100%"  // This will make the select box take the full width of its container
       });
-  });
+    });
   </script>
 
-<style>
-body {font-family: Arial, Helvetica, sans-serif;}
-* {box-sizing: border-box;}
-
-/* Button used to open the contact form - fixed at the bottom of the page */
-/* Updated styles for the .open-button class */
-.open-button {
-  color: #000000; /* Typical link color */
-  background-color: transparent; /* No background */
-  padding: 0; /* Remove padding */
-  border: none; /* No border */
-  cursor: pointer; /* Cursor style */
-  text-decoration: underline; /* Underline to indicate clickability */
-  display: inline; /* Inline element, not block */
-  font-size: inherit; /* Inherit font size from parent */
-  position: fixed; /* Keep it positioned */
-  bottom: 23px; /* Position from bottom */
-  right: 28px; /* Position from right */
-  z-index: 10;
-  border-radius: 15px;
-}
-
-
-/* The popup form - hidden by default */
-.form-popup {
-  display: none;
-  position: fixed; /* unchanged, position it relative to the viewport */
-  bottom: 20%;  /* adjust as needed */
-  right: 20%;   /* adjust as needed */
-  border: 3px solid #f1f1f1;
-  z-index: 9999; /* high value to ensure it's on top of other elements */
-  width: 250px;  /* width of the popup */
-  height: 100px; /* height of the popup */
-  border-radius: 15px; /* <--- Add this line to round the corners */
-}
-
-
-/* Add styles to the form container */
-.form-container {
-  max-width: 480px;  /* max-width less than or equal to width of form-popup */
-  padding: 10px;
-  background-color: white;
-  border-radius: 15px;
-}
-
-
-/* Full-width input fields */
-.form-container input[type=text], .form-container input[type=password] {
-  width: 100%;
-  padding: 15px;
-  margin: 5px 0 22px 0;
-  border: none;
-  background: #f1f1f1;
-  border-radius: 15px;
-}
-
-/* When the inputs get focus, do something */
-.form-container input[type=text]:focus, .form-container input[type=password]:focus {
-  background-color: #ddd;
-  outline: none;
-  border-radius: 15px;
-}
-
-/* Set a style for the submit/login button */
-.form-container .btn {
-  background-color: #04AA6D;
-  color: #F5F5F5;
-  padding: 16px 20px;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-  margin-bottom:10px;
-  opacity: 0.8;
-  border-radius: 15px;
-  
-}
-
-/* Add a red background color to the cancel button */
-.form-container .cancel {
-  background-color: red;
-  margin-top: 10px;
-}
-
-/* Add some hover effects to buttons */
-.form-container .btn:hover, .open-button:hover {
-  opacity: 1;
-}
-/* Adjust the size of the submit button */
-  .form-container input[type=submit] {
-    width: 100%; /* Make the button fill the container */
-    padding: 16px 20px; /* Increase padding */
-    margin-top: 10px; /* Add some margin at the top */
-    background-color: #5078A9; /* Background color */
-    color: white; /* Text color */
-    border: none; /* Remove border */
-    cursor: pointer; /* Cursor style */
-    opacity: 0.8; /* Add some opacity */
-    border-radius: 15px;
-  }
-
-  /* Add some hover effects to submit button */
-  .form-container input[type=submit]:hover {
-    opacity: 1; /* Full opacity on hover */
-    border-radius: 15px;
-  }
-
-  /* Style adjustments for the select element */
- .chosen-select {
-    width: 100%; /* Ensure width is 100% */
-    padding: 20px; /* Increase padding to increase height */
-    margin: 5px 0 22px 0; /* Consistent margin with other input elements */
-    border: 1px solid #ccc; /* Border to match other input elements */
-    border-radius: 15px;
-  }
-</style>
-</head>
-<body style="margin: 0; height: 100vh; overflow: scroll;">
-
-                        <div style="width: 100%; height: 100%; position: relative; background: #F5F5F5">
-                            <div style="height: 672px; left: 286px; top: 193px; position: absolute; flex-direction: column; justify-content: flex-end; align-items: center; gap: 40px; display: inline-flex">
-                                <div style="height: 68.02px; padding-top: 29.02px; padding-right: 834.86px; justify-content: flex-start; align-items: center; display: inline-flex">
-                                    <div style="width: 300px; height: 41px; color: #484848; font-size: 32px; font-family: Sora; font-weight: 800; line-height: 36px; word-wrap: break-word; margin-top: -285px;">Welcome {{ name }}!</div>
-                                </div>
-                       <div style="align-self: stretch; width: 611.33px; padding: 0 8px; display: flex; flex-direction: column; align-items: flex-end;">
-
-    <!-- Legal name section -->
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%; height: auto; border-bottom: 1px #F5F5F5 solid; padding: 14px 0;">
-      <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start;">
-          <div style="color: #222222; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 20px;">Legal name</div>
-          <div style="color: #717171; font-size: 14px; font-family: Roboto; font-weight: 400; line-height: 18px; margin-top: 5px;">{{ name }}</div>
-      </div>
-      <div style="cursor: pointer;" onclick="toggleNameEditForm()">
-          <span style="color: #222222; font-size: 14px; font-family: Roboto; font-weight: 600; text-decoration: underline; line-height: 20.02px;">Edit</span>
-      </div>
-  </div>
-  
-
-    <!-- Inline Form for updating the name -->
-    <div id="nameEditForm" style="display: none; width: 100%; padding: 10px 0; border-bottom: 1px #F5F5F5 solid;">
-        <form action="/userprofile" method="post">
-            <label for="name">Enter your name:</label>
-            <input type="text" id="name" name="name">
-            <input type="submit" value="Update Name">
-        </form>
-    </div>
-
-    <!-- Email address section -->
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%; height: auto; border-bottom: 1px #F5F5F5 solid; padding: 14px 0;">
-      <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start;">
-          <div style="color: #222222; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 20px;">Email address</div>
-          <div style="color: #717171; font-size: 13px; font-family: Roboto; font-weight: 400; line-height: 18px; margin-top: 5px;">JaneDoe@gmail.com</div>
-      </div>
-      <div style="cursor: pointer;">
-          <span style="color: #222222; font-size: 14px; font-family: Roboto; font-weight: 600; text-decoration: underline; line-height: 20.02px;">Edit</span>
-      </div>
-  </div>
-  
-
-<!-- JavaScript to toggle the name edit form visibility -->
-<script>
-    function toggleNameEditForm() {
-        const formDiv = document.getElementById('nameEditForm');
-        if (formDiv.style.display === 'none') {
-            formDiv.style.display = 'block';
-        } else {
-            formDiv.style.display = 'none';
-        }
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
     }
-</script>
 
-<!-- Phone number section -->
-<div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%; height: auto; border-bottom: 1px #F5F5F5 solid; padding: 14px 0;">
-  <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start;">
-      <div style="color: #222222; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 20px;">Phone number</div>
-      <div style="color: #717171; font-size: 14px; font-family: Roboto; font-weight: 400; line-height: 18px; margin-top: 5px;">123-345-6980</div>
-  </div>
-  <div style="cursor: pointer;">
-      <span style="color: #222222; font-size: 14px; font-family: Roboto; font-weight: 600; text-decoration: underline; line-height: 20.02px;">Add</span>
-  </div>
-</div>
+    * {
+      box-sizing: border-box;
+    }
+
+    /* Full-width input fields */
+    .form-container input[type=text],
+    .form-container input[type=password] {
+      width: 100%;
+      padding: 15px;
+      margin: 5px 0 22px 0;
+      border: none;
+      background: #f1f1f1;
+      border-radius: 15px;
+    }
+
+    /* When the inputs get focus, do something */
+    .form-container input[type=text]:focus,
+    .form-container input[type=password]:focus {
+      background-color: #ddd;
+      outline: none;
+      border-radius: 15px;
+    }
 
 
-                    
-                    
-<div style="display: flex; justify-content: space-between; align-items: center; width: 100%; height: 50px; border-bottom: 1px #F5F5F5 solid; padding: 14px 0;">
-  <div style="width: 595.33px; height: 42px; position: relative; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                    <div style="width: 60.90px; height: 21px; color: #222222; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 20px; word-wrap: break-word; margin-top: 10px;">Tags</div>
-                  
-                          <!-- Filters form wrapped inside a collapse div -->
-                          <!-- Button to open the filters form -->
-                        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#filtersCollapse">Show Filters</button>
 
-                        <div class="collapse" id="filtersCollapse">
-                          <form method="post">
-                              <!-- You can add your filters form fields here -->
-                              <div class="form-group">
-                                  <label for="filter">Select Filters:</label>
-                                  <select data-placeholder="Select Filters..." multiple class="chosen-select" id="filter" name="filters[]">
-                                      <option value="Filter 1">Filter 1</option>
-                                      <option value="Filter 2">Filter 2</option>
-                                      <option value="Filter 3">Filter 3</option>
-                                      <option value="Filter 4">Filter 4</option>
-                                  </select>
-                              </div>
-                              <button type="submit" class="btn btn-primary">Apply Filters</button>
-                          </form>
+    /* Add some hover effects to buttons */
+    .form-container .btn:hover,
+    .open-button:hover {
+      opacity: 1;
+    }
+
+    /* Adjust the size of the submit button */
+    .form-container input[type=submit] {
+      width: 100%;
+      /* Make the button fill the container */
+      padding: 16px 20px;
+      /* Increase padding */
+      margin-top: 10px;
+      /* Add some margin at the top */
+      background-color: #5078A9;
+      /* Background color */
+      color: white;
+      /* Text color */
+      border: none;
+      /* Remove border */
+      cursor: pointer;
+      /* Cursor style */
+      opacity: 0.8;
+      /* Add some opacity */
+      border-radius: 15px;
+    }
+
+    /* Add some hover effects to submit button */
+    .form-container input[type=submit]:hover {
+      opacity: 1;
+      /* Full opacity on hover */
+      border-radius: 15px;
+    }
+
+    /* Style adjustments for the select element */
+    .chosen-select {
+      width: 100%;
+      /* Ensure width is 100% */
+      padding: 20px;
+      /* Increase padding to increase height */
+      margin: 5px 0 22px 0;
+      /* Consistent margin with other input elements */
+      border: 1px solid #ccc;
+      /* Border to match other input elements */
+      border-radius: 15px;
+    }
+  </style>
+</head>
+
+       <body style="margin: 0; height: 100vh; overflow: hidden;">
+
+          <div style="width: 100%; height: 100%; position: relative; background: #FFFFFF">
+            <div
+              style="height: 672px; left: 286px; top: -200px; position: absolute; flex-direction: column; justify-content: flex-end; align-items: center; gap: 40px; display: inline-flex">
+              <div
+                style="height: 68.02px; padding-top: 29.02px; padding-right: 834.86px; justify-content: flex-start; align-items: center; display: inline-flex">
+                <div
+                  style="width: 900px; height: 41px; color: #484848; font-size: 32px; font-family: Verdana; font-weight: 800; line-height: 36px; word-wrap: break-word; margin-top: 75px;">
+                  Welcome, {{ name }}!</div>
+              </div>
+              <div
+                style="align-self: stretch; width: 611.33px; padding: 0 8px; display: flex; flex-direction: column; align-items: flex-end;">
+
+                <!-- Legal name section -->
+                <div
+                  style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%; height: auto; border-bottom: 1px #ffffff solid; padding: 14px 0;">
+                  <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start;">
+                    <div style="color: #222222; font-size: 16px; font-family: Verdana; font-weight: 400; line-height: 20px;">
+                      Full name</div>
+                    <div
+                      style="color: #717171; font-size: 14px; font-family: Verdana; font-weight: 400; line-height: 18px; margin-top: 5px;">
+                      {{ name }}</div>
+                  </div>
+                  <div style="cursor: pointer;" onclick="toggleNameEditForm()">
+                    <span
+                      style="color: #222222; font-size: 14px; font-family: Verdana; font-weight: 600; text-decoration: underline; line-height: 20.02px;">Edit</span>
+                  </div>
+                </div>
+
+
+                <!-- Inline Form for updating the name -->
+                <div id="nameEditForm" style="display: none; width: 100%; padding: 10px 0; border-bottom: 1px #FFFFFF solid;">
+                  <form action="/userprofile" method="post">
+                    <label for="name">Enter your name:</label>
+                    <input type="text" id="name" name="name">
+                    <!-- <input type="submit" value="Update Name"> -->
+                  </form>
+                </div>
+
+                <!-- Email address section -->
+                <div
+                  style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%; height: auto; border-bottom: 1px #FFFFFF solid; padding: 14px 0;">
+                  <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start;">
+                    <div style="color: #222222; font-size: 16px; font-family: Verdana; font-weight: 400; line-height: 20px;">
+                      Email address</div>
+                    <div
+                      style="color: #717171; font-size: 13px; font-family: Verdana; font-weight: 400; line-height: 18px; margin-top: 5px;">
+                      {{ email }}</div>
+                  </div>
+                  <div style="cursor: pointer;" onclick="toggleEmailEditForm()">
+                    <span
+                      style="color: #222222; font-size: 14px; font-family: Verdana; font-weight: 600; text-decoration: underline; line-height: 20.02px;">Edit</span>
+                  </div>
+                </div>
+                <!-- Inline Form for updating the name -->
+                <div id="emailEditForm" style="display: none; width: 100%; padding: 10px 0; border-bottom: 1px #FFFFFF solid;">
+                  <form action="/userprofile" method="post">
+                    <label for="email">Enter your email:</label>
+                    <input type="text" id="email" name="email">
+                    <!-- <input type="submit" value="Update Email"> -->
+                  </form>
+                </div>
+
+                <script>
+                  function hideAllForms() {
+                    document.getElementById('nameEditForm').style.display = 'none';
+                    document.getElementById('emailEditForm').style.display = 'none';
+                    document.getElementById('phoneNumberEditForm').style.display = 'none';
+                    document.getElementById('tagEditForm').style.display = 'none';
+                  }
+                </script>
+                <!-- JavaScript to toggle the name edit form visibility -->
+                <script>
+
+                  function toggleNameEditForm() {
+                    hideAllForms();
+                    const formDiv = document.getElementById('nameEditForm');
+                    formDiv.style.display = 'block';
+                  }
+
+                  function toggleEmailEditForm() {
+                    hideAllForms();
+                    const formDiv = document.getElementById('emailEditForm');
+                    formDiv.style.display = 'block';
+                  }
+
+                  function togglePhoneNumberEditForm() {
+                    hideAllForms();
+                    const formDiv = document.getElementById('phoneNumberEditForm');
+                    formDiv.style.display = 'block';
+                  }
+                </script>
+
+                <!-- Phone number section -->
+                <div
+                  style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%; height: auto; border-bottom: 1px #FFFFFF solid; padding: 14px 0;">
+                  <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start;">
+                    <div style="color: #222222; font-size: 16px; font-family: Verdana; font-weight: 400; line-height: 20px;">
+                      Phone number</div>
+                    <div
+                      style="color: #717171; font-size: 14px; font-family: Verdana; font-weight: 400; line-height: 18px; margin-top: 5px;">
+                      {{ phone }}</div>
+                  </div>
+                  <div style="cursor: pointer;" onclick="togglePhoneNumberEditForm()">
+                    <span
+                      style="color: #222222; font-size: 14px; font-family: Verdana; font-weight: 600; text-decoration: underline; line-height: 20.02px;">Edit</span>
+                  </div>
+                </div>
+                <!-- Inline Form for updating the phone number -->
+                <div id="phoneNumberEditForm"
+                  style="display: none; width: 100%; padding: 10px 0; border-bottom: 1px #FFFFFF solid;">
+                  <form action="/userprofile" method="post">
+                    <label for="phone">Enter your phone Number:</label>
+                    <input type="text" id="phone" name="phone">
+                    <!-- <input type="submit" value="Update Phone Number"> -->
+                  </form>
+                </div>
+                <div
+                  style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%; border-bottom: 1px #FFFFFF solid; padding: 14px 0;">
+                  <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start;">
+                    <div style="color: #222222; font-size: 16px; font-family: Verdana; font-weight: 400; line-height: 20px;">
+                      Tags</div>
+
+                    <div id="tagDisplay"
+                      style="color: #717171; font-size: 14px; font-family: Verdana; font-weight: 400; line-height: 18px; margin-top: 5px;">
+                      Not provided</div>
+
+                    <!-- Filters form wrapped inside the column div -->
+                    <div id="tagEditForm"
+                      style="display: none; width: 100%; padding: 10px 0; border-bottom: 1px #FFFFFF solid;">
+                      <form method="post">
+                        <div class="form-group">
+                          <!-- <label for="filter">Select Tag:</label> -->
+                          <select data-placeholder="Select Tags..." multiple class="chosen-select" id="filter"
+                            name="filters[]" style="width: 100%;" onchange="updateTagDisplay()">
+                            <option value="Filter 1">Tag 1</option>
+                            <option value="Filter 2">Tag 2</option>
+                            <option value="Filter 3">Tag 3</option>
+                            <option value="Filter 4">Tag 4</option>
+                          </select>
                         </div>
+                        <!-- <button type="submit" class="btn btn-primary" onclick="applyFilters()">Apply Filters</button> -->
 
 
 
-                    <div style="width: 84.95px; height: 18px; color: #717171; font-size: 14px; font-family: Roboto; font-weight: 400; line-height: 18px; word-wrap: break-word">Not provided</div>
+                      </form>
                     </div>
-                    </div>
-                   
-                    </div>
-                    </div>
-                    </div>
+                  </div>
+
+                  <!-- Edit link to show the tags -->
+                  <div style="cursor: pointer;" onclick="toggleTagEditForm()">
+                    <span
+                      style="color: #222222; font-size: 14px; font-family: Verdana; font-weight: 600; text-decoration: underline; line-height: 20.02px;">Edit</span>
+                  </div>
+                </div>
+
+                <script>
+                  function applyFilters() {
+                    // Update the tag display
+                    updateTagDisplay();
+
+                    // Hide the tag edit form
+                    // const formDiv = document.getElementById('tagEditForm');
+                    // formDiv.style.display = 'none';
+                  }
+
+                  function toggleTagEditForm() {
+                    hideAllForms();
+                    const formDiv = document.getElementById('tagEditForm');
+                    formDiv.style.display = 'block';
+                  }
+
+
+                  function updateTagDisplay() {
+                    const tagSelect = document.getElementById('filter');
+                    const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.text).join(', ');
+
+                    const displayElement = document.getElementById('tagDisplay');
+
+                    if (selectedTags.length) {
+                      displayElement.innerText = selectedTags;
+                    } else {
+                      displayElement.innerText = 'Not provided';
+                    }
+                  }
+                </script>
+              </div>
+            </div>
+          </div>
+          </div>
+          </div>
+          </div>
+          </div>
+          </div>
+            <div style="width: 150px; height: 954px; left: 0px; top: 40px; position: absolute; background: #5078A9"></div>
+            <div style="left: 25px; top: 100px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-end; gap: 30px; display: inline-flex">
+                <div style="width: 79px; color: white; font-size: 25px; font-family: Verdana; font-weight: 500; word-wrap: break-word">Filters</div>
+                <div style="width: 79px; color: white; font-size: 15px; font-family: Verdana; font-weight: 400; word-wrap: break-word">Faculty</div>
+                <div style="width: 79px; color: white; font-size: 15px; font-family: Verdana; font-weight: 400; word-wrap: break-word">Topics</div>
+                <div style="width: 79px; color: white; font-size: 15px; font-family: Verdana; font-weight: 400; word-wrap: break-word">Price</div>
+            </div>
+            <div style="width: 1440px; height: 60px; left: 0px; top: 0px; position: absolute; background: #012A5C"></div>
+            <div style="width: 1316px; height: 52px; left: 53px; top: 9px; position: absolute">
+              <div style="width: 165px; height: 51px; left: 0px; top: 1px; position: absolute; font-size: 30px; font-family: Sora; font-weight: 600; text-transform: capitalize; word-wrap: break-word">
+                <a href="/" style="color: white; text-decoration: none;">Betula</a>
+            </div>
+                      <div style="width: 200px; height: 28px; left: 200px; top: 10px; position: absolute; text-align: right; font-size: 20px; font-family: Verdana; font-weight: 500; word-wrap: break-word">
+                    <a href="/dashboard" style="color: white; text-decoration: none;">Dashboard</a>
+                </div>
+                
+                <div style="width: 192px; height: 28px; left: 571px; top: 10px; position: absolute; text-align: center; color: white; font-size: 20px; font-family: Verdana; font-weight: 500; word-wrap: break-word">Recommended</div>
+                <div style="width: 155px; height: 28px; left: 851px; top: 10px; position: absolute; text-align: center; color: white; font-size: 20px; font-family: Verdana; font-weight: 500; word-wrap: break-word">My Events</div>
+                <img style="width: 49px; height: 49px; left: 1267px; top: 0px; position: absolute" src="https://via.placeholder.com/49x49" />
             </div>
         </div>
-    </div>
-    <div style="width: 150px; height: 954px; left: 0px; top: 40px; position: absolute; background: #5078A9"></div>
-    <div style="left: 25px; top: 100px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-end; gap: 30px; display: inline-flex">
-        <div style="width: 79px; color: white; font-size: 25px; font-family: Actor; font-weight: 500; word-wrap: break-word">Filters</div>
-        <div style="width: 79px; color: white; font-size: 15px; font-family: Actor; font-weight: 400; word-wrap: break-word">Faculty</div>
-        <div style="width: 79px; color: white; font-size: 15px; font-family: Actor; font-weight: 400; word-wrap: break-word">Topics</div>
-        <div style="width: 79px; color: white; font-size: 15px; font-family: Actor; font-weight: 400; word-wrap: break-word">Price</div>
-    </div>
-    <div style="width: 1440px; height: 60px; left: 0px; top: 0px; position: absolute; background: #012A5C"></div>
-    <div style="width: 1316px; height: 52px; left: 53px; top: 9px; position: absolute">
-        <div style="width: 165px; height: 51px; left: 0px; top: 1px; position: absolute; color: white; font-size: 30px; font-family: Sora; font-weight: 600; text-transform: capitalize; word-wrap: break-word">Betula</a>
-        <div style="width: 200px; height: 28px; left: 200px; top: 10px; position: absolute; text-align: right; color: white; font-size: 20px; font-family: Sora; font-weight: 500; word-wrap: break-word">Dashboard</div>
-        <div style="width: 192px; height: 28px; left: 571px; top: 10px; position: absolute; text-align: center; color: white; font-size: 20px; font-family: Sora; font-weight: 500; word-wrap: break-word">Recommended</div>
-        <div style="width: 155px; height: 28px; left: 851px; top: 10px; position: absolute; text-align: center; color: white; font-size: 20px; font-family: Sora; font-weight: 500; word-wrap: break-word">My Events</div>
-        <img style="width: 49px; height: 49px; left: 1267px; top: 0px; position: absolute" src="https://via.placeholder.com/49x49" />
-    </div>
-</div>
 
-</body>
+      </body>
 </html> 

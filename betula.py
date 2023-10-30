@@ -85,18 +85,37 @@ class FilterForm(FlaskForm):
 
 @app.route('/userprofile', methods=['GET', 'POST'])
 def userprofile():
-    name = 'Guest'
-    selected_filters = []
+    # Initialize from session or default values
+    session.setdefault('name', 'Guest')
+    session.setdefault('phone', '123-456-7890')
+    session.setdefault('email', 'guest@guest.com')
+    session.setdefault('selected_filters', [])
+
     form = FilterForm()
 
-    # Check if 'filter_form' is submitted (indicating the FilterForm is submitted)
+    # # Check if 'filter_form' is submitted (indicating the FilterForm is submitted)
     if 'filter_form' in request.form and form.validate_on_submit():
-        selected_filters = form.filter.data
-    # Else, check for name updating functionality
-    elif 'name' in request.form:
-        name = request.form.get('name')
+        session['selected_filters'] = form.filter.data
+    # # Else, check for name updating functionality
+    # elif 'name' in request.form:
+    #     session['name'] = request.form.get('name')
+    # elif 'email' in request.form:
+    #     session['email'] = request.form.get('email')
+    # elif 'phone' in request.form:
+    #     session['phone'] = request.form.get('phone')
 
-    return render_template('userprofile.html', name=name, form=form, selected_filters=selected_filters)
+    if request.method == 'POST':
+        if 'filter_form' in request.form and form.validate_on_submit():
+            session['selected_filters'] = request.form.getlist('filters[]')
+        elif 'name' in request.form:
+            session['name'] = request.form.get('name')
+        elif 'email' in request.form:
+            session['email'] = request.form.get('email')
+        elif 'phone' in request.form:
+            session['phone'] = request.form.get('phone')
+
+    return render_template('userprofile.html', name=session['name'], email=session['email'], form=form, phone=session['phone'], selected_filters=session['selected_filters'])
+
 
 
 
