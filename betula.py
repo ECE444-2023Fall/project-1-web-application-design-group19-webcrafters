@@ -1,5 +1,6 @@
 from datetime import datetime
-from flask import Flask, render_template, session, redirect, url_for, flash, request
+from flask import Flask, render_template, session, redirect, url_for, flash, request, Response
+from wtforms.widgets import ListWidget, CheckboxInput
 
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
@@ -7,7 +8,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField
 from wtforms.validators import DataRequired, Email
 from wtforms import SelectMultipleField, widgets
-
+import csv
+from io import StringIO
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
@@ -78,44 +80,50 @@ def events():
 
 
 
+
 class FilterForm(FlaskForm):
-    filter = SelectMultipleField('Select Filters', choices=[('Filter 1', 'Filter 1'), ('Filter 2', 'Filter 2'), ('Filter 3', 'Filter 3'), ('Filter 4', 'Filter 4')], widget=widgets.ListWidget(prefix_label=False), option_widget=widgets.CheckboxInput())
+    filter = SelectMultipleField('Select Filters', choices=[('Tag 1', 'Tag 1'), ('Tag 2', 'Tag 2'), ('Tag 3', 'Tag 3'), ('Tag 4', 'Tag 4')], widget=ListWidget(prefix_label=False), option_widget=CheckboxInput())
     submit = SubmitField('Apply Filters')  
 
+def save_to_csv():
+    name = session.get('name', 'Guest')
+    email = session.get('email', 'guest@guest.com')
+    phone = session.get('phone', '123-456-7890')
+    tags = session.get('selected_filters', [])
+    output = StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['Name', 'Email', 'Phone', 'Tags'])
+    writer.writerow([name, email, phone, ', '.join(tags)])
+    output.seek(0)
+    return Response(output, mimetype="text/csv", headers={"Content-Disposition":"attachment;filename=profileData.csv"})
+
+@app.route('/saveToCSV', methods=['POST'])
+def save_to_csv_endpoint():
+    data = request.json
+    session['name'] = data.get('name', 'Guest')
+    session['email'] = data.get('email', 'guest@guest.com')
+    session['phone'] = data.get('phone', '123-456-7890')
+    session['selected_filters'] = data.get('tags', [])
+    return save_to_csv()
+
+@app.route('/download_csv', methods=['GET'])
+def download_csv():
+    return save_to_csv()
 
 @app.route('/userprofile', methods=['GET', 'POST'])
 def userprofile():
-    # Initialize from session or default values
     session.setdefault('name', 'Guest')
     session.setdefault('phone', '123-456-7890')
     session.setdefault('email', 'guest@guest.com')
     session.setdefault('selected_filters', [])
-
     form = FilterForm()
+    if request.method == 'POST' and form.validate():
+    # Your code here
 
-    # # Check if 'filter_form' is submitted (indicating the FilterForm is submitted)
-    if 'filter_form' in request.form and form.validate_on_submit():
-        session['selected_filters'] = form.filter.data
-    # # Else, check for name updating functionality
-    # elif 'name' in request.form:
-    #     session['name'] = request.form.get('name')
-    # elif 'email' in request.form:
-    #     session['email'] = request.form.get('email')
-    # elif 'phone' in request.form:
-    #     session['phone'] = request.form.get('phone')
-
-    if request.method == 'POST':
-        if 'filter_form' in request.form and form.validate_on_submit():
+        # This check should be adjusted:
+        if form.validate_on_submit():
             session['selected_filters'] = request.form.getlist('filters[]')
-        elif 'name' in request.form:
-            session['name'] = request.form.get('name')
-        elif 'email' in request.form:
-            session['email'] = request.form.get('email')
-        elif 'phone' in request.form:
-            session['phone'] = request.form.get('phone')
-
+            session['name'] = request.form.get('name', session['name'])
+            session['email'] = request.form.get('email', session['email'])
+            session['phone'] = request.form.get('phone', session['phone'])
     return render_template('userprofile.html', name=session['name'], email=session['email'], form=form, phone=session['phone'], selected_filters=session['selected_filters'])
-
-
-
-
