@@ -173,7 +173,7 @@ def test_posting_required_submission(client):
 
 # Aniqa    
 # Test if user can be accessed from the User_Table in the database
-def testing_adding_new_user_to_database(client):
+def test_user_table_access(client):
     
     user_data = {
         "email" : "test@betula.ca",
