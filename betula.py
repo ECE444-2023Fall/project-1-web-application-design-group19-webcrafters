@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Flask, render_template, session, redirect, url_for, flash, request, Response
+from flask import Flask, render_template, session, redirect, url_for, flash, request, Response, jsonify
 from wtforms.widgets import ListWidget, CheckboxInput
 
 from flask_bootstrap import Bootstrap
@@ -78,6 +78,19 @@ def events():
 
 
 
+@app.route('/print-tags', methods=['POST'])
+def print_tags():
+    data = request.json
+    tags = data.get('tags', [])
+    print('Received tags:', tags)
+    
+    # Convert tags to CSV format
+    csv_data = '"Tags"\n"' + ",".join(tags) + '"'
+    
+    # Create a response with the CSV data
+    response = Response(csv_data, content_type="text/csv")
+    response.headers["Content-Disposition"] = "attachment; filename=tags.csv"
+    return response
 
 
 
@@ -117,13 +130,13 @@ def userprofile():
     session.setdefault('email', 'guest@guest.com')
     session.setdefault('selected_filters', [])
     form = FilterForm()
-    if request.method == 'POST' and form.validate():
-    # Your code here
-
-        # This check should be adjusted:
-        if form.validate_on_submit():
+    if request.method == 'POST':
+        if 'filter_form' in request.form and form.validate_on_submit():
             session['selected_filters'] = request.form.getlist('filters[]')
-            session['name'] = request.form.get('name', session['name'])
-            session['email'] = request.form.get('email', session['email'])
-            session['phone'] = request.form.get('phone', session['phone'])
+        elif 'name' in request.form:
+            session['name'] = request.form.get('name')
+        elif 'email' in request.form:
+            session['email'] = request.form.get('email')
+        elif 'phone' in request.form:
+            session['phone'] = request.form.get('phone')
     return render_template('userprofile.html', name=session['name'], email=session['email'], form=form, phone=session['phone'], selected_filters=session['selected_filters'])

@@ -246,7 +246,7 @@
                       <option value="Tag 4">Tag 4</option>
                     </select>
                   </div>
-                  <!-- <button type="submit" class="btn btn-primary" onclick="applyFilters()">Apply Filters</button> -->
+                  <button type="submit" class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
                 </form>
               </div>
             </div>
@@ -329,9 +329,36 @@
         formDiv.style.display = 'block';
       }
       function applyFilters() {
-        // Update the tag display
-        updateTagDisplay();
-      }
+    // Update the tag display
+    updateTagDisplay();
+    
+    // Fetch the selected tags
+    const tagSelect = document.getElementById('filter');
+    const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.text);
+    
+    // Send the tags to the server
+    fetch('/print-tags', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({tags: selectedTags}),
+    })
+    .then(response => response.blob())
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = 'tags.csv';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+    });
+}
+
+
+
 
       function toggleTagEditForm() {
         hideAllForms();
@@ -357,7 +384,7 @@
       // This function saves the selected tags to localStorage
       function saveSelectedTags() {
         const tagSelect = document.getElementById('filter');
-        const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.value);
+        const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.text);
         localStorage.setItem('selectedTags', JSON.stringify(selectedTags));
       }
 
@@ -397,71 +424,12 @@
         updateTagDisplay();
       }
 
-      // Save data to json
-      // function collectProfileData() {
-      //   // Grab the values
-      //   const nameValue = document.getElementById('name').value;
-      //   const emailValue = document.getElementById('email').value;
-      //   const phoneValue = document.getElementById('phone').value;
-
-      //   // Check for selected tags, if implemented
-      //   const tagSelect = document.getElementById('filter');
-      //   const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.text);
-
-      //   // Construct the JSON object
-      //   const profileData = {
-      //     name: nameValue,
-      //     email: emailValue,
-      //     phone: phoneValue,
-      //     tags: selectedTags
-      //   };
-
-      //   // Log to console (for debugging purposes, you can remove this later)
-      //   console.log(profileData);
-
-      //   // Return the JSON object, in case you want to do something with it
-      //   return profileData;
-      // }
-
-//       function collectProfileData() {
-//     const name = document.getElementById('name').value;
-//     const email = document.getElementById('email').value;
-//     const phone = document.getElementById('phone').value;
-
-//     const profileData = {
-//         name: name,
-//         email: email,
-//         phone: phone
-//     };
-
-//     // Send this data to the server
-//     fetch('/saveToCSV', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify(profileData),
-//     })
-//     .then(response => response.blob())
-//     .then(blob => {
-//         // Create a downloadable link for the CSV
-//         const url = window.URL.createObjectURL(blob);
-//         const a = document.createElement('a');
-//         a.style.display = 'none';
-//         a.href = url;
-//         a.download = 'profileData.csv';
-//         document.body.appendChild(a);
-//         a.click();
-//         window.URL.revokeObjectURL(url);
-//     });
-// }
-
 function collectProfileData() {
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const phone = document.getElementById('phone').value;
     const tagSelect = document.getElementById('filter');  // Assuming the filter select has the id 'filter'
-    const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.value);  // get the values of selected tags
+    const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.text);  // get the values of selected tags
 
     const profileData = {
         name: name,
@@ -469,7 +437,7 @@ function collectProfileData() {
         phone: phone,
         tags: selectedTags
     };
-
+    console.log(profileData); 
     // Send this data to the server
     fetch('/saveToCSV', {
         method: 'POST',
