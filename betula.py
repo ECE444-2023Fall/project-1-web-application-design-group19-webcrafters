@@ -7,12 +7,38 @@ from flask_wtf import FlaskForm
 from wtforms import widgets, StringField, SubmitField, SelectField, SelectMultipleField, DateField, PasswordField, TextAreaField, TimeField
 from wtforms.validators import DataRequired, Email
 
+from pypyodbc_main import pypyodbc as odbc
+#import pypyodbc as odbc
+from credentials import db_username, db_password
+
+import logging
+from logging import handlers
+
+import pandas as pd
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger()
+
+#Event class for easy access of event information when rendering
+class Event():
+    def __init__(self, name, organization, where, when, tags, description, contact):
+        self.name = name
+        self.organization = organization
+        self.where = where
+        self.when = when
+        self.tags = tags
+        self.description = description
+        self.contact = contact
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
+
+app.add_url_rule('/custom_static/images/user.png', endpoint='custom_static', view_func=app.send_static_file)
 
 bootstrap = Bootstrap(app)
 moment = Moment(app)
 
+#Session Variables for Use in Backend Functions
 
 class LoginForm(FlaskForm):
     email = StringField('Email Address', validators=[DataRequired(), Email()])
@@ -59,6 +85,8 @@ def login():
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
+        session["email"] = email
+        print("Got email!")
         return redirect(url_for('dashboard'))
     return render_template('login.html', form=form, email=email, password=password)
 
@@ -77,18 +105,125 @@ def join():
         password = form.password.data
         rePassword = form.rePassword.data
         accountType = form.accountType.data
-        return redirect(url_for('dashboard'))
+    
+    # Link form to User_Data Table in DB
+    connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+    connection = odbc.connect(connection_string)
+
+    create_user_query = f'''
+                        INSERT INTO USER_DATA (User_Email, Username, Password, Account_Type)
+                        VALUES ('{email}', '{username}', '{password}', '{accountType}')
+                        '''
+    
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute(create_user_query)
+        cursor.commit() # Line needed to ensure DB on server is updated
+        print("User added successfully")
+    except:
+        print("User not added")
+    
+    cursor.close()
+    connection.close()
+
+    print("Cursors and DB Closed")
+
     return render_template('join.html', form=form, email=email, username=username, password=password, rePassword=rePassword, accountType=accountType)
 
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
-    return render_template('dashboard.html')
+    
+    # Link form to User_Data Table in DB
+    connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+    connection = odbc.connect(connection_string)
 
+    #Get the user from the USER_DATA table
+    get_user_table_data_query = f"SELECT * FROM USER_DATA WHERE User_Email = \'{session['email']}\'"
+    select_user_cursor = connection.cursor()
+    select_user_cursor.execute(get_user_table_data_query)
+    dataset = select_user_cursor.fetchall()
+
+    # Get Column Names
+    headers = [column[0] for column in select_user_cursor.description]
+    user_df = pd.DataFrame(columns=headers, data=dataset)
+    
+    #Get the user's tags and stringency
+    userTags = None
+
+    try:    
+        userTags = user_df['user_tags'].values[0]
+    except:
+        print('User was not found')
+
+    if userTags is not None:
+        userTags = userTags.split(',')
+        userStringency = user_df['recs_must_match'].values[0]
+    else:
+        userStringency = 0
+
+
+    #Now that we have the user information, let's grab the events
+    eventsList = []
+    get_user_table_data_query = f"SELECT * FROM EVENT_DATA"
+    select_user_cursor.execute(get_user_table_data_query)
+    dataset = select_user_cursor.fetchall()
+
+    # Get Column Names and match dataframe
+    headers = [column[0] for column in select_user_cursor.description]
+    events_df = pd.DataFrame(columns=headers, data=dataset)
+    
+    #Randomize our database
+    events_df = events_df.sample(frac=1)
+
+    #Maximum amount of recommendations to give to user at a time
+    MAX_RECOMMENDATIONS = 10
+
+    #Iterate through events and add matches matches
+    for index, row in events_df.iterrows():
+        #If we are stringent, only add events that match with our tags
+        if (userStringency):
+            tagMatch = False
+
+            try:
+                #Check if it has tags
+                rowTags = row['tags'].split(',')
+            except:
+                #Otherwise skip!
+                continue
+
+            for tag in rowTags:
+                if tag in userTags:
+                    tagMatch = True
+
+            if tagMatch:
+                
+                where = row['event_location_common_name'] + ", " + row['event_street_address'] + ", " + row['event_city']
+                when = row['event_date'] + " | " + row['event_start_time'] + " to " + row['event_end_time']
+
+                currEvent = Event(name = row['event_name'], organization = row['organization_name'], where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'])
+                eventsList.append(currEvent)
+        #Otherwise, add any event!
+        else:
+            where = row['event_location_common_name'] + ", " + row['event_street_address'] + ", " + row['event_city']
+            when = row['event_date'] + " | " + row['event_start_time'] + " to " + row['event_end_time']
+
+            currEvent = Event(name = row['event_name'], organization = row['organization_name'], where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'])
+            eventsList.append(currEvent)
+
+        #If we have reached the maximum amount of recommendations, break out of loop
+        if (len(eventsList) == MAX_RECOMMENDATIONS):
+            break
+
+    select_user_cursor.close()
+    connection.close()
+
+    return render_template('dashboard.html', events = eventsList)
 
 @app.route('/eventsdemo', methods=['GET', 'POST'])
 def events():
-    events = [['Event Name', 'Host Name' , "Social, Sports", "Description"], ['Event Name 2', 'Host Name 2' , "Free, Food", "Description 2"], ['Event Name 3', 'Host Name 3' , "Professional", "Description 3"]]
+    events = [['Event Name', 'Host Name', 'UofT', 'October 31st', "Social, Sports", "Description", "sean.pourgoutzidis@mail.utoronto.ca"], ['Event Name 2', 'Host Name 2' , "UofT", "October 31st", "Free, Food", "Description 2", "sean.pourgoutzidis@mail.utoronto.ca"], ['Event Name 3', 'Host Name 3' , "UofT", "October 31st", "Professional", "Description 3", "sean.pourgoutzidis@mail.utoronto.ca"]]
     return render_template('event.html', events=events)
 
 
