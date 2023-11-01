@@ -1,11 +1,15 @@
 from datetime import datetime
-from flask import Flask, render_template, session, redirect, url_for, flash
+from flask import Flask, render_template, session, redirect, url_for, flash, request, Response, jsonify
+from wtforms.widgets import ListWidget, CheckboxInput
 
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_wtf import FlaskForm
 from wtforms import widgets, StringField, SubmitField, SelectField, SelectMultipleField, DateField, PasswordField, TextAreaField, TimeField
 from wtforms.validators import DataRequired, Email
+from wtforms import SelectMultipleField, widgets
+import csv
+from io import StringIO
 
 from pypyodbc_main import pypyodbc as odbc
 #import pypyodbc as odbc
@@ -227,6 +231,71 @@ def events():
     return render_template('event.html', events=events)
 
 
+
+
+@app.route('/print-tags', methods=['POST'])
+def print_tags():
+    data = request.json
+    tags = data.get('tags', [])
+    print('Received tags:', tags)
+    
+    # Convert tags to CSV format
+    csv_data = '"Tags"\n"' + ",".join(tags) + '"'
+    
+    # Create a response with the CSV data
+    response = Response(csv_data, content_type="text/csv")
+    response.headers["Content-Disposition"] = "attachment; filename=tags.csv"
+    return response
+
+
+
+class FilterForm(FlaskForm):
+    filter = SelectMultipleField('Select Filters', choices=[('Tag 1', 'Tag 1'), ('Tag 2', 'Tag 2'), ('Tag 3', 'Tag 3'), ('Tag 4', 'Tag 4')], widget=ListWidget(prefix_label=False), option_widget=CheckboxInput())
+    submit = SubmitField('Apply Filters')  
+
+def save_to_csv():
+    name = session.get('name', 'Guest')
+    email = session.get('email', 'guest@guest.com')
+    phone = session.get('phone', '123-456-7890')
+    tags = session.get('selected_filters', [])
+    output = StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['Name', 'Email', 'Phone', 'Tags'])
+    writer.writerow([name, email, phone, ', '.join(tags)])
+    output.seek(0)
+    return Response(output, mimetype="text/csv", headers={"Content-Disposition":"attachment;filename=profileData.csv"})
+
+@app.route('/saveToCSV', methods=['POST'])
+def save_to_csv_endpoint():
+    data = request.json
+    session['name'] = data.get('name', 'Guest')
+    session['email'] = data.get('email', 'guest@guest.com')
+    session['phone'] = data.get('phone', '123-456-7890')
+    session['selected_filters'] = data.get('tags', [])
+    return save_to_csv()
+
+@app.route('/download_csv', methods=['GET'])
+def download_csv():
+    return save_to_csv()
+
+@app.route('/userprofile', methods=['GET', 'POST'])
+def userprofile():
+    session.setdefault('name', 'Guest')
+    session.setdefault('phone', '123-456-7890')
+    session.setdefault('email', 'guest@guest.com')
+    session.setdefault('selected_filters', [])
+    form = FilterForm()
+    if request.method == 'POST':
+        if 'filter_form' in request.form and form.validate_on_submit():
+            session['selected_filters'] = request.form.getlist('filters[]')
+        elif 'name' in request.form:
+            session['name'] = request.form.get('name')
+        elif 'email' in request.form:
+            session['email'] = request.form.get('email')
+        elif 'phone' in request.form:
+            session['phone'] = request.form.get('phone')
+    return render_template('userprofile.html', name=session['name'], email=session['email'], form=form, phone=session['phone'], selected_filters=session['selected_filters'])
+
 @app.route('/posting', methods=['GET', 'POST'])
 def posting():
     organization = None
@@ -262,3 +331,4 @@ def posting():
         cost = form.cost.data
         tags = form.tags.data
     return render_template('posting.html', form=form)
+
