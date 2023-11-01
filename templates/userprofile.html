@@ -1,3 +1,9 @@
+{% extends "base2.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Betula{% endblock %}
+
+{% block page_content %}
 <!DOCTYPE html>
 <html>
 
@@ -267,7 +273,7 @@
     </div>
     </div>
     </div>
-    <div style="width: 150px; height: 954px; left: 0px; top: 40px; position: absolute; background: #5078A9"></div>
+    <!-- <div style="width: 150px; height: 954px; left: 0px; top: 40px; position: absolute; background: #5078A9"></div>
     <div
       style="left: 25px; top: 100px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-end; gap: 30px; display: inline-flex">
       <div
@@ -303,7 +309,7 @@
       <img style="width: 49px; height: 49px; left: 1267px; top: 0px; position: absolute"
         src="https://via.placeholder.com/49x49" />
     </div>
-    </div>
+    </div> -->
     <script>
       function hideAllForms() {
         document.getElementById('nameEditForm').style.display = 'none';
@@ -468,3 +474,4 @@ function collectProfileData() {
   </body>
 
 </html>
+{% endblock %}
