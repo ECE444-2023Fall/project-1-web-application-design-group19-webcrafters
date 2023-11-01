@@ -1,0 +1,604 @@
+{% extends "base2.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Betula{% endblock %}
+
+{% block page_content %}
+<div style="width: 100%; height: auto; position: relative; background: #F5F5F5; min-height: 100%">
+    <!--<div style="width: 345px; height: 228px; left: 668px; top: 659px; position: absolute; background: #D9D9D9; border-radius: 30px"></div>-->
+    <!--<div style="width: 345px; height: 228px; left: 1074px; top: 351px; position: absolute; background: #D9D9D9; border-radius: 30px"></div>-->
+    <div style="left: 240px; top: 113px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex">
+        <div style="color: black; font-size: 24px; font-family: Roboto; font-weight: 400; text-transform: uppercase; letter-spacing: 2.40px; word-wrap: break-word">Search</div>
+        <style>
+
+        /* Style for the dropdown content */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 300px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        /* Style for the dropdown options */
+        .dropdown-content a {
+            padding: 12px 16px;
+            display: block;
+            text-decoration: none;
+            color: #333;
+        }
+
+        /* Change the background color of dropdown options when hovered */
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        /* Set sizing for search bar */
+        .searching input{
+            width: 300px;
+            height: 40px;
+            font-size: 16px;
+        }
+    </style>
+
+    <!-- Text input box -->
+    <div id = "search" class = "searching">
+        <input type="text" id="searchTextInput" oninput="searchDropdown()" onblur="onBlur()" placeholder="Event Name">
+
+        <!-- Dropdown content -->
+        <div id="searchDrop" class="dropdown-content">
+            <!-- Can choose which events to show add links to top searchs here -->
+            <a href="#">Option 1</a>
+            <a href="#">Option 2</a>
+            <a href="#">Option 3</a>
+        </div>
+    </div>
+
+    <!-- Functions for the search bar -->
+    <script>
+    function searchDropdown() 
+    {
+        // Get the text input and the dropdown content elements
+        var input = document.getElementById("searchTextInput");
+        var dropdown = document.getElementById("searchDrop");
+
+        // Show the dropdown if there is text in the input
+        if (input.value.length > 0) {
+            dropdown.style.display = "block";
+        } else{
+            dropdown.style.display = "none";
+        }
+    }
+
+    function onBlur()
+    {
+        // If the search bar loses focus, hide the drop down menu
+        var dropdown = document.getElementById("searchDrop");
+        dropdown.style.display = "none";
+    }
+    </script>
+
+        <!--<div style="align-self: stretch; height: 167px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
+            <div style="width: 628px; padding: 8px; background: white; border-radius: 4px; border: 2px #73A2FF solid; justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
+                <div style="flex: 1 1 0; align-self: stretch; color: #404040; font-size: 24px; font-family: Roboto; font-weight: 400; word-wrap: break-word">Dropdown field data</div>
+                <div style="width: 10px; height: 10px; position: relative">
+                    <div style="width: 8px; height: 4px; left: 1px; top: 7px; position: absolute; border: 1px #404040 solid"></div>
+                </div>
+            </div>
+            <div style="width: 628px; padding-left: 8px; padding-right: 8px; padding-top: 12px; padding-bottom: 12px; background: white; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15); border-radius: 4px; border: 1px #DBDBDB solid; justify-content: flex-start; align-items: flex-start; gap: 8px; display: inline-flex">
+                <div style="flex: 1 1 0; align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 16px; display: inline-flex">
+                    <div style="align-self: stretch; color: #404040; font-size: 18px; font-family: Roboto; font-weight: 400; word-wrap: break-word">Option data</div>
+                    <div style="align-self: stretch; color: #404040; font-size: 18px; font-family: Roboto; font-weight: 400; word-wrap: break-word">Option data</div>
+                    <div style="align-self: stretch; color: #404040; font-size: 18px; font-family: Roboto; font-weight: 400; word-wrap: break-word">Option data</div>
+                </div>
+                <div style="width: 4px; height: 40px; background: #DBDBDB; border-radius: 2px"></div>
+            </div>
+        </div>-->
+    </div>
+    <!--<div style="width: 345px; height: 228px; left: 262px; top: 351px; position: absolute; background: #D9D9D9; border-radius: 30px"></div>-->
+    <!--<div style="width: 345px; height: 228px; left: 668px; top: 351px; position: absolute; background: #D9D9D9; border-radius: 30px"></div>-->
+    
+    <!-- Show Events -->
+    
+    <table style="display: flex; justify-content: center; align-items: center; height: 100%; padding-top: 250px; padding-left: 30px">
+
+        {% for event in events %}
+        <td style="display: flex; justify-content: center; align-items: center; height: 100%; margin-bottom: 30px">
+            <div style="width: 623px; height: 508px; position: relative; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 30px; overflow: hidden">
+                <div style="width: 623px; height: 98px; left: 0px; top: 0px; position: absolute; background: #061945"></div>
+                <div style="width: 356px; height: 39px; left: 15px; top: 27px; position: absolute; color: white; font-size: 28px; font-family: Inter; font-weight: 400; word-wrap: break-word">{{ event.name }}</div>
+                <div style="width: 570px; height: 60px; padding: 10px; left: 21px; top: 425px; position: absolute; background: #061945; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
+                  <div style="width: 96px; height: 29px; color: white; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">Register</div>
+                </div>
+                <div style="height: 52px; padding-left: 6px; padding-right: 8px; left: 380px; top: 7px; position: absolute; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; overflow: hidden; justify-content: center; align-items: center; display: inline-flex">
+                  <div style="width: 198px; height: 52px; color: #061945; font-size: 16px; font-family: Inter; font-weight: 400; word-wrap: break-word">Hosted by: {{ event.organization }}</div>
+                </div>
+                <div style="height: 136px; padding-top: 11px; padding-bottom: 10px; padding-left: 9px; padding-right: 27px; left: 21px; top: 236px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; overflow: hidden; justify-content: flex-start; align-items: center; display: inline-flex">
+                  <div style="width: 535px; height: 115px; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Description: {{ event.description}} </div>
+                </div>
+                <div style="padding-top: 3px; padding-bottom: 6px; padding-left: 12px; padding-right: 6px; left: 21px; top: 188px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; overflow: hidden; justify-content: flex-end; align-items: center; display: inline-flex">
+                  <div style="width: 553px; height: 24px; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Tags: {{ event.tags }}</div>
+                </div>
+                <div style="width: 570px; height: 26px; left: 21px; top: 385px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50)"></div>
+                <div style="width: 545px; height: 25px; left: 32px; top: 387px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Contact: {{ event.contact }}</div>
+                <div style="width: 571px; height: 25px; left: 21px; top: 108px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
+                <div style="width: 551px; height: 24px; left: 33px; top: 109px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Where: {{ event.where }}</div>
+                <div style="width: 571px; height: 24px; left: 21px; top: 148px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
+                <div style="width: 551px; height: 25px; left: 33px; top: 148px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">When: {{ event.when }}</div>
+                <div style="width: 212px; height: 26px; left: 380px; top: 64px; position: absolute; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
+                <div style="width: 184px; height: 23px; left: 392px; top: 67px; position: absolute; text-align: center; color: #061945; font-size: 16px; font-family: Inter; font-weight: 400; word-wrap: break-word">Follow</div>
+            </div>
+        </td>
+        {% endfor %}
+    </table>
+
+
+    <!-- End of Showing Events-->
+
+    <!-- <div style="width: 1440px; height: 70px; left: 0px; top: 0px; position: absolute; background: #012A5C"></div>
+    <div style="width: 223px; height: 954px; left: 0px; top: 70px; position: absolute; background: #5078A9"></div>
+    <div style="width: 1316px; height: 52px; left: 53px; top: 9px; position: absolute">
+        <div style="width: 165px; height: 51px; left: 0px; top: 1px; position: absolute; color: white; font-size: 40px; font-family: Sora; font-weight: 600; text-transform: capitalize; word-wrap: break-word">Betula</div>
+    -->    
+        <!-- Shortcuts to Other Pages -->
+        <!-- Style for dashboard text -->
+        <!-- <style>
+
+            .dashboardShort 
+            {
+                width: 146px; 
+                height: 28px; 
+                left: 337px; 
+                top: 12px; 
+                position: absolute; 
+                text-align: center; 
+                color: white; 
+                font-size: 30px; 
+                font-family: Alegreya Sans; 
+                font-weight: 500; 
+                word-wrap: break-word
+            }
+
+            .dashboardShort a 
+            {
+                color: white;
+                text-decoration: none; /* Remove underlines from the link */
+            }
+
+        </style>
+
+        <div id="dashShort" class="dashboardShort" onclick="dashboard()">
+            <a href="#">Dashboard</a>
+        </div> -->
+        
+        <!-- Functions for dashboard text -->
+        <!-- <script>
+            // Define the function to be called
+            function dashboard() 
+            {
+                alert("Go to dashboard");
+            }
+        </script> -->
+
+        <!-- Style for recommended text -->
+        <!-- <style>
+        .recommendedShort 
+        {
+            width: 192px; 
+            height: 28px; 
+            left: 571px; 
+            top: 11px; 
+            position: absolute; 
+            text-align: center; 
+            color: white; 
+            font-size: 30px; 
+            font-family: Alegreya Sans; 
+            font-weight: 500; 
+            word-wrap: break-word
+        }
+
+        .recommendedShort a 
+        {
+            color: white;
+            text-decoration: none; /* Remove underlines from the link */
+        }
+        </style>
+
+        <div id="recShort" class="recommendedShort" onclick="recommneded()">
+            <a href="#">Recommended</a>
+        </div> -->
+
+        <!-- Functions for recommended text -->
+        <!-- <script>
+            // Define the function to be called
+            function recommneded() 
+            {
+                alert("Show recommended");
+            }
+        </script> -->
+
+        <!-- Style for events text -->
+        <!-- <style>
+            .myEventsShort 
+            {
+                width: 155px; 
+                height: 28px; 
+                left: 851px; 
+                top: 10px; 
+                position: absolute; 
+                text-align: center; 
+                color: white; 
+                font-size: 30px; 
+                font-family: Alegreya Sans; 
+                font-weight: 500; 
+                word-wrap: break-word
+            }
+        
+            .myEventsShort a 
+            {
+                color: white;
+                text-decoration: none; /* Remove underlines from the link */
+            }
+        
+        </style>
+        
+        <div id="eventShort" class="myEventsShort" onclick="myEvent()">
+            <a href="#">My Events</a>
+        </div> -->
+
+        <!-- Functions for event text -->
+        <!-- <script>
+            // Define the function to be called
+            function myEvent()
+            {
+                alert("Go to my events");
+            }
+        </script>
+
+        <style>
+            .userShort 
+            {
+                width: 49px; 
+                height: 49px; 
+                left: 1267px; 
+                top: 0px;
+                position: absolute;
+            }
+        
+            .userShort a 
+            {
+                color: white;
+                text-decoration: none; /* Remove underlines from the link */
+            }
+        </style>
+        
+        <div id="usrShort" class="userShort">-->
+            <!-- <img href="#" src="/images/user.png" alt="Clickable Image" onclick="myUser()"> -->
+            <!-- <img src="{{ url_for('static', filename='images/user.png') }}" alt="Clickable Image" onclick="myUser()" style="cursor: pointer;">
+
+        </div>
+
+        <script>
+            // Define the function to be called
+            function myUser() 
+            {
+                alert("Go to user page");
+            }
+        </script>
+                
+    </div> --> 
+    <div style="height: 100%; left: 32px; top: 113px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-end; gap: 30px; display: inline-flex">
+    <div style="color: white; font-size: 24px; font-family: Plus Jakarta Sans; font-weight: 500; word-wrap: break-word">Filters</div>
+        
+        <!-- Styling for Events Filter -->
+        <style>
+            .facultyFilter 
+            {
+                width: 100px; 
+                color: white; 
+                font-size: 20px; 
+                font-family: Alegreya Sans; 
+                font-weight: 400; 
+                word-wrap: break-word
+            }
+
+            .facultyFilter a 
+            {
+                color: white;
+                text-decoration: none; /* Remove underlines from the link */
+            }
+
+            .facultyDropdown-container 
+            {
+                position: relative;
+                display: inline-block;
+            }
+
+            /* Style for the text that shows/hides the dropdown */
+            .facultyDropdown-text 
+            {
+                cursor: pointer;
+            }
+
+            /* Style for the dropdown menu */
+            .facultyDropdown 
+            {
+                display: none;
+                position: absolute;
+                background-color: #f1f1f1;
+                border: 1px solid #ccc;
+                max-height: 200px; /* Set a maximum height for scrollbars */
+                width: 150px;
+                overflow-y: auto; /* Enable vertical scrolling when needed */
+                z-index: 2;
+            }
+
+            /* Style for the checkboxes */
+            .checkbox-label 
+            {
+                display: block;
+                margin: 4px;
+            }
+
+            .down-arrow::after 
+            {
+                content: " ▼";
+                position: absolute;
+                right: 0;
+            }
+        </style>
+
+        <div id="facFilter" class="facultyFilter" onclick="facultyDropdown()">
+            <a href="#">Faculty<span class="down-arrow"></span></a>
+            <div class="facultyDropdown" id="facultyDrop">
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 1
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 2
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 3
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 4
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 5
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 6
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 7
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 8
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 9
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 10
+                </label>
+            </div>
+        </div>
+        
+        <!-- Functions for Faculty Filter -->
+        <script>
+            function facultyDropdown() 
+            {
+                var dropdown = document.getElementById("facultyDrop");
+                dropdown.style.display = "block";
+                var dropdownTwo = document.getElementById("topicDrop");
+                dropdownTwo.style.display = "none";
+                var dropdownThree = document.getElementById("priceDrop");
+                dropdownThree.style.display = "none";
+            }
+        </script>
+
+        <!-- Styling for Topics Filter -->
+        <style>
+            .topcisFilter 
+            {
+                width: 100px; 
+                color: white; 
+                font-size: 20px; 
+                font-family: Alegreya Sans; 
+                font-weight: 400; 
+                word-wrap: break-word
+            }
+        
+            .topcisFilter a 
+            {
+                color: white;
+                text-decoration: none; /* Remove underlines from the link */
+            }
+        
+            .topicsDropdown-container 
+            {
+                    position: relative;
+                    display: inline-block;
+            }
+            
+            /* Style for the text that shows/hides the dropdown */
+            .topicsDropdown-text 
+            {
+                cursor: pointer;
+            }
+
+            /* Style for the dropdown menu */
+            .topicsDropdown 
+            {
+                display: none;
+                position: absolute;
+                background-color: #f1f1f1;
+                border: 1px solid #ccc;
+                max-height: 200px; /* Set a maximum height for scrollbars */
+                width: 150px;
+                overflow-y: auto; /* Enable vertical scrolling when needed */
+                z-index: 3;
+            }
+
+            /* Style for the checkboxes */
+            .checkbox-label 
+            {
+                display: block;
+                margin: 4px;
+            }
+        </style>
+
+        <div id="topFilter" class="topcisFilter" onclick="topicDropdown()">
+            <a href="#">Topics<span class="down-arrow"></span></a>
+            <div class="topicsDropdown" id="topicsDrop">
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 1
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 2
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 3
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 4
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 5
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 6
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 7
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 8
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 9
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 10
+                </label>
+            </div>
+        </div>
+
+        <!-- Functions for Topic Filter -->
+        <script>
+            function topicDropdown() 
+            {
+                    var dropdown = document.getElementById("topicsDrop");
+                    dropdown.style.display = "block";
+                    var dropdownTwo = document.getElementById("facultyDrop");
+                    dropdownTwo.style.display = "none";
+                    var dropdownThree = document.getElementById("priceDrop");
+                    dropdownThree.style.display = "none";
+            }
+        </script>
+
+        <!-- Styling for Price Filter -->
+        <style>
+            .priceFilter 
+            {
+                width: 100px; 
+                color: white; 
+                font-size: 20px; 
+                font-family: Alegreya Sans; 
+                font-weight: 400; 
+                word-wrap: break-word
+            }
+        
+            .priceFilter a 
+            {
+                color: white;
+                text-decoration: none; /* Remove underlines from the link */
+            }
+        
+            .priceDropdown-container 
+            {
+                position: relative;
+                display: inline-block;
+            }
+            
+            /* Style for the text that shows/hides the dropdown */
+            .priceDropdown-text 
+            {
+                cursor: pointer;
+            }
+
+            /* Style for the dropdown menu */
+            .priceDropdown 
+            {
+                display: none;
+                position: absolute;
+                background-color: #f1f1f1;
+                border: 1px solid #ccc;
+                max-height: 200px; /* Set a maximum height for scrollbars */
+                width: 150px;
+                overflow-y: auto; /* Enable vertical scrolling when needed */
+                z-index: 3;
+            }
+
+            /* Style for the checkboxes */
+            .checkbox-label 
+            {
+                display: block;
+                margin: 4px;
+            }
+        </style>
+
+        <div id="priFilter" class="priceFilter" onclick="priceDropdown()">
+            <a href="#">Price<span class="down-arrow"></span></a>
+            <div class="priceDropdown" id="priceDrop">
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 1
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 2
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 3
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 4
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 5
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 6
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 7
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 8
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 9
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox"> Option 10
+                </label>
+            </div>
+        </div>
+
+        <!-- Functions for Price Filter -->
+        <script>
+            // Define the function to be called
+            function priceDropdown() 
+            {
+                var dropdown = document.getElementById("priceDrop");
+                dropdown.style.display = "block";
+                var dropdownTwo = document.getElementById("facultyDrop");
+                dropdownTwo.style.display = "none";
+                var dropdownThree = document.getElementById("topicDrop");
+                dropdownThree.style.display = "none";
+            }
+        </script>
+
+    </div>
+</div>
+{% endblock %}
