@@ -4,10 +4,7 @@
 {% block title %}Betula{% endblock %}
 
 {% block page_content %}
-<div style="width: 100%; height: auto; position: relative; background: #F5F5F5; min-height: 100%">
-    <!--<div style="width: 345px; height: 228px; left: 668px; top: 659px; position: absolute; background: #D9D9D9; border-radius: 30px"></div>-->
-    <!--<div style="width: 345px; height: 228px; left: 1074px; top: 351px; position: absolute; background: #D9D9D9; border-radius: 30px"></div>-->
-    <div style="left: 240px; top: 113px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex">
+    <div style="left: 250px; top: 113px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex">
         <div style="color: black; font-size: 24px; font-family: Roboto; font-weight: 400; text-transform: uppercase; letter-spacing: 2.40px; word-wrap: break-word">Search</div>
         <style>
 
@@ -40,7 +37,7 @@
             height: 40px;
             font-size: 16px;
         }
-    </style>
+        </style>
 
     <!-- Text input box -->
     <div id = "search" class = "searching">
@@ -136,160 +133,11 @@
 
     <!-- End of Showing Events-->
 
-    <!-- <div style="width: 1440px; height: 70px; left: 0px; top: 0px; position: absolute; background: #012A5C"></div>
-    <div style="width: 223px; height: 954px; left: 0px; top: 70px; position: absolute; background: #5078A9"></div>
+
     <div style="width: 1316px; height: 52px; left: 53px; top: 9px; position: absolute">
-        <div style="width: 165px; height: 51px; left: 0px; top: 1px; position: absolute; color: white; font-size: 40px; font-family: Sora; font-weight: 600; text-transform: capitalize; word-wrap: break-word">Betula</div>
-    -->    
-        <!-- Shortcuts to Other Pages -->
-        <!-- Style for dashboard text -->
-        <!-- <style>
 
-            .dashboardShort 
-            {
-                width: 146px; 
-                height: 28px; 
-                left: 337px; 
-                top: 12px; 
-                position: absolute; 
-                text-align: center; 
-                color: white; 
-                font-size: 30px; 
-                font-family: Alegreya Sans; 
-                font-weight: 500; 
-                word-wrap: break-word
-            }
-
-            .dashboardShort a 
-            {
-                color: white;
-                text-decoration: none; /* Remove underlines from the link */
-            }
-
-        </style>
-
-        <div id="dashShort" class="dashboardShort" onclick="dashboard()">
-            <a href="#">Dashboard</a>
-        </div> -->
-        
-        <!-- Functions for dashboard text -->
-        <!-- <script>
-            // Define the function to be called
-            function dashboard() 
-            {
-                alert("Go to dashboard");
-            }
-        </script> -->
-
-        <!-- Style for recommended text -->
-        <!-- <style>
-        .recommendedShort 
-        {
-            width: 192px; 
-            height: 28px; 
-            left: 571px; 
-            top: 11px; 
-            position: absolute; 
-            text-align: center; 
-            color: white; 
-            font-size: 30px; 
-            font-family: Alegreya Sans; 
-            font-weight: 500; 
-            word-wrap: break-word
-        }
-
-        .recommendedShort a 
-        {
-            color: white;
-            text-decoration: none; /* Remove underlines from the link */
-        }
-        </style>
-
-        <div id="recShort" class="recommendedShort" onclick="recommneded()">
-            <a href="#">Recommended</a>
-        </div> -->
-
-        <!-- Functions for recommended text -->
-        <!-- <script>
-            // Define the function to be called
-            function recommneded() 
-            {
-                alert("Show recommended");
-            }
-        </script> -->
-
-        <!-- Style for events text -->
-        <!-- <style>
-            .myEventsShort 
-            {
-                width: 155px; 
-                height: 28px; 
-                left: 851px; 
-                top: 10px; 
-                position: absolute; 
-                text-align: center; 
-                color: white; 
-                font-size: 30px; 
-                font-family: Alegreya Sans; 
-                font-weight: 500; 
-                word-wrap: break-word
-            }
-        
-            .myEventsShort a 
-            {
-                color: white;
-                text-decoration: none; /* Remove underlines from the link */
-            }
-        
-        </style>
-        
-        <div id="eventShort" class="myEventsShort" onclick="myEvent()">
-            <a href="#">My Events</a>
-        </div> -->
-
-        <!-- Functions for event text -->
-        <!-- <script>
-            // Define the function to be called
-            function myEvent()
-            {
-                alert("Go to my events");
-            }
-        </script>
-
-        <style>
-            .userShort 
-            {
-                width: 49px; 
-                height: 49px; 
-                left: 1267px; 
-                top: 0px;
-                position: absolute;
-            }
-        
-            .userShort a 
-            {
-                color: white;
-                text-decoration: none; /* Remove underlines from the link */
-            }
-        </style>
-        
-        <div id="usrShort" class="userShort">-->
-            <!-- <img href="#" src="/images/user.png" alt="Clickable Image" onclick="myUser()"> -->
-            <!-- <img src="{{ url_for('static', filename='images/user.png') }}" alt="Clickable Image" onclick="myUser()" style="cursor: pointer;">
-
-        </div>
-
-        <script>
-            // Define the function to be called
-            function myUser() 
-            {
-                alert("Go to user page");
-            }
-        </script>
-                
-    </div> --> 
-    <div style="height: 100%; left: 32px; top: 113px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-end; gap: 30px; display: inline-flex">
-    <div style="color: white; font-size: 24px; font-family: Plus Jakarta Sans; font-weight: 500; word-wrap: break-word">Filters</div>
+    <div style="height: 100%; left: 0px; top: 113px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 30px; display: inline-flex">
+        <div style="color: white; font-size: 24px; font-family: system-ui; font-weight: 500; word-wrap: break-word">Filters</div>
         
         <!-- Styling for Events Filter -->
         <style>
@@ -298,7 +146,7 @@
                 width: 100px; 
                 color: white; 
                 font-size: 20px; 
-                font-family: Alegreya Sans; 
+                font-family: system-ui; 
                 font-weight: 400; 
                 word-wrap: break-word
             }
@@ -405,7 +253,7 @@
                 width: 100px; 
                 color: white; 
                 font-size: 20px; 
-                font-family: Alegreya Sans; 
+                font-family: system-ui; 
                 font-weight: 400; 
                 word-wrap: break-word
             }
@@ -505,7 +353,7 @@
                 width: 100px; 
                 color: white; 
                 font-size: 20px; 
-                font-family: Alegreya Sans; 
+                font-family: system-ui; 
                 font-weight: 400; 
                 word-wrap: break-word
             }
@@ -600,5 +448,4 @@
         </script>
 
     </div>
-</div>
 {% endblock %}
