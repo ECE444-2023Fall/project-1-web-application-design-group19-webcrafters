@@ -130,9 +130,44 @@
         {% endfor %}
     </table>
 
-
     <!-- End of Showing Events-->
 
+
+
+    <!-- Button for posting -->
+    <style>
+        .postbutton {
+            border: none;
+            padding: 10px;
+            margin: 10px 10px;
+            text-align: center;
+            text-decoration: none;
+            color: #012a5c;
+            font-size: 50px;
+            font-family: system-ui;
+            font-weight: 600;
+            width: 60px;
+            height: 60px;
+            background-color: #d7e6f8;
+            border-radius: 30px;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+        .postbutton:hover {
+            background-color: #b1d4ff;
+            transition: 0.1s;
+        }
+    </style>
+    <button class="postbutton", onclick="window.location.href ='posting';">+</button>
+
+
+
+    <!-- Filters sidebar -->
 
     <div style="width: 1316px; height: 52px; left: 53px; top: 9px; position: absolute">
 
