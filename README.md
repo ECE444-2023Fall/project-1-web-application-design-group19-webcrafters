@@ -69,6 +69,10 @@ Currently our project has not been deployed. To use this project you must:
 * Run the Docker container to view the webapp ```docker run -d -p 5000:5000 python-docker```
 * Open [http://localhost:5000](http://localhost:5000)
 
+To set up the database, you must:
+* Send your IP address to our Software Lead at aniqa.tahseen@mail.utoronto.ca so that it can be added on the list of safe client IP addresses that can access the database
+* Run the db_connection.py file only to create/drop tables from the database only when needed
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
