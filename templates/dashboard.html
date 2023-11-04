@@ -43,8 +43,8 @@
             <div id = "search" class = "searching">
                 <input type="text" id="searchTextInput" oninput="searchDropdown()" onblur="onBlur()" placeholder="Event Name">
                     
-                    <!-- Dropdown content -->
-                    <div id="searchDrop" class="dropdown-content">
+                <!-- Dropdown content -->
+                <div id="searchDrop" class="dropdown-content">
                     <!-- Can choose which events to show add links to top searchs here -->
                     <a href="#">Option 1</a>
                     <a href="#">Option 2</a>
@@ -531,15 +531,48 @@
             allEvents.forEach(event => {
                 const tags = event.tags.split(", ");
                 if (tags.includes(selectedTag)) {
-                    var currentEventElement = document.getElementById("event" + event.iden);
+                    const currentEventElement = document.getElementById("event" + event.iden);
                     if (checkboxObject.checked) {
+                        currentEventElement.classList.remove("hiddenByTagFilter");
                         currentEventElement.style.display = "flex";
+
+                        runNameSearch(document.getElementById("searchTextInput"));
                     } else {
-                        currentEventElement.style.display = "none";
+                        if (currentEventElement.classList.contains("hiddenByNameSearch")) {
+                            currentEventElement.classList.remove("hiddenByNameSearch");
+                            currentEventElement.classList.add("hiddenByTagFilter");
+                        } else {
+                            currentEventElement.classList.add("hiddenByTagFilter");
+                            currentEventElement.style.display = "none";
+                        }
                     }
                 }
             });
         }
     </script>
+    
 </div>
+<script>
+    // Search scripts
+    function runNameSearch(inputObject) {
+        const input = inputObject.value;
+        const allEvents = JSON.parse({{events|tojson}});
+
+        allEvents.forEach(event => {
+            const currentEventElement = document.getElementById("event" + event.iden);
+            if (!currentEventElement.classList.contains("hiddenByTagFilter")) {
+                if (input.length === 0) {
+                    currentEventElement.classList.remove("hiddenByNameSearch");
+                    currentEventElement.style.display = "flex";
+                } else if (String(event.name).includes(input)) {
+                    currentEventElement.classList.remove("hiddenByNameSearch");
+                    currentEventElement.style.display = "flex";
+                } else {
+                    currentEventElement.classList.add("hiddenByNameSearch");
+                    currentEventElement.style.display = "none";
+                }
+            }
+        });
+    }
+</script>
 {% endblock %}
