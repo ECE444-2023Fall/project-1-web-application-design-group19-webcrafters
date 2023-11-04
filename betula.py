@@ -268,15 +268,6 @@ def save_to_csv():
     output.seek(0)
     return Response(output, mimetype="text/csv", headers={"Content-Disposition":"attachment;filename=profileData.csv"})
 
-@app.route('/saveToCSV', methods=['POST'])
-def save_to_csv_endpoint():
-    data = request.json
-    session['name'] = data.get('name', 'Guest')
-    session['email'] = data.get('email', 'guest@guest.com')
-    session['phone'] = data.get('phone', '123-456-7890')
-    session['selected_filters'] = data.get('tags', [])
-    return save_to_csv()
-
 @app.route('/download_csv', methods=['GET'])
 def download_csv():
     return save_to_csv()
@@ -335,41 +326,6 @@ def posting():
         tags = form.tags.data
     return render_template('posting.html', form=form)
 
-
-
-
-@app.route('/print-tags', methods=['POST'])
-def print_tags():
-    data = request.json
-    tags = data.get('tags', [])
-    print('Received tags:', tags)
-    
-    # Convert tags to CSV format
-    csv_data = '"Tags"\n"' + ",".join(tags) + '"'
-    
-    # Create a response with the CSV data
-    response = Response(csv_data, content_type="text/csv")
-    response.headers["Content-Disposition"] = "attachment; filename=tags.csv"
-    return response
-
-
-
-class FilterForm(FlaskForm):
-    filter = SelectMultipleField('Select Filters', choices=[('Tag 1', 'Tag 1'), ('Tag 2', 'Tag 2'), ('Tag 3', 'Tag 3'), ('Tag 4', 'Tag 4')], widget=ListWidget(prefix_label=False), option_widget=CheckboxInput())
-    submit = SubmitField('Apply Filters')  
-
-def save_to_csv():
-    name = session.get('name', 'Guest')
-    email = session.get('email', 'guest@guest.com')
-    phone = session.get('phone', '123-456-7890')
-    tags = session.get('selected_filters', [])
-    output = StringIO()
-    writer = csv.writer(output)
-    writer.writerow(['Name', 'Email', 'Phone', 'Tags'])
-    writer.writerow([name, email, phone, ', '.join(tags)])
-    output.seek(0)
-    return Response(output, mimetype="text/csv", headers={"Content-Disposition":"attachment;filename=profileData.csv"})
-
 @app.route('/saveToCSV', methods=['POST'])
 def save_to_csv_endpoint():
     data = request.json
@@ -378,62 +334,3 @@ def save_to_csv_endpoint():
     session['phone'] = data.get('phone', '123-456-7890')
     session['selected_filters'] = data.get('tags', [])
     return save_to_csv()
-
-@app.route('/download_csv', methods=['GET'])
-def download_csv():
-    return save_to_csv()
-
-@app.route('/userprofile', methods=['GET', 'POST'])
-def userprofile():
-    session.setdefault('name', 'Guest')
-    session.setdefault('phone', '123-456-7890')
-    session.setdefault('email', 'guest@guest.com')
-    session.setdefault('selected_filters', [])
-    form = FilterForm()
-    if request.method == 'POST':
-        if 'filter_form' in request.form and form.validate_on_submit():
-            session['selected_filters'] = request.form.getlist('filters[]')
-        elif 'name' in request.form:
-            session['name'] = request.form.get('name')
-        elif 'email' in request.form:
-            session['email'] = request.form.get('email')
-        elif 'phone' in request.form:
-            session['phone'] = request.form.get('phone')
-    return render_template('userprofile.html', name=session['name'], email=session['email'], form=form, phone=session['phone'], selected_filters=session['selected_filters'])
-
-@app.route('/posting', methods=['GET', 'POST'])
-def posting():
-    organization = None
-    campus = None
-    event = None
-    description = None
-    date = None
-    startTime = None
-    endTime = None
-    street = None
-    city = None
-    postal = None
-    commonName = None
-    college = None
-    faculty = None
-    cost = None
-    tags = None
-    form = PostingForm()
-    if form.validate_on_submit():
-        organization = form.organization.data
-        campus = form.campus.data
-        event = form.event.data
-        description = form.description.data
-        date = form.date.data
-        startTime = form.startTime.data
-        endTime = form.endTime.data
-        street = form.street.data
-        city = form.city.data
-        postal = form.postal.data
-        commonName = form.commonName.data
-        college = form.college.data
-        faculty = form.faculty.data
-        cost = form.cost.data
-        tags = form.tags.data
-    return render_template('posting.html', form=form)
-
