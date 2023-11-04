@@ -77,10 +77,10 @@
             </script>
         </div>
 
-        <div style="left: 700px; top: 113px; position:absolute;">
+        <!-- <div style="left: 700px; top: 113px; position:absolute;">
             <div style="color: black; font-size: 24px; font-family: Roboto; font-weight: 400; text-transform: uppercase; letter-spacing: 2.40px; word-wrap: break-word">Tags</div>
             <select name="Tags" class="form-select" multiple aria-label="Tag selection">
-                <!-- <option selected>Select Tags</option> -->
+                
                 <option value="food">Has Food</option>
                 <option value="free">Free</option>
                 <option value="career">Career/Professional Development</option>
@@ -92,7 +92,7 @@
                 <option value="dept-fase">Department - FASE</option>
                 <option value="dept-uc">Department - University College</option>
               </select>
-        </div>
+        </div> -->
     </div>
     
     <!-- Show Events -->
@@ -100,7 +100,7 @@
     <table style="display: flex; justify-content: center; align-items: center; height: 100%; padding-top: 250px; padding-left: 30px">
 
         {% for event in events %}
-        <td id="{{event[0]|lower|replace(' ', '-')}}" style="display: flex; justify-content: center; align-items: center; height: 100%; margin-bottom: 30px">
+        <td id="{{'event' ~ event.iden}}" style="display: flex; justify-content: center; align-items: center; height: 100%; margin-bottom: 30px">
             <div style="width: 623px; height: 508px; position: relative; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 30px; overflow: hidden">
                 <div style="width: 623px; height: 98px; left: 0px; top: 0px; position: absolute; background: #061945"></div>
                 <div style="width: 356px; height: 39px; left: 15px; top: 27px; position: absolute; color: white; font-size: 28px; font-family: Inter; font-weight: 400; word-wrap: break-word">{{ event.name }}</div>
@@ -351,7 +351,7 @@
             <div class="facultyDropdown" id="facultyDrop">
                 {% for faculty in facultyTags %}
                 <label class="checkbox-label">
-                    <input id="{{faculty|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{faculty}}', '{{events|tojson|safe|tojson}}')">{{faculty}}
+                    <input id="{{faculty|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{faculty}}')">{{faculty}}
                 </label>
                 {% endfor %}
             </div>
@@ -428,7 +428,7 @@
             <div class="topicsDropdown" id="topicsDrop">
                 {% for topic in topicTags %}
                 <label class="checkbox-label">
-                    <input id="{{topic|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{topic}}', '{{events|tojson|safe|tojson}}')">{{topic}}
+                    <input id="{{topic|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{topic}}')">{{topic}}
                 </label>
                 {% endfor %}
             </div>
@@ -436,31 +436,14 @@
 
         <!-- Functions for Topic Filter -->
         <script>
-            
-
             function topicDropdown() 
             {
-                    var dropdown = document.getElementById("topicsDrop");
-                    dropdown.style.display = "block";
-                    var dropdownTwo = document.getElementById("facultyDrop");
-                    dropdownTwo.style.display = "none";
-                    var dropdownThree = document.getElementById("priceDrop");
-                    dropdownThree.style.display = "none";
-            }
-
-            function changeTopicTag(checkboxObject, selectedTag, allEvents) {
-                // const allEvents = {{events|tojson|safe}};
-                allEvents.forEach(event => {
-                    const tags = event[4].split(", ");
-                    if (tags.includes(selectedTag)) {
-                        var currentEventElement = document.getElementById(event[0]);
-                        if (checkboxObject.checked) {
-                            currentEventElement.style.display = "flex";
-                        } else {
-                            currentEventElement.style.display = "none";
-                        }
-                    }
-                });
+                var dropdown = document.getElementById("topicsDrop");
+                dropdown.style.display = "block";
+                var dropdownTwo = document.getElementById("facultyDrop");
+                dropdownTwo.style.display = "none";
+                var dropdownThree = document.getElementById("priceDrop");
+                dropdownThree.style.display = "none";
             }
         </script>
 
@@ -520,7 +503,7 @@
             <div class="priceDropdown" id="priceDrop">
                 {% for price in priceTags %}
                 <label class="checkbox-label">
-                    <input id="{{price|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{price}}', '{{events|tojson|safe|tojson}}')">{{price}}
+                    <input id="{{price|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{price}}')">{{price}}
                 </label>
                 {% endfor %}
             </div>
@@ -543,13 +526,12 @@
     </div>
     <!-- Filter Universal Functions -->
     <script>
-        function updateTag(checkboxObject, selectedTag, allEvents) {
-            const allEvents = JSON.parse(allEvents);
-            console.log(allEvents);
+        function updateTag(checkboxObject, selectedTag) {
+            const allEvents = JSON.parse({{events|tojson}});
             allEvents.forEach(event => {
-                const tags = event[2].split(", ");
+                const tags = event.tags.split(", ");
                 if (tags.includes(selectedTag)) {
-                    var currentEventElement = document.getElementById(event[0].toLowerCase().replace(' ', '-'));
+                    var currentEventElement = document.getElementById("event" + event.iden);
                     if (checkboxObject.checked) {
                         currentEventElement.style.display = "flex";
                     } else {

@@ -25,7 +25,8 @@ logger = logging.getLogger()
 
 #Event class for easy access of event information when rendering
 class Event():
-    def __init__(self, name, organization, where, when, tags, description, contact):
+    def __init__(self, iden, name, organization, where, when, tags, description, contact):
+        self.iden = iden
         self.name = name
         self.organization = organization
         self.where = where
@@ -208,14 +209,14 @@ def dashboard():
                 where = row['event_location_common_name'] + ", " + row['event_street_address'] + ", " + row['event_city']
                 when = row['event_date'] + " | " + row['event_start_time'] + " to " + row['event_end_time']
 
-                currEvent = Event(name = row['event_name'], organization = row['organization_name'], where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'])
+                currEvent = Event(iden = index, name = row['event_name'], organization = row['organization_name'], where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'])
                 eventsList.append(currEvent)
         #Otherwise, add any event!
         else:
             where = row['event_location_common_name'] + ", " + row['event_street_address'] + ", " + row['event_city']
             when = row['event_date'] + " | " + row['event_start_time'] + " to " + row['event_end_time']
 
-            currEvent = Event(name = row['event_name'], organization = row['organization_name'], where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'])
+            currEvent = Event(iden = index, name = row['event_name'], organization = row['organization_name'], where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'])
             eventsList.append(currEvent)
 
         #If we have reached the maximum amount of recommendations, break out of loop
@@ -225,7 +226,7 @@ def dashboard():
     select_user_cursor.close()
     connection.close()
 
-    return render_template('dashboard.html', events = eventsList)
+    return render_template('dashboard.html', events = eventsList, facultyTags = facultyTags, topicTags=topicTags, priceTags=priceTags)
 
 @app.route('/eventsdemo', methods=['GET', 'POST'])
 def events():
