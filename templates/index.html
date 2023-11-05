@@ -28,6 +28,7 @@
     justify-content: center; 
     align-items: center; 
     text-align: center; 
+    margin-top: 45px;
   }
 
   .betula-text {
@@ -35,15 +36,16 @@
   }
 
   .event-dashboard-text {
-    margin-top: 30px; 
+    margin-top: 20px; 
   }
 
   .button-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px;
-    margin-top: 50px; 
+    gap: 90px;
+    margin-top: 60px; 
+    margin-bottom: 60px;
   }
 
   .button {
@@ -54,14 +56,19 @@
     text-decoration: none;
     display: inline-block;
     color: white;
-    font-size: 16px;
-    font-family: Inter;
-    font-weight: 700;
+    font-size: 20px;
+    font-family: system-ui;
+    font-weight: 600;
     word-wrap: break-word;
     width: 150px;
-    height: 48px;
+    height: 55px;
     background-color: #5078A9;
     border-radius: 15px;
+  }
+
+  .button:hover {
+    background-color: #44668f;
+    transition: 0.1s;
   }
 
   .join, .login {position: relative;}
@@ -72,8 +79,12 @@
 </head>
 <body>
   <div class="welcome-page">
-    <div class="betula-text" style="color: #25355A; font-size: 3em; font-family: Raleway; font-weight: 600; text-transform: capitalize; word-wrap: break-word">Betula</div>
-    <div class="event-dashboard-text" style="color: #25355A; font-size: 1.5em; font-family: Sora; font-weight: 400; word-wrap: break-word">Welcome to Betula, UofT’s Events Dashboard</div>
+    <div class="betula-text" style="color: #25355A; font-size: 80px; font-family: Raleway; font-weight: 600; text-transform: capitalize; word-wrap: break-word">Betula</div>
+    <div class="event-dashboard-text" style="color: #25355A; font-size: 35px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Welcome to Betula, UofT’s Events Dashboard</div>
+    <!-- <div class="event-dashboard-text" style="margin-top: 10px; color: #25355A; font-size: 50px; font-family: system-ui; font-weight: 400; word-wrap: break-word">UofT’s Events Dashboard</div> -->
+
+    <br>
+
     <div class="button-container"> <!-- Container for the buttons -->
       <button class="button join" onclick="window.location.href ='join';">Join</button>
       <button class="button login" onclick="window.location.href ='login';">Login</button>
