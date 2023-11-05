@@ -10,6 +10,7 @@ from wtforms.validators import DataRequired, Email
 from wtforms import SelectMultipleField, widgets
 import csv
 from io import StringIO
+import json
 
 from pypyodbc_main import pypyodbc as odbc
 #import pypyodbc as odbc
@@ -25,6 +26,10 @@ logger = logging.getLogger()
 
 #Event class for easy access of event information when rendering
 class Event():
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, 
+            sort_keys=True, indent=4)
+    
     def __init__(self, iden, name, organization, where, when, tags, description, contact):
         self.iden = iden
         self.name = name
@@ -34,6 +39,8 @@ class Event():
         self.tags = tags
         self.description = description
         self.contact = contact
+
+# jsonEvent = {iden:iden, name:name, organization:organization, where:where, when:when, tags:tags, description:description, contact:contact}
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
@@ -147,7 +154,7 @@ def dashboard():
     connection = odbc.connect(connection_string)
 
     #Get the user from the USER_DATA table
-    get_user_table_data_query = f"SELECT * FROM USER_DATA WHERE User_Email = \'{session['email']}\'"
+    get_user_table_data_query = f"SELECT * FROM USER_DATA WHERE User_Email = '{session['email']}'"
     select_user_cursor = connection.cursor()
     select_user_cursor.execute(get_user_table_data_query)
     dataset = select_user_cursor.fetchall()

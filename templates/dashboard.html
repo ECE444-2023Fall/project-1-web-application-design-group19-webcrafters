@@ -527,7 +527,7 @@
     <!-- Filter Universal Functions -->
     <script>
         function updateTag(checkboxObject, selectedTag) {
-            const allEvents = JSON.parse({{events|tojson}});
+            const allEvents = {{events}};
             allEvents.forEach(event => {
                 const tags = event.tags.split(", ");
                 if (tags.includes(selectedTag)) {
@@ -556,7 +556,7 @@
     // Search scripts
     function runNameSearch(inputObject) {
         const input = inputObject.value;
-        const allEvents = JSON.parse({{events|tojson}});
+        const allEvents = {{events}};
 
         allEvents.forEach(event => {
             const currentEventElement = document.getElementById("event" + event.iden);
