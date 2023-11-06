@@ -150,12 +150,13 @@
             height: 60px;
             background-color: #d7e6f8;
             border-radius: 30px;
-            position: absolute;
+            position: fixed;
             right: 0;
             bottom: 0;
             display: flex;
             justify-content: center;
             align-items: center;
+            z-index: 100;
 
         }
         .postbutton:hover {
@@ -163,7 +164,7 @@
             transition: 0.1s;
         }
     </style>
-    <button class="postbutton", onclick="window.location.href ='posting';">+</button>
+    <button class="postbutton", onclick="window.location.href ='posting';" title="Create a post">+</button>
 
 
 
