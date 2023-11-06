@@ -1,7 +1,43 @@
 {% extends "bootstrap/base.html" %}
 
+{% block head %}
+    {{ super() }}
+    {# <script src="../static/scripts/filter.js" type="text/javascript"></script> #}
+    
+{% endblock %}
+
 
 {% block content %}
+<script type="text/javascript" charset="utf-8">
+    // Universal filtering function
+    function updateTag(checkboxObject, selectedTag) {
+        const allEvents = {{jsonEvents|safe}};
+        allEvents.forEach(event => {
+            const tags = event.tags.split(",");
+            if (tags.includes(selectedTag)) {
+                const currentEventElement = document.getElementById("event" + event.iden);
+                if (checkboxObject.checked) {
+                    currentEventElement.classList.remove("hiddenByTagFilter");
+                    currentEventElement.style.display = "flex";
+
+                    runNameSearch(document.getElementById("searchTextInput"));
+                } else {
+                    if (currentEventElement.classList.contains("hiddenByNameSearch")) {
+                        currentEventElement.classList.remove("hiddenByNameSearch");
+                        currentEventElement.classList.add("hiddenByTagFilter");
+                    } else {
+                        currentEventElement.classList.add("hiddenByTagFilter");
+                        currentEventElement.style.display = "none";
+                    }
+                }
+            }
+        });
+    }
+    
+    // Search scripts
+    
+</script>
+
 <div style="width: 100%; height: auto; position: relative; background: #F5F5F5; min-height: 100%">
     <div style="width:100%; display:flex; flex-wrap:wrap">
         <div style="left: 240px; top: 113px; position:absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex">
@@ -41,7 +77,7 @@
     
             <!-- Text input box -->
             <div id = "search" class = "searching">
-                <input type="text" id="searchTextInput" oninput="runNameSearch(this)" onblur="onBlur()" placeholder="Event Name">
+                <input type="text" id="searchTextInput" oninput="runNameSearch()" onblur="onBlur()" placeholder="Event Name">
                     
                 <!-- Dropdown content -->
                 <div id="searchDrop" class="dropdown-content">
@@ -73,6 +109,28 @@
                     // If the search bar loses focus, hide the drop down menu
                     var dropdown = document.getElementById("searchDrop");
                     dropdown.style.display = "none";
+                }
+
+                function runNameSearch() 
+                {
+                    const input = document.getElementById("searchTextInput");
+                    const allEvents = {{jsonEvents|safe}};
+
+                    allEvents.forEach(event => {
+                        const currentEventElement = document.getElementById("event" + event.iden);
+                        if (!currentEventElement.classList.contains("hiddenByTagFilter")) {
+                            if (input.length === 0) {
+                                currentEventElement.classList.remove("hiddenByNameSearch");
+                                currentEventElement.style.display = "flex";
+                            } else if (String(event.name).includes(input)) {
+                                currentEventElement.classList.remove("hiddenByNameSearch");
+                                currentEventElement.style.display = "flex";
+                            } else {
+                                currentEventElement.classList.add("hiddenByNameSearch");
+                                currentEventElement.style.display = "none";
+                            }
+                        }
+                    });
                 }
             </script>
         </div>
@@ -351,7 +409,7 @@
             <div class="facultyDropdown" id="facultyDrop">
                 {% for faculty in facultyTags %}
                 <label class="checkbox-label">
-                    <input id="{{faculty|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{faculty}}')">{{faculty}}
+                    <input id="{{faculty|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{faculty}}'); return false;">{{faculty}}
                 </label>
                 {% endfor %}
             </div>
@@ -363,7 +421,7 @@
             {
                 var dropdown = document.getElementById("facultyDrop");
                 dropdown.style.display = "block";
-                var dropdownTwo = document.getElementById("topicDrop");
+                var dropdownTwo = document.getElementById("topicsDrop");
                 dropdownTwo.style.display = "none";
                 var dropdownThree = document.getElementById("priceDrop");
                 dropdownThree.style.display = "none";
@@ -428,7 +486,7 @@
             <div class="topicsDropdown" id="topicsDrop">
                 {% for topic in topicTags %}
                 <label class="checkbox-label">
-                    <input id="{{topic|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{topic}}')">{{topic}}
+                    <input id="{{topic|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{topic}}'); return false;">{{topic}}
                 </label>
                 {% endfor %}
             </div>
@@ -503,7 +561,7 @@
             <div class="priceDropdown" id="priceDrop">
                 {% for price in priceTags %}
                 <label class="checkbox-label">
-                    <input id="{{price|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{price}}')">{{price}}
+                    <input id="{{price|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{price}}'); return false;">{{price}}
                 </label>
                 {% endfor %}
             </div>
@@ -518,61 +576,12 @@
                 dropdown.style.display = "block";
                 var dropdownTwo = document.getElementById("facultyDrop");
                 dropdownTwo.style.display = "none";
-                var dropdownThree = document.getElementById("topicDrop");
+                var dropdownThree = document.getElementById("topicsDrop");
                 dropdownThree.style.display = "none";
             }
         </script>
-
     </div>
-    <!-- Filter Universal Functions -->
-    <script>
-        function updateTag(checkboxObject, selectedTag) {
-            const allEvents = {{events}};
-            allEvents.forEach(event => {
-                const tags = event.tags.split(", ");
-                if (tags.includes(selectedTag)) {
-                    const currentEventElement = document.getElementById("event" + event.iden);
-                    if (checkboxObject.checked) {
-                        currentEventElement.classList.remove("hiddenByTagFilter");
-                        currentEventElement.style.display = "flex";
-
-                        runNameSearch(document.getElementById("searchTextInput"));
-                    } else {
-                        if (currentEventElement.classList.contains("hiddenByNameSearch")) {
-                            currentEventElement.classList.remove("hiddenByNameSearch");
-                            currentEventElement.classList.add("hiddenByTagFilter");
-                        } else {
-                            currentEventElement.classList.add("hiddenByTagFilter");
-                            currentEventElement.style.display = "none";
-                        }
-                    }
-                }
-            });
-        }
-    </script>
-    
 </div>
-<script>
-    // Search scripts
-    function runNameSearch(inputObject) {
-        const input = inputObject.value;
-        const allEvents = {{events}};
 
-        allEvents.forEach(event => {
-            const currentEventElement = document.getElementById("event" + event.iden);
-            if (!currentEventElement.classList.contains("hiddenByTagFilter")) {
-                if (input.length === 0) {
-                    currentEventElement.classList.remove("hiddenByNameSearch");
-                    currentEventElement.style.display = "flex";
-                } else if (String(event.name).includes(input)) {
-                    currentEventElement.classList.remove("hiddenByNameSearch");
-                    currentEventElement.style.display = "flex";
-                } else {
-                    currentEventElement.classList.add("hiddenByNameSearch");
-                    currentEventElement.style.display = "none";
-                }
-            }
-        });
-    }
-</script>
+
 {% endblock %}

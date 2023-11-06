@@ -180,6 +180,7 @@ def dashboard():
 
     #Now that we have the user information, let's grab the events
     eventsList = []
+    jsonEventsList = []
     get_user_table_data_query = f"SELECT * FROM EVENT_DATA"
     select_user_cursor.execute(get_user_table_data_query)
     dataset = select_user_cursor.fetchall()
@@ -218,6 +219,7 @@ def dashboard():
 
                 currEvent = Event(iden = index, name = row['event_name'], organization = row['organization_name'], where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'])
                 eventsList.append(currEvent)
+                jsonEventsList.append(currEvent.__dict__)
         #Otherwise, add any event!
         else:
             where = row['event_location_common_name'] + ", " + row['event_street_address'] + ", " + row['event_city']
@@ -225,6 +227,7 @@ def dashboard():
 
             currEvent = Event(iden = index, name = row['event_name'], organization = row['organization_name'], where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'])
             eventsList.append(currEvent)
+            jsonEventsList.append(currEvent.__dict__)
 
         #If we have reached the maximum amount of recommendations, break out of loop
         if (len(eventsList) == MAX_RECOMMENDATIONS):
@@ -233,7 +236,7 @@ def dashboard():
     select_user_cursor.close()
     connection.close()
 
-    return render_template('dashboard.html', events = eventsList, facultyTags = facultyTags, topicTags=topicTags, priceTags=priceTags)
+    return render_template('dashboard.html', jsonEvents = json.dumps(jsonEventsList), events = eventsList, facultyTags = facultyTags, topicTags=topicTags, priceTags=priceTags)
 
 @app.route('/eventsdemo', methods=['GET', 'POST'])
 def events():
