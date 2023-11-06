@@ -2,8 +2,6 @@
 
 {% block head %}
     {{ super() }}
-    {# <script src="../static/scripts/filter.js" type="text/javascript"></script> #}
-    
 {% endblock %}
 
 
@@ -35,7 +33,27 @@
     }
     
     // Search scripts
-    
+    function runNameSearch() {
+        const input = document.getElementById("searchTextInput").value;
+        const allEvents = {{jsonEvents|safe}};
+        console.log(input);
+        console.log(allEvents);
+        allEvents.forEach(event => {
+            const currentEventElement = document.getElementById("event" + event.iden);
+            if (!currentEventElement.classList.contains("hiddenByTagFilter")) {
+                if (input.length === 0) {
+                    currentEventElement.classList.remove("hiddenByNameSearch");
+                    currentEventElement.style.display = "flex";
+                } else if (event.name.toLowerCase().includes(input.toLowerCase())) {
+                    currentEventElement.classList.remove("hiddenByNameSearch");
+                    currentEventElement.style.display = "flex";
+                } else {
+                    currentEventElement.classList.add("hiddenByNameSearch");
+                    currentEventElement.style.display = "none";
+                }
+            }
+        });
+    }
 </script>
 
 <div style="width: 100%; height: auto; position: relative; background: #F5F5F5; min-height: 100%">
@@ -111,27 +129,7 @@
                     dropdown.style.display = "none";
                 }
 
-                function runNameSearch() 
-                {
-                    const input = document.getElementById("searchTextInput");
-                    const allEvents = {{jsonEvents|safe}};
-
-                    allEvents.forEach(event => {
-                        const currentEventElement = document.getElementById("event" + event.iden);
-                        if (!currentEventElement.classList.contains("hiddenByTagFilter")) {
-                            if (input.length === 0) {
-                                currentEventElement.classList.remove("hiddenByNameSearch");
-                                currentEventElement.style.display = "flex";
-                            } else if (String(event.name).includes(input)) {
-                                currentEventElement.classList.remove("hiddenByNameSearch");
-                                currentEventElement.style.display = "flex";
-                            } else {
-                                currentEventElement.classList.add("hiddenByNameSearch");
-                                currentEventElement.style.display = "none";
-                            }
-                        }
-                    });
-                }
+                
             </script>
         </div>
 
@@ -394,6 +392,7 @@
             {
                 display: block;
                 margin: 4px;
+                color:black;
             }
 
             .down-arrow::after 
@@ -409,7 +408,7 @@
             <div class="facultyDropdown" id="facultyDrop">
                 {% for faculty in facultyTags %}
                 <label class="checkbox-label">
-                    <input id="{{faculty|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{faculty}}'); return false;">{{faculty}}
+                    <input id="{{faculty|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{faculty}}')">{{faculty}}
                 </label>
                 {% endfor %}
             </div>
@@ -420,7 +419,7 @@
             function facultyDropdown() 
             {
                 var dropdown = document.getElementById("facultyDrop");
-                dropdown.style.display = "block";
+                dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
                 var dropdownTwo = document.getElementById("topicsDrop");
                 dropdownTwo.style.display = "none";
                 var dropdownThree = document.getElementById("priceDrop");
@@ -478,6 +477,7 @@
             {
                 display: block;
                 margin: 4px;
+                color:black;
             }
         </style>
 
@@ -486,7 +486,7 @@
             <div class="topicsDropdown" id="topicsDrop">
                 {% for topic in topicTags %}
                 <label class="checkbox-label">
-                    <input id="{{topic|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{topic}}'); return false;">{{topic}}
+                    <input id="{{topic|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{topic}}')">{{topic}}
                 </label>
                 {% endfor %}
             </div>
@@ -497,7 +497,7 @@
             function topicDropdown() 
             {
                 var dropdown = document.getElementById("topicsDrop");
-                dropdown.style.display = "block";
+                dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
                 var dropdownTwo = document.getElementById("facultyDrop");
                 dropdownTwo.style.display = "none";
                 var dropdownThree = document.getElementById("priceDrop");
@@ -553,6 +553,7 @@
             {
                 display: block;
                 margin: 4px;
+                color:black;
             }
         </style>
 
@@ -561,7 +562,7 @@
             <div class="priceDropdown" id="priceDrop">
                 {% for price in priceTags %}
                 <label class="checkbox-label">
-                    <input id="{{price|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{price}}'); return false;">{{price}}
+                    <input id="{{price|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{price}}')">{{price}}
                 </label>
                 {% endfor %}
             </div>
@@ -573,7 +574,7 @@
             function priceDropdown() 
             {
                 var dropdown = document.getElementById("priceDrop");
-                dropdown.style.display = "block";
+                dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
                 var dropdownTwo = document.getElementById("facultyDrop");
                 dropdownTwo.style.display = "none";
                 var dropdownThree = document.getElementById("topicsDrop");
