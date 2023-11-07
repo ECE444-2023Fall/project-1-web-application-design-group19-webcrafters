@@ -413,8 +413,8 @@
             }
         </style>
 
-        <div id="facFilter" class="dropdown facultyFilter" onclick="facultyDropdown()">
-            <a href="#">Faculty<span class="down-arrow"></span></a>
+        <div id="facFilter" class="dropdown facultyFilter" >
+            <a href="#" onclick="facultyDropdown(); return false;">Faculty<span class="down-arrow"></span></a>
             <div class="facultyDropdown" id="facultyDrop">
                 {% for faculty in facultyTags %}
                 <label class="checkbox-label">
@@ -491,8 +491,8 @@
             }
         </style>
 
-        <div id="topFilter" class="topcisFilter" onclick="topicDropdown()">
-            <a href="#">Topics<span class="down-arrow"></span></a>
+        <div id="topFilter" class="topcisFilter">
+            <a href="#" onclick="topicDropdown(); return false;">Topics<span class="down-arrow"></span></a>
             <div class="topicsDropdown" id="topicsDrop">
                 {% for topic in topicTags %}
                 <label class="checkbox-label">
@@ -567,8 +567,8 @@
             }
         </style>
 
-        <div id="priFilter dropdown" class="priceFilter" onclick="priceDropdown()">
-            <a href="#">Price<span class="down-arrow"></span></a>
+        <div id="priFilter dropdown" class="priceFilter">
+            <a href="#" onclick="priceDropdown(); return false;">Price<span class="down-arrow"></span></a>
             <div class="priceDropdown" id="priceDrop">
                 {% for price in priceTags %}
                 <label class="checkbox-label">
