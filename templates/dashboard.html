@@ -4,7 +4,6 @@
     {{ super() }}
 {% endblock %}
 
-
 {% block content %}
 <script type="text/javascript" charset="utf-8">
     // Universal filtering function
@@ -12,18 +11,25 @@
         const allEvents = {{jsonEvents|safe}};
         allEvents.forEach(event => {
             const tags = event.tags.split(",");
+            // Check if event's list of tags includes the selected/deselected tag being filtered
             if (tags.includes(selectedTag)) {
                 const currentEventElement = document.getElementById("event" + event.iden);
+                // Check if checkbox is checked or unchecked
                 if (checkboxObject.checked) {
+                    // If checkbox checked, show event
                     currentEventElement.classList.remove("hiddenByTagFilter");
                     currentEventElement.style.display = "flex";
 
+                    // Rerun search to see if event is still valid to be shown
                     runNameSearch(document.getElementById("searchTextInput"));
                 } else {
+                    // If checkbox not checked, check if event has been hidden by search
                     if (currentEventElement.classList.contains("hiddenByNameSearch")) {
+                        // If hidden, change label to be hidden by tag filtering (takes precedence)
                         currentEventElement.classList.remove("hiddenByNameSearch");
                         currentEventElement.classList.add("hiddenByTagFilter");
                     } else {
+                        // If not hidden, hide it
                         currentEventElement.classList.add("hiddenByTagFilter");
                         currentEventElement.style.display = "none";
                     }
@@ -32,22 +38,26 @@
         });
     }
     
-    // Search scripts
+    // Main search function
     function runNameSearch() {
         const input = document.getElementById("searchTextInput").value;
         const allEvents = {{jsonEvents|safe}};
-        console.log(input);
-        console.log(allEvents);
+        
         allEvents.forEach(event => {
             const currentEventElement = document.getElementById("event" + event.iden);
+            
+            // Change event only if not hidden by tag filtering already
             if (!currentEventElement.classList.contains("hiddenByTagFilter")) {
                 if (input.length === 0) {
+                    // If empty search bar, show all valid events
                     currentEventElement.classList.remove("hiddenByNameSearch");
                     currentEventElement.style.display = "flex";
                 } else if (event.name.toLowerCase().includes(input.toLowerCase())) {
+                    // If name of event includes the search string, show it
                     currentEventElement.classList.remove("hiddenByNameSearch");
                     currentEventElement.style.display = "flex";
                 } else {
+                    // If name of event does NOT include search string, hide it
                     currentEventElement.classList.add("hiddenByNameSearch");
                     currentEventElement.style.display = "none";
                 }
