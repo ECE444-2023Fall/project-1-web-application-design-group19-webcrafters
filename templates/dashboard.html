@@ -36,6 +36,8 @@
                 }
             }
         });
+
+        checkIfNoEvents();
     }
     
     // Main search function
@@ -63,6 +65,26 @@
                 }
             }
         });
+        checkIfNoEvents();
+    }
+
+    function checkIfNoEvents() {
+        const allEvents = {{jsonEvents|safe}};
+        let hiddenCount = 0;
+        const noEventsElement = document.getElementById("noevents");
+
+        allEvents.forEach(event => {
+            const currentEventElement = document.getElementById("event" + event.iden);
+            if (currentEventElement.style.display === "none") {
+                hiddenCount++;
+            }
+        });
+
+        if (hiddenCount === allEvents.length) {
+            noEventsElement.style.display = "flex";
+        } else {
+            noEventsElement.style.display = "none";
+        }
     }
 </script>
 
@@ -164,7 +186,16 @@
     <!-- Show Events -->
         
     <table style="display: flex; justify-content: center; align-items: center; height: 100%; padding-top: 250px; padding-left: 30px">
-
+        {% if events|length == 0 %}
+            <td id="noevents" style="display: flex; justify-content: center; align-items: center; height: 100%; margin-bottom: 30px">
+                <h2>No Events</h2>
+            </td>
+        {% else %}
+            <td id="noevents" style="display: none; justify-content: center; align-items: center; height: 100%; margin-bottom: 30px">
+                <h2>No Events</h2>
+            </td>
+        {% endif %}
+        
         {% for event in events %}
         <td id="{{'event' ~ event.iden}}" style="display: flex; justify-content: center; align-items: center; height: 100%; margin-bottom: 30px">
             <div style="width: 623px; height: 508px; position: relative; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 30px; overflow: hidden">
