@@ -74,6 +74,7 @@
         const noEventsElement = document.getElementById("noevents");
 
         allEvents.forEach(event => {
+            // Check if each element is shown or hidden
             const currentEventElement = document.getElementById("event" + event.iden);
             if (currentEventElement.style.display === "none") {
                 hiddenCount++;
@@ -81,8 +82,10 @@
         });
 
         if (hiddenCount === allEvents.length) {
+            // If all elements hidden, show the 'no events' text
             noEventsElement.style.display = "flex";
         } else {
+            // If not all elements are hidden, hide the text
             noEventsElement.style.display = "none";
         }
     }
@@ -164,23 +167,6 @@
                 
             </script>
         </div>
-
-        <!-- <div style="left: 700px; top: 113px; position:absolute;">
-            <div style="color: black; font-size: 24px; font-family: Roboto; font-weight: 400; text-transform: uppercase; letter-spacing: 2.40px; word-wrap: break-word">Tags</div>
-            <select name="Tags" class="form-select" multiple aria-label="Tag selection">
-                
-                <option value="food">Has Food</option>
-                <option value="free">Free</option>
-                <option value="career">Career/Professional Development</option>
-                <option value="cultural">Cultural</option>
-                <option value="social-work">Social Work/Charity</option>
-                <option value="fitness">Fitness</option>
-                <option value="social">Social</option>
-                <option value="dept-trinity">Department - Trinity College</option>
-                <option value="dept-fase">Department - FASE</option>
-                <option value="dept-uc">Department - University College</option>
-              </select>
-        </div> -->
     </div>
     
     <!-- Show Events -->
