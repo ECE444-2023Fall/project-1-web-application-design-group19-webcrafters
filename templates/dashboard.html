@@ -1,10 +1,10 @@
-{% extends "bootstrap/base.html" %}
+{% extends "base2.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
-{% block content %}
-<div style="width: 100%; height: auto; position: relative; background: #F5F5F5; min-height: 100%">
-    <!--<div style="width: 345px; height: 228px; left: 668px; top: 659px; position: absolute; background: #D9D9D9; border-radius: 30px"></div>-->
-    <!--<div style="width: 345px; height: 228px; left: 1074px; top: 351px; position: absolute; background: #D9D9D9; border-radius: 30px"></div>-->
-    <div style="left: 240px; top: 113px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex">
+{% block title %}Betula{% endblock %}
+
+{% block page_content %}
+    <div style="left: 250px; top: 80px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex">
         <div style="color: black; font-size: 24px; font-family: Roboto; font-weight: 400; text-transform: uppercase; letter-spacing: 2.40px; word-wrap: break-word">Search</div>
         <style>
 
@@ -37,7 +37,7 @@
             height: 40px;
             font-size: 16px;
         }
-    </style>
+        </style>
 
     <!-- Text input box -->
     <div id = "search" class = "searching">
@@ -130,186 +130,71 @@
         {% endfor %}
     </table>
 
-
     <!-- End of Showing Events-->
 
-    <div style="width: 1440px; height: 70px; left: 0px; top: 0px; position: absolute; background: #012A5C"></div>
-    <div style="width: 223px; height: 954px; left: 0px; top: 70px; position: absolute; background: #5078A9"></div>
-    <div style="width: 1316px; height: 52px; left: 53px; top: 9px; position: absolute">
-        <div style="width: 165px; height: 51px; left: 0px; top: 1px; position: absolute; color: white; font-size: 40px; font-family: Sora; font-weight: 600; text-transform: capitalize; word-wrap: break-word">Betula</div>
-        
-        <!-- Shortcuts to Other Pages -->
-        <!-- Style for dashboard text -->
-        <style>
 
-            .dashboardShort 
-            {
-                width: 146px; 
-                height: 28px; 
-                left: 337px; 
-                top: 12px; 
-                position: absolute; 
-                text-align: center; 
-                color: white; 
-                font-size: 30px; 
-                font-family: Alegreya Sans; 
-                font-weight: 500; 
-                word-wrap: break-word
-            }
 
-            .dashboardShort a 
-            {
-                color: white;
-                text-decoration: none; /* Remove underlines from the link */
-            }
+    <!-- Button for posting -->
+    <style>
+        .postbutton {
+            border: none;
+            padding: 10px;
+            margin: 10px 10px;
+            text-align: center;
+            text-decoration: none;
+            color: #012a5c;
+            font-size: 50px;
+            font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-weight: 500;
+            width: 60px;
+            height: 60px;
+            background-color: #d7e6f8;
+            border-radius: 30px;
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
 
-        </style>
-
-        <div id="dashShort" class="dashboardShort" onclick="dashboard()">
-            <a href="#">Dashboard</a>
-        </div>
-        
-        <!-- Functions for dashboard text -->
-        <script>
-            // Define the function to be called
-            function dashboard() 
-            {
-                alert("Go to dashboard");
-            }
-        </script>
-
-        <!-- Style for recommended text -->
-        <style>
-        .recommendedShort 
-        {
-            width: 192px; 
-            height: 28px; 
-            left: 571px; 
-            top: 11px; 
-            position: absolute; 
-            text-align: center; 
-            color: white; 
-            font-size: 30px; 
-            font-family: Alegreya Sans; 
-            font-weight: 500; 
-            word-wrap: break-word
         }
-
-        .recommendedShort a 
-        {
-            color: white;
-            text-decoration: none; /* Remove underlines from the link */
+        .postbutton:hover {
+            background-color: #b1d4ff;
+            transition: 0.1s;
         }
-        </style>
+    </style>
+    <button class="postbutton", onclick="window.location.href ='posting';" title="Create a post">+</button>
 
-        <div id="recShort" class="recommendedShort" onclick="recommneded()">
-            <a href="#">Recommended</a>
-        </div>
 
-        <!-- Functions for recommended text -->
-        <script>
-            // Define the function to be called
-            function recommneded() 
-            {
-                alert("Show recommended");
-            }
-        </script>
 
-        <!-- Style for events text -->
-        <style>
-            .myEventsShort 
-            {
-                width: 155px; 
-                height: 28px; 
-                left: 851px; 
-                top: 10px; 
-                position: absolute; 
-                text-align: center; 
-                color: white; 
-                font-size: 30px; 
-                font-family: Alegreya Sans; 
-                font-weight: 500; 
-                word-wrap: break-word
-            }
-        
-            .myEventsShort a 
-            {
-                color: white;
-                text-decoration: none; /* Remove underlines from the link */
-            }
-        
-        </style>
-        
-        <div id="eventShort" class="myEventsShort" onclick="myEvent()">
-            <a href="#">My Events</a>
-        </div>
+    <!-- Filters sidebar -->
 
-        <!-- Functions for event text -->
-        <script>
-            // Define the function to be called
-            function myEvent()
-            {
-                alert("Go to my events");
-            }
-        </script>
+    <div id="filtersContainer" style="width: 210px; height: calc(100vh - 55px); left: 0px; top: 55px; position: fixed; overflow-y: hidden;">
 
-        <style>
-            .userShort 
-            {
-                width: 49px; 
-                height: 49px; 
-                left: 1267px; 
-                top: 0px;
-                position: absolute;
-            }
-        
-            .userShort a 
-            {
-                color: white;
-                text-decoration: none; /* Remove underlines from the link */
-            }
-        </style>
+    <div style="height: 100%; left: 53px; top: 30px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 1px; display: inline-flex">
+        <div style="color: white; font-size: 24px; font-family: system-ui; font-weight: 500; word-wrap: break-word">Filters</div>
+        <br>
 
-        <div id="usrShort" class="userShort">
-            <!-- <img href="#" src="/images/user.png" alt="Clickable Image" onclick="myUser()"> -->
-            <img src="{{ url_for('static', filename='images/user.png') }}" alt="Clickable Image" onclick="myUser()" style="cursor: pointer;">
-
-        </div>
-
-        <script>
-            // Define the function to be called
-            function myUser() 
-            {
-                alert("Go to user page");
-            }
-        </script>
-                
-    </div>
-    <div style="height: 100%; left: 32px; top: 113px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-end; gap: 30px; display: inline-flex">
-    <div style="color: white; font-size: 24px; font-family: Plus Jakarta Sans; font-weight: 500; word-wrap: break-word">Filters</div>
-        
         <!-- Styling for Events Filter -->
         <style>
             .facultyFilter 
             {
-                width: 100px; 
+                display: flex;
+                align-items: center;
                 color: white; 
                 font-size: 20px; 
-                font-family: Alegreya Sans; 
-                font-weight: 400; 
-                word-wrap: break-word
+                font-family: system-ui; 
+                font-weight: 350; 
+                word-wrap: break-word;
+                position: relative; 
+                margin-bottom: 0px;
             }
 
             .facultyFilter a 
             {
                 color: white;
                 text-decoration: none; /* Remove underlines from the link */
-            }
-
-            .facultyDropdown-container 
-            {
-                position: relative;
-                display: inline-block;
             }
 
             /* Style for the text that shows/hides the dropdown */
@@ -322,13 +207,8 @@
             .facultyDropdown 
             {
                 display: none;
-                position: absolute;
-                background-color: #f1f1f1;
-                border: 1px solid #ccc;
-                max-height: 200px; /* Set a maximum height for scrollbars */
-                width: 150px;
-                overflow-y: auto; /* Enable vertical scrolling when needed */
-                z-index: 2;
+                margin-left: 20px; 
+                margin-top: 0px;
             }
 
             /* Style for the checkboxes */
@@ -336,62 +216,79 @@
             {
                 display: block;
                 margin: 4px;
+                font-family: 'system-ui';
+                font-weight: 250;
+                color: white;
+            }
+
+            .right-arrow::after 
+            {
+                content: " ▶";
+                margin-right: 8px;
+                cursor: pointer;
             }
 
             .down-arrow::after 
             {
                 content: " ▼";
-                position: absolute;
-                right: 0;
+                margin-right: 8px;
+                cursor: pointer;
             }
         </style>
 
         <div id="facFilter" class="facultyFilter" onclick="facultyDropdown()">
-            <a href="#">Faculty<span class="down-arrow"></span></a>
-            <div class="facultyDropdown" id="facultyDrop">
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 1
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 2
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 3
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 4
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 5
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 6
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 7
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 8
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 9
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 10
-                </label>
-            </div>
+            <span class="right-arrow" id="facultyArrowIcon"></span>
+            <a href="#"><span>Faculty</span></a>
         </div>
+        <div class="facultyDropdown" id="facultyDrop">
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 1
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 2
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 3
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 4
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 5
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 6
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 7
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 8
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 9
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 10
+            </label>
+        </div>
+        <br>
         
         <!-- Functions for Faculty Filter -->
         <script>
             function facultyDropdown() 
             {
                 var dropdown = document.getElementById("facultyDrop");
-                dropdown.style.display = "block";
-                var dropdownTwo = document.getElementById("topicDrop");
-                dropdownTwo.style.display = "none";
-                var dropdownThree = document.getElementById("priceDrop");
-                dropdownThree.style.display = "none";
+                // Check if the dropdown is currently visible or hidden
+                if (dropdown.style.display === "block") {
+                    dropdown.style.display = "none"; // If visible, hide the dropdown
+                    document.getElementById("facultyArrowIcon").classList.remove("down-arrow");
+                    document.getElementById("facultyArrowIcon").classList.add("right-arrow");
+                } else {
+                    dropdown.style.display = "block"; // If hidden, show the dropdown
+                    document.getElementById("facultyArrowIcon").classList.remove("right-arrow");
+                    document.getElementById("facultyArrowIcon").classList.add("down-arrow");
+                }
             }
         </script>
 
@@ -399,12 +296,13 @@
         <style>
             .topcisFilter 
             {
-                width: 100px; 
+                display: flex;
+                align-items: center;
                 color: white; 
                 font-size: 20px; 
-                font-family: Alegreya Sans; 
-                font-weight: 400; 
-                word-wrap: break-word
+                font-family: system-ui; 
+                font-weight: 350; 
+                word-wrap: break-word;
             }
         
             .topcisFilter a 
@@ -429,13 +327,7 @@
             .topicsDropdown 
             {
                 display: none;
-                position: absolute;
-                background-color: #f1f1f1;
-                border: 1px solid #ccc;
-                max-height: 200px; /* Set a maximum height for scrollbars */
-                width: 150px;
-                overflow-y: auto; /* Enable vertical scrolling when needed */
-                z-index: 3;
+                margin-left: 20px; 
             }
 
             /* Style for the checkboxes */
@@ -443,55 +335,65 @@
             {
                 display: block;
                 margin: 4px;
+                font-family: 'system-ui';
+                font-weight: 250;
+                color: white;
             }
         </style>
 
         <div id="topFilter" class="topcisFilter" onclick="topicDropdown()">
-            <a href="#">Topics<span class="down-arrow"></span></a>
-            <div class="topicsDropdown" id="topicsDrop">
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 1
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 2
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 3
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 4
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 5
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 6
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 7
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 8
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 9
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 10
-                </label>
-            </div>
+            <span class="right-arrow" id="topicArrowIcon"></span>
+            <a href="#"><span>Topics</span></a>
         </div>
+        <div class="topicsDropdown" id="topicsDrop">
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 1
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 2
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 3
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 4
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 5
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 6
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 7
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 8
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 9
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 10
+            </label>
+        </div>
+        <br>
 
         <!-- Functions for Topic Filter -->
         <script>
             function topicDropdown() 
             {
-                    var dropdown = document.getElementById("topicsDrop");
-                    dropdown.style.display = "block";
-                    var dropdownTwo = document.getElementById("facultyDrop");
-                    dropdownTwo.style.display = "none";
-                    var dropdownThree = document.getElementById("priceDrop");
-                    dropdownThree.style.display = "none";
+                var dropdown = document.getElementById("topicsDrop");
+                // Check if the dropdown is currently visible or hidden
+                if (dropdown.style.display === "block") {
+                    dropdown.style.display = "none"; // If visible, hide the dropdown
+                    document.getElementById("topicArrowIcon").classList.remove("down-arrow");
+                    document.getElementById("topicArrowIcon").classList.add("right-arrow");
+                } else {
+                    dropdown.style.display = "block"; // If hidden, show the dropdown
+                    document.getElementById("topicArrowIcon").classList.remove("right-arrow");
+                    document.getElementById("topicArrowIcon").classList.add("down-arrow");
+                }
             }
         </script>
 
@@ -499,12 +401,13 @@
         <style>
             .priceFilter 
             {
-                width: 100px; 
+                display: flex;
+                align-items: center;
                 color: white; 
                 font-size: 20px; 
-                font-family: Alegreya Sans; 
-                font-weight: 400; 
-                word-wrap: break-word
+                font-family: system-ui; 
+                font-weight: 350; 
+                word-wrap: break-word;
             }
         
             .priceFilter a 
@@ -529,13 +432,7 @@
             .priceDropdown 
             {
                 display: none;
-                position: absolute;
-                background-color: #f1f1f1;
-                border: 1px solid #ccc;
-                max-height: 200px; /* Set a maximum height for scrollbars */
-                width: 150px;
-                overflow-y: auto; /* Enable vertical scrolling when needed */
-                z-index: 3;
+                margin-left: 20px; 
             }
 
             /* Style for the checkboxes */
@@ -543,59 +440,81 @@
             {
                 display: block;
                 margin: 4px;
+                font-family: 'system-ui';
+                font-weight: 250;
+                color: white;
             }
         </style>
 
         <div id="priFilter" class="priceFilter" onclick="priceDropdown()">
-            <a href="#">Price<span class="down-arrow"></span></a>
-            <div class="priceDropdown" id="priceDrop">
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 1
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 2
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 3
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 4
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 5
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 6
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 7
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 8
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 9
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox"> Option 10
-                </label>
-            </div>
+            <span class="right-arrow" id="priceArrowIcon"></span>
+            <a href="#"><span>Price</span></a>
         </div>
+        <div class="priceDropdown" id="priceDrop">
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 1
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 2
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 3
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 4
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 5
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 6
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 7
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 8
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 9
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox"> Option 10
+            </label>
+        </div>
+        <br>
 
+        <br>
         <!-- Functions for Price Filter -->
         <script>
             // Define the function to be called
             function priceDropdown() 
             {
                 var dropdown = document.getElementById("priceDrop");
-                dropdown.style.display = "block";
-                var dropdownTwo = document.getElementById("facultyDrop");
-                dropdownTwo.style.display = "none";
-                var dropdownThree = document.getElementById("topicDrop");
-                dropdownThree.style.display = "none";
+                // Check if the dropdown is currently visible or hidden
+                if (dropdown.style.display === "block") {
+                    dropdown.style.display = "none"; // If visible, hide the dropdown
+                    document.getElementById("priceArrowIcon").classList.remove("down-arrow");
+                    document.getElementById("priceArrowIcon").classList.add("right-arrow");
+                } else {
+                    dropdown.style.display = "block"; // If hidden, show the dropdown
+                    document.getElementById("priceArrowIcon").classList.remove("right-arrow");
+                    document.getElementById("priceArrowIcon").classList.add("down-arrow");
+                }
             }
         </script>
-
     </div>
-</div>
+
+    <!-- Filters container script -->
+    <script>
+        document.getElementById("filtersContainer").addEventListener("mouseenter", function() {
+            // Scroll when cursor is at filters
+            document.getElementById("filtersContainer").style.overflowY = "auto";
+        });
+        
+        document.getElementById("filtersContainer").addEventListener("mouseleave", function() {
+            // No scroll when cursor leaves filters
+            document.getElementById("filtersContainer").style.overflowY = "hidden";
+        });
+    </script>
 {% endblock %}
