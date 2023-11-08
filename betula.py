@@ -275,6 +275,7 @@ def dashboard():
             if str(event.event_id) in request.form:
                 event_pressed = event.event_id
                 eventsList[index].registered = True
+                break
 
             index += 1
         
@@ -294,7 +295,8 @@ def dashboard():
             else:
                 userRegisteredEvents.remove(str(event_pressed))
                 print(f"Current Registered Events {userRegisteredEvents}")
-                userRegisteredEvents = ','.join(userRegisteredEvents)
+                if userRegisteredEvents is not None:
+                    userRegisteredEvents = ','.join(userRegisteredEvents)
             
             userRegisteredEvents = str(userRegisteredEvents)
 
@@ -398,8 +400,8 @@ def myEvents():
         events_df = pd.DataFrame(columns=headers, data=dataset)
             
         #close access to the databse
-        select_user_cursor.close()
-        connection.close()
+        #select_user_cursor.close()
+        #connection.close()
 
         #Iterate through events and add matches matches
         for index, row in events_df.iterrows():
@@ -416,9 +418,62 @@ def myEvents():
             eventsList.append(currEvent)
     
     #Make sure to close the database as soon as possible
-    else:
+    #else:
         #close access to the databse
-        select_user_cursor.close()
-        connection.close()
+        #select_user_cursor.close()
+        #connection.close()
+
+    if request.method == 'POST':
+        
+        event_pressed = None
+
+        #Get the button pressed from the events on the screen
+        index = 0
+        for event in eventsList:
+            if str(event.event_id) in request.form:
+                event_pressed = event.event_id
+                eventsList[index].registered = True
+                break
+
+            index += 1
+        
+        print(f"Clicked {event_pressed}")
+
+        print(f"User Registered Events: {userRegisteredEvents}")
+
+        #Add it to the user's registered events
+        if userRegisteredEvents is not None:
+ 
+            #if the event clicked is not already counted add it
+            #if not(str(event_pressed) in userRegisteredEvents):
+                #userRegisteredEvents = str(userRegisteredEvents)
+            #    userRegisteredEvents = str(','.join(userRegisteredEvents))
+            #    userRegisteredEvents = userRegisteredEvents + "," + str(event_pressed)
+            #if they have clicked it a second time, unregister them!
+            #else:
+            userRegisteredEvents.remove(str(event_pressed))
+            print(f"Current Registered Events {userRegisteredEvents}")
+            if userRegisteredEvents is not None:
+                userRegisteredEvents = ','.join(userRegisteredEvents)
+            
+            userRegisteredEvents = str(userRegisteredEvents)
+
+        else:
+            userRegisteredEvents = str(event_pressed)
+
+        print(f"USER REGISTERED EVENTS: {userRegisteredEvents}")
+
+        #placeholders = ",".join(["?"] * len(userRegisteredEvents))
+
+        #Update the user table with what the user pressed
+        params = [userRegisteredEvents, session['email']]
+        update_table_query = f"UPDATE USER_DATA SET event_id = \'" + userRegisteredEvents + f"\' WHERE User_Email = \'{session['email']}\'"
+        print(update_table_query)
+        select_user_cursor.execute(update_table_query)
+
+    #Save table and close database
+    connection.commit()
+    select_user_cursor.close()
+    connection.close()
 
     return render_template('saved.html', events = eventsList, hasSavedEvents = hasSavedEvents)
