@@ -169,7 +169,7 @@ def dashboard():
 
     userRegisteredEvents = user_df['event_id'].values[0]
 
-    if userRegisteredEvents is not None:
+    if userRegisteredEvents is not "None":
         userRegisteredEvents = userRegisteredEvents.split(',')
 
     print(f"User Registered Events {userRegisteredEvents}")
@@ -284,7 +284,7 @@ def dashboard():
         print(f"User Registered Events: {userRegisteredEvents}")
 
         #Add it to the user's registered events
-        if userRegisteredEvents is not None:
+        if userRegisteredEvents is not "None":
  
             #if the event clicked is not already counted add it
             if not(str(event_pressed) in userRegisteredEvents):
