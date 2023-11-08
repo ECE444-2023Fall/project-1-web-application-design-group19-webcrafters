@@ -277,7 +277,10 @@ def dashboard():
         for event in eventsList:
             if str(event.event_id) in request.form:
                 event_pressed = event.event_id
-                eventsList[index].registered = True
+                if eventsList[index].registered == True:
+                    eventsList[index].registered = False
+                else:
+                    eventsList[index].registered = True
                 break
 
             index += 1
