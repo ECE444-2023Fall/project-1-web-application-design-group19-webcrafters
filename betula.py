@@ -491,7 +491,9 @@ def myEvents():
         print(update_table_query)
         select_user_cursor.execute(update_table_query)
         
-
+        if userRegisteredEvents is None or len(userRegisteredEvents) == 0:
+            hasSavedEvents = False
+        
     #Save table and close database
     connection.commit()
     select_user_cursor.close()
