@@ -167,7 +167,7 @@
             <form action="/userprofile" method="post">
               <label for="name">Enter your name:</label>
               <input type="text" id="name" name="name">
-              <input type="submit" value="Update Name">
+              <!-- <input type="submit" value="Update Name"> -->
             </form>
           </div>
 
@@ -191,11 +191,11 @@
             <form action="/userprofile" method="post">
               <label for="email">Enter your email:</label>
               <input type="text" id="email" name="email">
-              <input type="submit" value="Update Email">
+              <!-- <input type="submit" value="Update Email"> -->
             </form>
           </div>
 
-          <!-- Phone number section -->
+          <!-- Password section -->
           <div
             style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%; height: auto; border-bottom: 1px #FFFFFF solid; padding: 14px 0;">
             <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start;">
@@ -216,7 +216,7 @@
             <form action="/userprofile" method="post" id="phoneNumberForm">
               <label for="phone">Enter your password:</label>
               <input type="text" id="phone" name="phone">
-              <input type="submit" value="Update Password">
+              <!-- <input type="submit" value="Update Password"> -->
             </form>
 
           </div>
@@ -240,10 +240,20 @@
                     <!-- <label for="filter">Select Tag:</label> -->
                     <select data-placeholder="Select Tags..." multiple class="chosen-select" id="filter" name="filters[]"
                       style="width: 100%;" onchange="updateTagDisplay()">
-                      <option value="Tag 1">Tag 1</option>
-                      <option value="Tag 2">Tag 2</option>
-                      <option value="Tag 3">Tag 3</option>
-                      <option value="Tag 4">Tag 4</option>
+                      <option value="Faculty of Applied Science and Engineering">Faculty of Applied Science and Engineering</option>
+                      <option value="Trinity College">Trinity College</option>
+                      <option value="University College">University College</option>
+                      <option value="St. Michael's College">St. Michael's College</option>\
+                      <option value="Victoria College">Victoria College</option>
+                      <option value="Professional">Professional</option>
+                      <option value="Cultural">Cultural</option>
+                      <option value="Soical Work/Charity">Soical Work / Charity</option>
+                      <option value="Fitness">Fitness</option>
+                      <option value="Social">Social</option>
+                      <option value="Sports">Sports</option>
+                      <option value="Free">Free</option>
+                      <option value="Paid">Paid</option>
+                      <option value="Free Food">Free Food</option>
                     </select>
                   </div>
                   <button type="submit" class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
@@ -257,7 +267,8 @@
                 style="color: #222222; font-size: 14px; font-family: Verdana; font-weight: 600; text-decoration: underline; line-height: 20.02px;">Edit</span>
             </div>
           </div>
-          <a href="{{ url_for('download_csv') }}" class="btn btn-primary">Download Profile as CSV</a>
+          <!-- <a href="{{ url_for('save_to_csv_endpoint') }}" class="btn btn-primary">Download Profile as CSV</a> -->
+          <button type="button" class="btn btn-primary" onclick="collectProfileData()">Save Profile</button>
 
         </div>
       </div>
@@ -328,14 +339,15 @@
         const formDiv = document.getElementById('phoneNumberEditForm');
         formDiv.style.display = 'block';
       }
-      function applyFilters() {
+
+function applyFilters() {
     // Update the tag display
     updateTagDisplay();
-    
+
     // Fetch the selected tags
     const tagSelect = document.getElementById('filter');
     const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.text);
-    
+
     // Send the tags to the server
     fetch('/print-tags', {
         method: 'POST',
@@ -344,21 +356,14 @@
         },
         body: JSON.stringify({tags: selectedTags}),
     })
-    .then(response => response.blob())
-    .then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        a.download = 'tags.csv';
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
+    .then(response => response.json())  // Expecting a JSON response now
+    .then(data => {
+        console.log('Response:', data);  // Log the response from the server
+    })
+    .catch((error) => {
+        console.error('Error:', error);
     });
 }
-
-
-
 
       function toggleTagEditForm() {
         hideAllForms();
@@ -424,12 +429,13 @@
         updateTagDisplay();
       }
 
+
 function collectProfileData() {
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const phone = document.getElementById('phone').value;
     const tagSelect = document.getElementById('filter');  // Assuming the filter select has the id 'filter'
-    const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.text);  // get the values of selected tags
+    const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.value);  // get the values of selected tags
 
     const profileData = {
         name: name,
@@ -437,7 +443,7 @@ function collectProfileData() {
         phone: phone,
         tags: selectedTags
     };
-    console.log(profileData); 
+
     // Send this data to the server
     fetch('/saveToCSV', {
         method: 'POST',
@@ -446,20 +452,17 @@ function collectProfileData() {
         },
         body: JSON.stringify(profileData),
     })
-    .then(response => response.blob())
-    .then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        a.download = 'profileData.csv';
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data.message);  // Log the success message from the server
+        // Optionally, display this message to the user
+    })
+    .catch((error) => {
+        console.error('Error:', error);
     });
 }
 
-      
+     
     </script>
 
 

@@ -18,7 +18,7 @@ from credentials import db_username, db_password
 import logging
 from logging import handlers
 
-import pandas as pd
+#import pandas as pd
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
@@ -233,25 +233,21 @@ def events():
 
 
 
+
+
 @app.route('/print-tags', methods=['POST'])
 def print_tags():
     data = request.json
     tags = data.get('tags', [])
     print('Received tags:', tags)
-    
-    # Convert tags to CSV format
-    csv_data = '"Tags"\n"' + ",".join(tags) + '"'
-    
-    # Create a response with the CSV data
-    response = Response(csv_data, content_type="text/csv")
-    response.headers["Content-Disposition"] = "attachment; filename=tags.csv"
-    return response
-
+    # Instead of returning a CSV file response, return a simple JSON message
+    return jsonify({"message": "Tags received and printed to the server's console."})
 
 
 class FilterForm(FlaskForm):
-    filter = SelectMultipleField('Select Filters', choices=[('Tag 1', 'Tag 1'), ('Tag 2', 'Tag 2'), ('Tag 3', 'Tag 3'), ('Tag 4', 'Tag 4')], widget=ListWidget(prefix_label=False), option_widget=CheckboxInput())
+    filter = SelectMultipleField('Select Filters', choices=[('Tag 1', 'Tag 1'), ('Tag 2', 'Tag 2'), ('Tag 3', 'Tag 3'), ('Tag 4', 'Tag 4'), ('Tag 5', 'Tag 5'), ('Tag 6', 'Tag 6'), ('Tag 7', 'Tag 7'), ('Tag 8', 'Tag 8'), ('Tag 9', 'Tag 9'), ('Tag 10', 'Tag 10'), ('Tag 11', 'Tag 11'),('Tag 12', 'Tag 12'), ('Tag 13', 'Tag 13'), ('Tag 14', 'Tag 14')], widget=ListWidget(prefix_label=False), option_widget=CheckboxInput())
     submit = SubmitField('Apply Filters')  
+
 
 def save_to_csv():
     name = session.get('name', 'Guest')
@@ -262,8 +258,12 @@ def save_to_csv():
     writer = csv.writer(output)
     writer.writerow(['Name', 'Email', 'Phone', 'Tags'])
     writer.writerow([name, email, phone, ', '.join(tags)])
-    output.seek(0)
-    return Response(output, mimetype="text/csv", headers={"Content-Disposition":"attachment;filename=profileData.csv"})
+    # Print the CSV content to the terminal
+    output.seek(0)  # Go to the start of the StringIO object
+    csv_content = output.getvalue()  # Read the CSV content
+    print("User Profile:\n", csv_content)  # Print the CSV content to the terminal
+    # You can return a simple message as you are not downloading the CSV
+    return jsonify({"message": "CSV content printed to terminal."})
 
 @app.route('/saveToCSV', methods=['POST'])
 def save_to_csv_endpoint():
@@ -274,9 +274,6 @@ def save_to_csv_endpoint():
     session['selected_filters'] = data.get('tags', [])
     return save_to_csv()
 
-@app.route('/download_csv', methods=['GET'])
-def download_csv():
-    return save_to_csv()
 
 @app.route('/userprofile', methods=['GET', 'POST'])
 def userprofile():
