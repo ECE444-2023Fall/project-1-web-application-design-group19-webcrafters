@@ -169,7 +169,7 @@ def dashboard():
 
     userRegisteredEvents = user_df['event_id'].values[0]
 
-    if userRegisteredEvents is not "None":
+    if userRegisteredEvents is not None:
         userRegisteredEvents = userRegisteredEvents.split(',')
 
     print(f"User Registered Events {userRegisteredEvents}")
@@ -187,7 +187,7 @@ def dashboard():
     #Randomize our database
     events_df = events_df.sample(frac=1)
 
-    print(events_df.head)
+    #print(events_df.head)
 
     #Maximum amount of recommendations to give to user at a time
     MAX_RECOMMENDATIONS = 10
@@ -199,11 +199,14 @@ def dashboard():
 
         registered = False
 
+        print(event_id)
         if userRegisteredEvents is not None:
-            if event_id in userRegisteredEvents:
+            if str(event_id) in userRegisteredEvents:
+                print('Registered!')
                 registered = True
-        else:
-            registered = False
+            else:
+                print('Not registered!')
+                registered = False
 
         #If we are stringent, only add events that match with our tags
         if (userStringency):
@@ -284,13 +287,25 @@ def dashboard():
         print(f"User Registered Events: {userRegisteredEvents}")
 
         #Add it to the user's registered events
-        if userRegisteredEvents is not "None":
+        if userRegisteredEvents is not None:
  
+            #Remove any blank space if there are any
+            for element in userRegisteredEvents:
+                if element == '':
+                    userRegisteredEvents.remove(element)
+            
+            amountRegistered = len(userRegisteredEvents)
+
+            print(f"Removed Spaces?: {userRegisteredEvents}")
+
             #if the event clicked is not already counted add it
             if not(str(event_pressed) in userRegisteredEvents):
                 #userRegisteredEvents = str(userRegisteredEvents)
                 userRegisteredEvents = str(','.join(userRegisteredEvents))
-                userRegisteredEvents = userRegisteredEvents + "," + str(event_pressed)
+                if (amountRegistered > 0):
+                    userRegisteredEvents = userRegisteredEvents + "," + str(event_pressed)
+                else:
+                    userRegisteredEvents = str(event_pressed)
             #if they have clicked it a second time, unregister them!
             else:
                 userRegisteredEvents.remove(str(event_pressed))
