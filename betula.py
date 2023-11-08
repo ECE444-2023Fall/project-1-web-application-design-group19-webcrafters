@@ -12,7 +12,7 @@ import csv
 from io import StringIO
 
 from pypyodbc_main import pypyodbc as odbc
-#import pypyodbc as odbc
+import pypyodbc as odbc
 from credentials import db_username, db_password
 
 import logging
