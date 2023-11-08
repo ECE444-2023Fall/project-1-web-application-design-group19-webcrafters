@@ -144,7 +144,12 @@
                     <!--<div style="width: 570px; height: 60px; padding: 10px; left: 21px; top: 425px; position: absolute; background: #061945; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">-->
                       <form method="POST" action="/dashboard" style="width: 96px; height: 29px; color: white; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">
                         <!--<button type = "Register" name = "{{ event.event_id }}" value = "{% if event.registered %}Unregister{% else %}Register{% endif %}"></button> -->
-                        <button class="registerButton" name = "{{event.event_id}}" onclick="registerFlip()">Register</button>
+                        <button class="registerButton" name = "{{event.event_id}}" onclick="registerFlip()">{% if event.registered %}
+                                                                                                                Unregister
+                                                                                                            {% else %}
+                                                                                                                Register
+                                                                                                            {% endif %}
+                        </button>
                         <style>
                             .registerButton {
                                 display:flex;
