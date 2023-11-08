@@ -92,67 +92,129 @@
                 <div style="width: 4px; height: 40px; background: #DBDBDB; border-radius: 2px"></div>
             </div>
         </div>-->
-    </div>
+  
     <!--<div style="width: 345px; height: 228px; left: 262px; top: 351px; position: absolute; background: #D9D9D9; border-radius: 30px"></div>-->
     <!--<div style="width: 345px; height: 228px; left: 668px; top: 351px; position: absolute; background: #D9D9D9; border-radius: 30px"></div>-->
     
     <!-- Show Events -->
-    
-    <table style="display: flex; justify-content: center; align-items: center; height: 100%; padding-top: 250px; padding-left: 30px">
+    {% raw %}
+   <!-- <table style="display: flex; justify-content: center; align-items: center; height: 100%; padding-top: 250px; padding-left: 30px">
 
         {% for event in events %}
-        <td style="display: flex; justify-content: center; align-items: center; height: 100%; margin-bottom: 30px">
-            <div style="width: 623px; height: 508px; position: relative; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 30px; overflow: hidden">
-                <div style="width: 623px; height: 98px; left: 0px; top: 0px; position: absolute; background: #061945"></div>
-                <div style="width: 356px; height: 39px; left: 15px; top: 27px; position: absolute; color: white; font-size: 28px; font-family: Inter; font-weight: 400; word-wrap: break-word">{{ event.name }}</div>
-                <div style="width: 570px; height: 60px; padding: 10px; left: 21px; top: 425px; position: absolute; background: #061945; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
-                  <form method="POST" action="/dashboard" style="width: 96px; height: 29px; color: white; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">
-                    <!--<button type = "Register" name = "{{ event.event_id }}" value = "{% if event.registered %}Registered!{% else %}Register{% endif %}"></button>-->
-                    <button id="registerButton" onclick="registerFlip()"></button>
-                        <script>
-                          var button = document.getElementById("registerButton");
-                        
-                        	if (event.registered) {
-                              button.innerText = "Yes";
-                            } else {
-                              button.innerText = "No";
-                            }
-                          // Function to toggle the global variable and update the button text
-                          function registerFlip() {
-                            event.registered = !event.registered; // Toggle the variable
-                            // update database accordingly
-                            // Update the button text based on the new variable state
-                            if (event.registered) {
-                              button.innerText = "Yes";
-                            } else {
-                              button.innerText = "No";
-                            }
-                          }
-                        </script>
-                  </form>
-                </div>
-                <div style="height: 52px; padding-left: 6px; padding-right: 8px; left: 380px; top: 7px; position: absolute; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; overflow: hidden; justify-content: center; align-items: center; display: inline-flex">
-                  <div style="width: 198px; height: 52px; color: #061945; font-size: 16px; font-family: Inter; font-weight: 400; word-wrap: break-word">Hosted by: {{ event.organization }}</div>
-                </div>
-                <div style="height: 136px; padding-top: 11px; padding-bottom: 10px; padding-left: 9px; padding-right: 27px; left: 21px; top: 236px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; overflow: hidden; justify-content: flex-start; align-items: center; display: inline-flex">
-                  <div style="width: 535px; height: 115px; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Description: {{ event.description}} </div>
-                </div>
-                <div style="padding-top: 3px; padding-bottom: 6px; padding-left: 12px; padding-right: 6px; left: 21px; top: 188px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; overflow: hidden; justify-content: flex-end; align-items: center; display: inline-flex">
-                  <div style="width: 553px; height: 24px; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Tags: {{ event.tags }}</div>
-                </div>
-                <div style="width: 570px; height: 26px; left: 21px; top: 385px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50)"></div>
-                <div style="width: 545px; height: 25px; left: 32px; top: 387px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Contact: {{ event.contact }}</div>
-                <div style="width: 571px; height: 25px; left: 21px; top: 108px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                <div style="width: 551px; height: 24px; left: 33px; top: 109px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Where: {{ event.where }}</div>
-                <div style="width: 571px; height: 24px; left: 21px; top: 148px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                <div style="width: 551px; height: 25px; left: 33px; top: 148px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">When: {{ event.when }}</div>
-                <div style="width: 212px; height: 26px; left: 380px; top: 64px; position: absolute; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                <div style="width: 184px; height: 23px; left: 392px; top: 67px; position: absolute; text-align: center; color: #061945; font-size: 16px; font-family: Inter; font-weight: 400; word-wrap: break-word">Follow</div>
-            </div>
-        </td>
-        {% endfor %}
-    </table>
 
+  
+        <td style="display: flex; justify-content: center; align-items: center; height: 100%; margin-bottom: 30px"> --> 
+     {% endraw %}
+     <style>
+        /* Style for the event contatiner */
+        .eventContainer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 40px;
+             width: 100%;
+        }
+    
+        /* Style for the event post */
+        .eventPost {
+            width: 180%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .eventGrid {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 40px;
+        }
+
+        
+    </style>
+
+    <div class="eventContatiner">
+        <div class="eventGrid">
+            {% for event in events %} 
+            <div class="eventPost">
+                <div style=" height: 508px; position: relative; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 30px; overflow: hidden">
+                    <div style="width: 623px; height: 98px; left: 0px; top: 0px; position: relative; background: #061945"></div>
+                    <div style="width: 356px; height: 39px; left: 15px; top: 27px; position: absolute; color: white; font-size: 28px; font-family: Inter; font-weight: 400; word-wrap: break-word">{{ event.name }}</div>
+                    <!--<div style="width: 570px; height: 60px; padding: 10px; left: 21px; top: 425px; position: absolute; background: #061945; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">-->
+                      <form method="POST" action="/dashboard" style="width: 96px; height: 29px; color: white; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">
+                        <!--<button type = "Register" name = "{{ event.event_id }}" value = "{% if event.registered %}Unregister{% else %}Register{% endif %}"></button> -->
+                        <button class="registerButton" name = "{{event.event_id}}" onclick="registerFlip()">Register</button>
+                        <style>
+                            .registerButton {
+                                display:flex;
+                                background: #061945;
+                                width: 470px; 
+                                height: 60px; 
+                                padding: 10px; 
+                                left: 21px; 
+                                top: 425px; 
+                                position: absolute; 
+                                box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); 
+                                border-radius: 10px; justify-content: 
+                                center; align-items: 
+                                center; gap: 10px; 
+                                display: inline-flex;
+                                color:#fff;
+                                font-size:16px;
+                            }
+                        </style>
+                        <script>
+                            var button = document.querySelector(".registerButton");
+                        
+                           /* if (event.registered) {
+                              button.innerText = "Unregister";
+                            } else {
+                              button.innerText = "Reigister";
+                            }*/
+                          // Function to toggle the global variable and update the button text
+                            function registerFlip() {
+                                var button = document.querySelector(".registerButton");
+                                //event.registered = !event.registered;
+                                if(button.textContent === "Unregister")
+                                {
+                                    button.textContent = "Register";
+                                }
+                                else
+                                {
+                                    button.textContent = "Unregister"; 
+                                }
+                            }
+                        </script>
+                     </form>
+                    
+                    <div style="width: 30%; height: 52px; left: 325px; top: 7px; position: absolute; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
+                    <div style="width: 30%; height: 52px; left: 340px; top: 12px; position: absolute; color: #061945; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Hosted By: {{ event.organization }}</div>
+               
+                    <div style="width: 90%; height: 136px; left: 21px; top: 236px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
+                    <div style="width: 551px; height: 115px; left: 33px; top: 245px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Description: {{ event.description }}</div>
+                    <div style="width: 90%; height: 25px; left: 21px; top: 188px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
+                    <div style="width: 551px; height: 24px; left: 33px; top: 192px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Tags: {{ event.tags }}</div>
+                    <div style="width: 90%; height: 25px; left: 21px; top: 387px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
+                    <div style="width: 551px; height: 24px; left: 33px; top: 391px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Contact: {{ event.contact }}</div>
+                    
+                    <div style="width: 90%; height: 25px; left: 21px; top: 108px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
+                    <div style="width: 551px; height: 24px; left: 33px; top: 112px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Where: {{ event.where }}</div>
+                    <div style="width: 90%; height: 24px; left: 21px; top: 148px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
+                    <div style="width: 551px; height: 25px; left: 33px; top: 152px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">When: {{ event.when }}</div>
+                    
+                    <div style="width: 30%; height: 23px; left: 325px; top: 67px; position: absolute; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
+                    <div style="width: 30%; height: 23px; left: 380px; top: 70px; position: absolute; color: #061945; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Follow</div>
+               
+                    
+                </div>
+                </div>
+        <!--</td>-->
+        {% endfor %}
+    <!--</table>-->
+    </div>
+        </div>
+    </div>
 
     <!-- End of Showing Events-->
 
