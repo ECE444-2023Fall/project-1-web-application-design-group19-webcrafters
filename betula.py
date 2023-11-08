@@ -379,6 +379,7 @@ def myEvents():
     #Stores if the user has any saved events
     hasSavedEvents = False
 
+    
     #Store the events to render
     eventsList = []
 
@@ -433,6 +434,7 @@ def myEvents():
             if str(event.event_id) in request.form:
                 event_pressed = event.event_id
                 eventsList[index].registered = True
+                eventsList.remove(eventsList[index])
                 break
 
             index += 1
@@ -470,6 +472,7 @@ def myEvents():
         update_table_query = f"UPDATE USER_DATA SET event_id = \'" + userRegisteredEvents + f"\' WHERE User_Email = \'{session['email']}\'"
         print(update_table_query)
         select_user_cursor.execute(update_table_query)
+        
 
     #Save table and close database
     connection.commit()
