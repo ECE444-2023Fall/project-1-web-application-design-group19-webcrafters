@@ -1,7 +1,6 @@
 {% extends "base2.html" %}
 
 {% block content %}
-<!-- <div style="width: 100%; height: 100%; position: relative; background: #F5F5F5"> -->
     <div style="left: 240px; top: 113px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex;">
     
     
@@ -69,11 +68,6 @@
                         <script>
                             var button = document.querySelector(".registerButton");
                         
-                           /* if (event.registered) {
-                              button.innerText = "Unregister";
-                            } else {
-                              button.innerText = "Reigister";
-                            }*/
                           // Function to toggle the global variable and update the button text
                             function registerFlip() {
                                 var button = document.querySelector(".registerButton");
@@ -105,8 +99,50 @@
                     <div style="width: 90%; height: 24px; left: 21px; top: 148px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
                     <div style="width: 551px; height: 25px; left: 33px; top: 152px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">When: {{ event.when }}</div>
                     
-                    <div style="width: 30%; height: 23px; left: 325px; top: 67px; position: absolute; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                    <div style="width: 30%; height: 23px; left: 380px; top: 70px; position: absolute; color: #061945; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Follow</div>
+                    <form method="POST" action="/dashboard"> <!-- style="width: 30%; height: 23px; left: 380px; top: 70px; position: absolute; color: #061945; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">-->
+                        <button class="followButton" name = "{{event.event_id}}" onclick="followFlip()">{% if event.registered %}
+                                                                                                            Unfollow
+                                                                                                        {% else %}
+                                                                                                            Follow
+                                                                                                        {% endif %}
+                        </button>
+                        <style>
+                            .followButton {
+                                display: flex;
+                                background: #ffffff;
+                                width: 30%; 
+                                height: 23px; 
+                                padding: 10px; 
+                                left: 325px; 
+                                top: 67px; 
+                                position: absolute; 
+                                box-shadow: 0px 2px 2px #04102c; 
+                                border-radius: 10px; justify-content: 
+                                center; align-items: 
+                                center; gap: 10px; 
+                                display: inline-flex;
+                                color: #061945;
+                                font-size: 14px;
+                                font-family: system-ui;
+                            }
+                        </style>
+                        <script>
+                            var button = document.querySelector(".followButton");
+                        
+                          // Function to toggle the global variable and update the button text
+                            function followFlip() {
+                                var button = document.querySelector(".followButton");
+                                if(button.textContent === "Unfollow")
+                                {
+                                    button.textContent = "Follow";
+                                }
+                                else
+                                {
+                                    button.textContent = "Unfollow"; 
+                                }
+                            }
+                        </script>
+                     </form>
                
                     
                 </div>
@@ -275,13 +311,44 @@
   </div>
         {% endif %}
       </div>
-        
-                <!--<div style="width: 146px; height: 28px; left: 337px; top: 12px; position: absolute; text-align: center; color: white; font-size: 30px; font-family: Alegreya Sans; font-weight: 500; word-wrap: break-word">Dashboard</div>
-                <div style="width: 192px; height: 28px; left: 571px; top: 11px; position: absolute; text-align: center; color: white; font-size: 30px; font-family: Alegreya Sans; font-weight: 500; word-wrap: break-word">Recommended</div>
-                <div style="width: 155px; height: 28px; left: 851px; top: 10px; position: absolute; text-align: center; color: white; font-size: 30px; font-family: Alegreya Sans; font-weight: 500; word-wrap: break-word">My Events</div>
-                <img style="width: 49px; height: 49px; left: 1267px; top: 0px; position: absolute" src="https://via.placeholder.com/49x49" /> -->
+    
                 
     </div>
+
+
+    <!-- Button for posting -->
+    <style>
+        .postbutton {
+            border: none;
+            padding: 10px;
+            margin: 10px 10px;
+            text-align: center;
+            text-decoration: none;
+            color: #012a5c;
+            font-size: 50px;
+            font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-weight: 500;
+            width: 60px;
+            height: 60px;
+            background-color: #d7e6f8;
+            border-radius: 30px;
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+
+        }
+        .postbutton:hover {
+            background-color: #b1d4ff;
+            transition: 0.1s;
+        }
+    </style>
+    <button class="postbutton", onclick="window.location.href ='posting';" title="Create a post">+</button>
+
+
     <!-- Filters sidebar -->
 
     <div id="filtersContainer" style="width: 210px; height: calc(100vh - 55px); left: 0px; top: 55px; position: fixed; overflow-y: hidden;">
@@ -631,5 +698,4 @@
                 document.getElementById("filtersContainer").style.overflowY = "hidden";
             });
         </script>
-<!-- </div> -->
 {% endblock %}
