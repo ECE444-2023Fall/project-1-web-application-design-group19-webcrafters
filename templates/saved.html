@@ -1,7 +1,7 @@
 {% extends "base2.html" %}
 
 {% block content %}
-<div style="width: 100%; height: 100%; position: relative; background: #F5F5F5">
+<!-- <div style="width: 100%; height: 100%; position: relative; background: #F5F5F5"> -->
     <div style="left: 240px; top: 113px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex;">
     
     
@@ -282,73 +282,78 @@
                 <img style="width: 49px; height: 49px; left: 1267px; top: 0px; position: absolute" src="https://via.placeholder.com/49x49" /> -->
                 
     </div>
-    <div style="width: 1440px; height: 70px; left: 0px; top: 0px; position: absolute; background: #012A5C"></div>
-    <div style="width: 223px; height: 954px; left: 0px; top: 70px; position: absolute; background: #5078A9"></div>
-    <div style="width: 1316px; height: 52px; left: 53px; top: 9px; position: absolute">
-        <div style="width: 165px; height: 51px; left: 0px; top: 1px; position: absolute; color: white; font-size: 40px; font-family: Sora; font-weight: 600; text-transform: capitalize; word-wrap: break-word">Betula</div>
-    <div style="left: 32px; top: 113px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-end; gap: 30px; display: inline-flex">
-    <div style="color: white; font-size: 24px; font-family: Plus Jakarta Sans; font-weight: 500; word-wrap: break-word">Filters</div>
-        
-        <!-- Styling for Events Filter -->
-        <style>
-            .facultyFilter 
-            {
-                width: 100px; 
-                color: white; 
-                font-size: 20px; 
-                font-family: Alegreya Sans; 
-                font-weight: 400; 
-                word-wrap: break-word
-            }
+    <!-- Filters sidebar -->
 
-            .facultyFilter a 
-            {
-                color: white;
-                text-decoration: none; /* Remove underlines from the link */
-            }
+    <div id="filtersContainer" style="width: 210px; height: calc(100vh - 55px); left: 0px; top: 55px; position: fixed; overflow-y: hidden;">
 
-            .facultyDropdown-container 
-            {
-                position: relative;
-                display: inline-block;
-            }
-
-            /* Style for the text that shows/hides the dropdown */
-            .facultyDropdown-text 
-            {
-                cursor: pointer;
-            }
-
-            /* Style for the dropdown menu */
-            .facultyDropdown 
-            {
-                display: none;
-                position: absolute;
-                background-color: #f1f1f1;
-                border: 1px solid #ccc;
-                max-height: 200px; /* Set a maximum height for scrollbars */
-                width: 150px;
-                overflow-y: auto; /* Enable vertical scrolling when needed */
-                z-index: 2;
-            }
-
-            /* Style for the checkboxes */
-            .checkbox-label 
-            {
-                display: block;
-                margin: 4px;
-            }
-
-            .down-arrow::after 
-            {
-                content: " ▼";
-                position: absolute;
-                right: 0;
-            }
-        </style>
-
-        <div id="facFilter" class="facultyFilter" onclick="facultyDropdown()">
-            <a href="#">Faculty<span class="down-arrow"></span></a>
+        <div style="height: 100%; left: 53px; top: 30px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 1px; display: inline-flex">
+            <div style="color: white; font-size: 24px; font-family: system-ui; font-weight: 500; word-wrap: break-word">Filters</div>
+            <br>
+    
+            <!-- Styling for Events Filter -->
+            <style>
+                .facultyFilter 
+                {
+                    display: flex;
+                    align-items: center;
+                    color: white; 
+                    font-size: 20px; 
+                    font-family: system-ui; 
+                    font-weight: 350; 
+                    word-wrap: break-word;
+                    position: relative; 
+                    margin-bottom: 0px;
+                }
+    
+                .facultyFilter a 
+                {
+                    color: white;
+                    text-decoration: none; /* Remove underlines from the link */
+                }
+    
+                /* Style for the text that shows/hides the dropdown */
+                .facultyDropdown-text 
+                {
+                    cursor: pointer;
+                }
+    
+                /* Style for the dropdown menu */
+                .facultyDropdown 
+                {
+                    display: none;
+                    margin-left: 20px; 
+                    margin-top: 0px;
+                }
+    
+                /* Style for the checkboxes */
+                .checkbox-label 
+                {
+                    display: block;
+                    margin: 4px;
+                    font-family: 'system-ui';
+                    font-weight: 250;
+                    color: white;
+                }
+    
+                .right-arrow::after 
+                {
+                    content: " ▶";
+                    margin-right: 8px;
+                    cursor: pointer;
+                }
+    
+                .down-arrow::after 
+                {
+                    content: " ▼";
+                    margin-right: 8px;
+                    cursor: pointer;
+                }
+            </style>
+    
+            <div id="facFilter" class="facultyFilter" onclick="facultyDropdown()">
+                <span class="right-arrow" id="facultyArrowIcon"></span>
+                <a href="#"><span>Faculty</span></a>
+            </div>
             <div class="facultyDropdown" id="facultyDrop">
                 <label class="checkbox-label">
                     <input type="checkbox"> Option 1
@@ -381,74 +386,79 @@
                     <input type="checkbox"> Option 10
                 </label>
             </div>
-        </div>
-        
-        <!-- Functions for Faculty Filter -->
-        <script>
-            function facultyDropdown() 
-            {
-                var dropdown = document.getElementById("facultyDrop");
-                dropdown.style.display = "block";
-                var dropdownTwo = document.getElementById("topicDrop");
-                dropdownTwo.style.display = "none";
-                var dropdownThree = document.getElementById("priceDrop");
-                dropdownThree.style.display = "none";
-            }
-        </script>
-
-        <!-- Styling for Topics Filter -->
-        <style>
-            .topcisFilter 
-            {
-                width: 100px; 
-                color: white; 
-                font-size: 20px; 
-                font-family: Alegreya Sans; 
-                font-weight: 400; 
-                word-wrap: break-word
-            }
-        
-            .topcisFilter a 
-            {
-                color: white;
-                text-decoration: none; /* Remove underlines from the link */
-            }
-        
-            .topicsDropdown-container 
-            {
-                    position: relative;
-                    display: inline-block;
-            }
+            <br>
             
-            /* Style for the text that shows/hides the dropdown */
-            .topicsDropdown-text 
-            {
-                cursor: pointer;
-            }
-
-            /* Style for the dropdown menu */
-            .topicsDropdown 
-            {
-                display: none;
-                position: absolute;
-                background-color: #f1f1f1;
-                border: 1px solid #ccc;
-                max-height: 200px; /* Set a maximum height for scrollbars */
-                width: 150px;
-                overflow-y: auto; /* Enable vertical scrolling when needed */
-                z-index: 3;
-            }
-
-            /* Style for the checkboxes */
-            .checkbox-label 
-            {
-                display: block;
-                margin: 4px;
-            }
-        </style>
-
-        <div id="topFilter" class="topcisFilter" onclick="topicDropdown()">
-            <a href="#">Topics<span class="down-arrow"></span></a>
+            <!-- Functions for Faculty Filter -->
+            <script>
+                function facultyDropdown() 
+                {
+                    var dropdown = document.getElementById("facultyDrop");
+                    // Check if the dropdown is currently visible or hidden
+                    if (dropdown.style.display === "block") {
+                        dropdown.style.display = "none"; // If visible, hide the dropdown
+                        document.getElementById("facultyArrowIcon").classList.remove("down-arrow");
+                        document.getElementById("facultyArrowIcon").classList.add("right-arrow");
+                    } else {
+                        dropdown.style.display = "block"; // If hidden, show the dropdown
+                        document.getElementById("facultyArrowIcon").classList.remove("right-arrow");
+                        document.getElementById("facultyArrowIcon").classList.add("down-arrow");
+                    }
+                }
+            </script>
+    
+            <!-- Styling for Topics Filter -->
+            <style>
+                .topcisFilter 
+                {
+                    display: flex;
+                    align-items: center;
+                    color: white; 
+                    font-size: 20px; 
+                    font-family: system-ui; 
+                    font-weight: 350; 
+                    word-wrap: break-word;
+                }
+            
+                .topcisFilter a 
+                {
+                    color: white;
+                    text-decoration: none; /* Remove underlines from the link */
+                }
+            
+                .topicsDropdown-container 
+                {
+                        position: relative;
+                        display: inline-block;
+                }
+                
+                /* Style for the text that shows/hides the dropdown */
+                .topicsDropdown-text 
+                {
+                    cursor: pointer;
+                }
+    
+                /* Style for the dropdown menu */
+                .topicsDropdown 
+                {
+                    display: none;
+                    margin-left: 20px; 
+                }
+    
+                /* Style for the checkboxes */
+                .checkbox-label 
+                {
+                    display: block;
+                    margin: 4px;
+                    font-family: 'system-ui';
+                    font-weight: 250;
+                    color: white;
+                }
+            </style>
+    
+            <div id="topFilter" class="topcisFilter" onclick="topicDropdown()">
+                <span class="right-arrow" id="topicArrowIcon"></span>
+                <a href="#"><span>Topics</span></a>
+            </div>
             <div class="topicsDropdown" id="topicsDrop">
                 <label class="checkbox-label">
                     <input type="checkbox"> Option 1
@@ -481,74 +491,79 @@
                     <input type="checkbox"> Option 10
                 </label>
             </div>
-        </div>
-
-        <!-- Functions for Topic Filter -->
-        <script>
-            function topicDropdown() 
-            {
+            <br>
+    
+            <!-- Functions for Topic Filter -->
+            <script>
+                function topicDropdown() 
+                {
                     var dropdown = document.getElementById("topicsDrop");
-                    dropdown.style.display = "block";
-                    var dropdownTwo = document.getElementById("facultyDrop");
-                    dropdownTwo.style.display = "none";
-                    var dropdownThree = document.getElementById("priceDrop");
-                    dropdownThree.style.display = "none";
-            }
-        </script>
-
-        <!-- Styling for Price Filter -->
-        <style>
-            .priceFilter 
-            {
-                width: 100px; 
-                color: white; 
-                font-size: 20px; 
-                font-family: Alegreya Sans; 
-                font-weight: 400; 
-                word-wrap: break-word
-            }
-        
-            .priceFilter a 
-            {
-                color: white;
-                text-decoration: none; /* Remove underlines from the link */
-            }
-        
-            .priceDropdown-container 
-            {
-                position: relative;
-                display: inline-block;
-            }
+                    // Check if the dropdown is currently visible or hidden
+                    if (dropdown.style.display === "block") {
+                        dropdown.style.display = "none"; // If visible, hide the dropdown
+                        document.getElementById("topicArrowIcon").classList.remove("down-arrow");
+                        document.getElementById("topicArrowIcon").classList.add("right-arrow");
+                    } else {
+                        dropdown.style.display = "block"; // If hidden, show the dropdown
+                        document.getElementById("topicArrowIcon").classList.remove("right-arrow");
+                        document.getElementById("topicArrowIcon").classList.add("down-arrow");
+                    }
+                }
+            </script>
+    
+            <!-- Styling for Price Filter -->
+            <style>
+                .priceFilter 
+                {
+                    display: flex;
+                    align-items: center;
+                    color: white; 
+                    font-size: 20px; 
+                    font-family: system-ui; 
+                    font-weight: 350; 
+                    word-wrap: break-word;
+                }
             
-            /* Style for the text that shows/hides the dropdown */
-            .priceDropdown-text 
-            {
-                cursor: pointer;
-            }
-
-            /* Style for the dropdown menu */
-            .priceDropdown 
-            {
-                display: none;
-                position: absolute;
-                background-color: #f1f1f1;
-                border: 1px solid #ccc;
-                max-height: 200px; /* Set a maximum height for scrollbars */
-                width: 150px;
-                overflow-y: auto; /* Enable vertical scrolling when needed */
-                z-index: 3;
-            }
-
-            /* Style for the checkboxes */
-            .checkbox-label 
-            {
-                display: block;
-                margin: 4px;
-            }
-        </style>
-
-        <div id="priFilter" class="priceFilter" onclick="priceDropdown()">
-            <a href="#">Price<span class="down-arrow"></span></a>
+                .priceFilter a 
+                {
+                    color: white;
+                    text-decoration: none; /* Remove underlines from the link */
+                }
+            
+                .priceDropdown-container 
+                {
+                    position: relative;
+                    display: inline-block;
+                }
+                
+                /* Style for the text that shows/hides the dropdown */
+                .priceDropdown-text 
+                {
+                    cursor: pointer;
+                }
+    
+                /* Style for the dropdown menu */
+                .priceDropdown 
+                {
+                    display: none;
+                    margin-left: 20px; 
+                }
+    
+                /* Style for the checkboxes */
+                .checkbox-label 
+                {
+                    display: block;
+                    margin: 4px;
+                    font-family: 'system-ui';
+                    font-weight: 250;
+                    color: white;
+                }
+            </style>
+    
+            <div id="priFilter" class="priceFilter" onclick="priceDropdown()">
+                <span class="right-arrow" id="priceArrowIcon"></span>
+                <a href="#"><span>Price</span></a>
+            </div>
             <div class="priceDropdown" id="priceDrop">
                 <label class="checkbox-label">
                     <input type="checkbox"> Option 1
@@ -581,27 +596,40 @@
                     <input type="checkbox"> Option 10
                 </label>
             </div>
+            <br>
+    
+            <br>
+            <!-- Functions for Price Filter -->
+            <script>
+                // Define the function to be called
+                function priceDropdown() 
+                {
+                    var dropdown = document.getElementById("priceDrop");
+                    // Check if the dropdown is currently visible or hidden
+                    if (dropdown.style.display === "block") {
+                        dropdown.style.display = "none"; // If visible, hide the dropdown
+                        document.getElementById("priceArrowIcon").classList.remove("down-arrow");
+                        document.getElementById("priceArrowIcon").classList.add("right-arrow");
+                    } else {
+                        dropdown.style.display = "block"; // If hidden, show the dropdown
+                        document.getElementById("priceArrowIcon").classList.remove("right-arrow");
+                        document.getElementById("priceArrowIcon").classList.add("down-arrow");
+                    }
+                }
+            </script>
         </div>
-
-        <!-- Functions for Price Filter -->
+    
+        <!-- Filters container script -->
         <script>
-            // Define the function to be called
-            function priceDropdown() 
-            {
-                var dropdown = document.getElementById("priceDrop");
-                dropdown.style.display = "block";
-                var dropdownTwo = document.getElementById("facultyDrop");
-                dropdownTwo.style.display = "none";
-                var dropdownThree = document.getElementById("topicDrop");
-                dropdownThree.style.display = "none";
-            }
+            document.getElementById("filtersContainer").addEventListener("mouseenter", function() {
+                // Scroll when cursor is at filters
+                document.getElementById("filtersContainer").style.overflowY = "auto";
+            });
+            
+            document.getElementById("filtersContainer").addEventListener("mouseleave", function() {
+                // No scroll when cursor leaves filters
+                document.getElementById("filtersContainer").style.overflowY = "hidden";
+            });
         </script>
-
-<!--
-        <div style="width: 79px; color: white; font-size: 20px; font-family: Alegreya Sans; font-weight: 400; word-wrap: break-word">Faculty</div>
-        <div style="width: 79px; color: white; font-size: 20px; font-family: Alegreya Sans; font-weight: 400; word-wrap: break-word">Topics</div>
-        <div style="width: 79px; color: white; font-size: 20px; font-family: Alegreya Sans; font-weight: 400; word-wrap: break-word">Price</div>
--->  
-    </div>
-</div>
+<!-- </div> -->
 {% endblock %}
