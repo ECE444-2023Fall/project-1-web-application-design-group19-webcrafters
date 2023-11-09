@@ -357,6 +357,23 @@ def print_tags():
     data = request.json
     tags = data.get('tags', [])
     print('Received tags:', tags)
+
+    # Link form to User_Data Table in DB
+    connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+    connection = odbc.connect(connection_string)
+    select_user_cursor = connection.cursor()
+
+    tagsString = str(",".join(tags))
+
+    #Update the user's tags based on what was returned
+    update_table_query = f"UPDATE USER_DATA SET user_tags = \'" + tagsString + f"\' WHERE User_Email = \'{session['email']}\'"
+    print(update_table_query)
+    select_user_cursor.execute(update_table_query)
+
+    #Save table and close database
+    connection.commit()
+    select_user_cursor.close()
+    connection.close()
     
     # Convert tags to CSV format
     csv_data = '"Tags"\n"' + ",".join(tags) + '"'
@@ -400,21 +417,85 @@ def download_csv():
 
 @app.route('/userprofile', methods=['GET', 'POST'])
 def userprofile():
-    session.setdefault('name', 'Guest')
-    session.setdefault('phone', '123-456-7890')
-    session.setdefault('email', 'guest@guest.com')
-    session.setdefault('selected_filters', [])
+    #Get the user from session email
+    
+    # Link form to User_Data Table in DB
+    connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+    connection = odbc.connect(connection_string)
+
+    #Get the user from the USER_DATA table
+    get_user_table_data_query = f"SELECT * FROM USER_DATA WHERE User_Email = \'{session['email']}\'"
+    select_user_cursor = connection.cursor()
+    select_user_cursor.execute(get_user_table_data_query)
+    dataset = select_user_cursor.fetchall()
+
+    # Get Column Names
+    headers = [column[0] for column in select_user_cursor.description]
+    user_df = pd.DataFrame(columns=headers, data=dataset)
+
+    print(user_df.head)
+
+    name = str(user_df["user_first_name"].values[0])
+
+    if name == 'None':
+        name = 'Guest'
+
+    password = str((user_df["password"].values[0]))
+    email = str(user_df["user_email"].values[0])
+    
+    #These are the tags we have from the user's database, can we 
+    tags = user_df["user_tags"].values[0]
+
+    print(tags)
+
+    tagsList = []
+    if tags is not None:
+        tagsList = tags.split(",")
+
+    session.setdefault('name', name)
+    session.setdefault('password', password)
+    session.setdefault('email', email)
+    session.setdefault('selected_filters', tagsList)
+
     form = FilterForm()
     if request.method == 'POST':
+        print("POST!")
         if 'filter_form' in request.form and form.validate_on_submit():
-            session['selected_filters'] = request.form.getlist('filters[]')
+            #session['selected_filters'] = request.form.getlist('filters[]')
+            print('hello!')
+            print(session['selected_filters'])
         elif 'name' in request.form:
             session['name'] = request.form.get('name')
+
+            #Update the user's name based on what was returned
+            update_table_query = f"UPDATE USER_DATA SET user_first_name = \'" + session['name'] + f"\' WHERE User_Email = \'{session['email']}\'"
+            print(update_table_query)
+            select_user_cursor.execute(update_table_query)
+
         elif 'email' in request.form:
+            oldEmail = session['email']
             session['email'] = request.form.get('email')
+
+            #Update the user's name based on what was returned
+            update_table_query = f"UPDATE USER_DATA SET user_email = \'" + session['email'] + f"\' WHERE User_Email = \'{oldEmail}\'"
+            print(update_table_query)
+            select_user_cursor.execute(update_table_query)
+
         elif 'phone' in request.form:
-            session['phone'] = request.form.get('phone')
-    return render_template('userprofile.html', name=session['name'], email=session['email'], form=form, phone=session['phone'], selected_filters=session['selected_filters'])
+            session['password'] = request.form.get('phone')
+
+            #Update the user's name based on what was returned
+            update_table_query = f"UPDATE USER_DATA SET password = \'" + session['password'] + f"\' WHERE User_Email = \'{session['email']}\'"
+            print(update_table_query)
+            select_user_cursor.execute(update_table_query)
+
+    #Save table and close database
+    connection.commit()
+    select_user_cursor.close()
+    connection.close()
+
+    return render_template('userprofile.html', name=session['name'], email=session['email'], form=form, password=session['password'], selected_filters=session['selected_filters'])
+
 
   
 @app.route('/posting', methods=['GET', 'POST'])
