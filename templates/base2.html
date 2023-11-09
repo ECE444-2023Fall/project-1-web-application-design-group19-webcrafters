@@ -7,46 +7,84 @@
 <html>
 <head>
 <style>
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #012a5c;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 100;
-}
+    /* Navbar style */
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #25355A;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 100;
+        border-radius: 0;
+    }
 
-li {
-  float: left;
-}
+    /* Navbar contents style */
+    li {
+        float: left;
+        cursor: pointer;
+    }
 
-li a {
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 50px;
-  text-decoration: none;
-}
+    li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 0px 50px;
+        text-decoration: none;
+        margin-top: 7px;
+    }
 
-li a:hover {
-    color: #cfe4ff;
-    text-decoration: none;
-}
+    li a:hover {
+        color: #cfe4ff;
+        text-decoration: none;
+    }
 
-.active {
-  font-weight: bold;
-}
+    .active {
+        font-weight: bold;
+    }
+
+    li b {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 0px 50px;
+        text-decoration: none;
+        margin-top: 1px;
+    }
+
+    li b:hover {
+        color: #cfe4ff;
+        text-decoration: none;
+    }
+
+    /* Adjust margin to raise the image */
+    li img {
+        margin-bottom: 10px; /* Increase this value to lower the image */
+    }
 </style>
 </head>
 <body>
     <ul>
-        <li style="font-size: 40px; font-family: Sora; font-weight: 600;"><a class="active" href="#dashboard" onclick="betula()">Betula</a></li>
-        <li style="float:right;"><img href="#" src="your-image-source.jpg" alt="Clickable Image" onclick="myUser()"></li>
-        <li style="font-size: 30px; float:right; font-family: system-ui; font-weight: 400;"><a href="#" onclick="myEvent()">My Events</a></li>
-        <li style="font-size: 30px; float:right; font-family: system-ui; font-weight: 400;"><a href="#dashboard" onclick="dashboard()">Dashboard</a></li>
+        <!-- Betula title -->
+        <li style="font-size: 40px; font-family: Sora; font-weight: 600;">
+            <b class="active" href="#dashboard" onclick="betula()">Betula</b>
+        </li>
+        <!-- User profile icon -->
+        <li style="float:right;">
+            <a href="#userprofile" onclick="myUser()">
+                <img src="./static/images/user.png" alt="Profile Icon" width="37" height="37">
+            </a>
+        </li>
+        <!-- My Events tab -->
+        <li style="font-size: 30px; float:right; font-family: system-ui; font-weight: 400;">
+            <a href="#" onclick="myEvent()">My Events</a>
+        </li>
+        <!-- Dashboard tab -->
+        <li style="font-size: 30px; float:right; font-family: system-ui; font-weight: 400;">
+            <a href="#dashboard" onclick="dashboard()">Dashboard</a>
+        </li>
 
     </ul>
 
@@ -64,16 +102,16 @@ li a:hover {
 
         function myEvent()
         {
-            alert("Go to my events");
+            window.location.href ='myEvents';
         }
 
         function myUser() 
         {
-            alert("Go to user page");
+            window.location.href ='userprofile';
         }
     </script>
 
-    <div style="width: 223px; height: 100%; left: 0px; position: fixed; background: #5078A9"></div>
+    <div style="width: 210px; height: 100%; left: 0px; position: fixed; background: #5078A9"></div>
 </body>
 </html>
 
