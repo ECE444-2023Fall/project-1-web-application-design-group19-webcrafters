@@ -369,14 +369,15 @@ def print_tags():
 
 
 class FilterForm(FlaskForm):
-    filter = SelectMultipleField('Select Filters', choices=[('Tag 1', 'Tag 1'), ('Tag 2', 'Tag 2'), ('Tag 3', 'Tag 3'), ('Tag 4', 'Tag 4')], widget=ListWidget(prefix_label=False), option_widget=CheckboxInput())
-    submit = SubmitField('Apply Filters')  
+    filter = SelectMultipleField('Select Filters', choices=[('Tag 1', 'Tag 1'), ('Tag 2', 'Tag 2'), ('Tag 3', 'Tag 3'), ('Tag 4', 'Tag 4'), ('Tag 5', 'Tag 5'), ('Tag 6', 'Tag 6'), ('Tag 7', 'Tag 7'), ('Tag 8', 'Tag 8'), ('Tag 9', 'Tag 9'), ('Tag 10', 'Tag 10'), ('Tag 11', 'Tag 11'),('Tag 12', 'Tag 12'), ('Tag 13', 'Tag 13'), ('Tag 14', 'Tag 14')], widget=ListWidget(prefix_label=False), option_widget=CheckboxInput())
+    submit = SubmitField('Apply Filters')   
 
 def save_to_csv():
+    
     name = session.get('name', 'Guest')
     email = session.get('email', 'guest@guest.com')
     phone = session.get('phone', '123-456-7890')
-    tags = session.get('selected_filters', [])
+    tags = session.get('tags', [])
     output = StringIO()
     writer = csv.writer(output)
     writer.writerow(['Name', 'Email', 'Phone', 'Tags'])
