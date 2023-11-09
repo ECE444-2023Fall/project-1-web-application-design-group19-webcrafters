@@ -257,7 +257,7 @@
                 style="color: #222222; font-size: 14px; font-family: Verdana; font-weight: 600; text-decoration: underline; line-height: 20.02px;">Edit</span>
             </div>
           </div>
-          <a href="{{ url_for('download_csv') }}" class="btn btn-primary">Download Profile as CSV</a>
+          <a href="{{ url_for('download_csv') }}" class="btn btn-primary">Save Profile</a>
 
         </div>
       </div>
@@ -429,13 +429,13 @@ function collectProfileData() {
     const email = document.getElementById('email').value;
     const phone = document.getElementById('phone').value;
     const tagSelect = document.getElementById('filter');  // Assuming the filter select has the id 'filter'
-    const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.text);  // get the values of selected tags
+    //const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.text);  // get the values of selected tags
 
     const profileData = {
         name: name,
         email: email,
         phone: phone,
-        tags: selectedTags
+       // tags: selectedTags
     };
     console.log(profileData); 
     // Send this data to the server

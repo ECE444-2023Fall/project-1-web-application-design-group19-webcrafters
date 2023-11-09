@@ -18,7 +18,7 @@ from credentials import db_username, db_password
 import logging
 from logging import handlers
 
-import pandas as pd
+#import pandas as pd
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
@@ -254,10 +254,11 @@ class FilterForm(FlaskForm):
     submit = SubmitField('Apply Filters')  
 
 def save_to_csv():
+    
     name = session.get('name', 'Guest')
     email = session.get('email', 'guest@guest.com')
     phone = session.get('phone', '123-456-7890')
-    tags = session.get('selected_filters', [])
+    tags = session.get('tags', [])
     output = StringIO()
     writer = csv.writer(output)
     writer.writerow(['Name', 'Email', 'Phone', 'Tags'])
