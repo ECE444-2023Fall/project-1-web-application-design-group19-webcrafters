@@ -18,7 +18,7 @@ from credentials import db_username, db_password
 import logging
 from logging import handlers
 
-#import pandas as pd
+import pandas as pd
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
