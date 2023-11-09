@@ -1,7 +1,6 @@
 {% extends "base2.html" %}
 
 {% block content %}
-<!-- <div style="width: 100%; height: 100%; position: relative; background: #F5F5F5"> -->
     <div style="left: 240px; top: 113px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex;">
     
     
@@ -42,9 +41,9 @@
             <div class="eventPost">
                 <div style=" height: 508px; position: relative; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 30px; overflow: hidden">
                     <div style="width: 623px; height: 98px; left: 0px; top: 0px; position: relative; background: #061945"></div>
-                    <div style="width: 356px; height: 39px; left: 15px; top: 27px; position: absolute; color: white; font-size: 28px; font-family: Inter; font-weight: 400; word-wrap: break-word">{{ event.name }}</div>
+                    <div style="width: 356px; height: 39px; left: 15px; top: 27px; position: absolute; color: white; font-size: 28px; font-family: system-ui; font-weight: 400; word-wrap: break-word">{{ event.name }}</div>
                     <!--<div style="width: 570px; height: 60px; padding: 10px; left: 21px; top: 425px; position: absolute; background: #061945; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">-->
-                      <form method="POST" action="/myEvents" style="width: 96px; height: 29px; color: white; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">
+                      <form method="POST" action="/myEvents" style="width: 96px; height: 29px; color: white; font-size: 24px; font-family: system-ui; font-weight: 400; word-wrap: break-word">
                         <!--<button type = "Register" name = "{{ event.event_id }}" value = "{% if event.registered %}Unregister{% else %}Register{% endif %}"></button> -->
                         <button class="registerButton" name = "{{event.event_id}}" onclick="registerFlip()">Unregister</button>
                         <style>
@@ -69,11 +68,6 @@
                         <script>
                             var button = document.querySelector(".registerButton");
                         
-                           /* if (event.registered) {
-                              button.innerText = "Unregister";
-                            } else {
-                              button.innerText = "Reigister";
-                            }*/
                           // Function to toggle the global variable and update the button text
                             function registerFlip() {
                                 var button = document.querySelector(".registerButton");
@@ -91,22 +85,64 @@
                      </form>
                     
                     <div style="width: 30%; height: 52px; left: 325px; top: 7px; position: absolute; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                    <div style="width: 30%; height: 52px; left: 340px; top: 12px; position: absolute; color: #061945; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Hosted By: {{ event.organization }}</div>
+                    <div style="width: 30%; height: 52px; left: 340px; top: 12px; position: absolute; color: #061945; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Hosted By: {{ event.organization }}</div>
                
                     <div style="width: 90%; height: 136px; left: 21px; top: 236px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                    <div style="width: 551px; height: 115px; left: 33px; top: 245px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Description: {{ event.description }}</div>
+                    <div style="width: 551px; height: 115px; left: 33px; top: 245px; position: absolute; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Description: {{ event.description }}</div>
                     <div style="width: 90%; height: 25px; left: 21px; top: 188px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                    <div style="width: 551px; height: 24px; left: 33px; top: 192px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Tags: {{ event.tags }}</div>
+                    <div style="width: 551px; height: 24px; left: 33px; top: 192px; position: absolute; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Tags: {{ event.tags }}</div>
                     <div style="width: 90%; height: 25px; left: 21px; top: 387px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                    <div style="width: 551px; height: 24px; left: 33px; top: 391px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Contact: {{ event.contact }}</div>
+                    <div style="width: 551px; height: 24px; left: 33px; top: 391px; position: absolute; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Contact: {{ event.contact }}</div>
                     
                     <div style="width: 90%; height: 25px; left: 21px; top: 108px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                    <div style="width: 551px; height: 24px; left: 33px; top: 112px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Where: {{ event.where }}</div>
+                    <div style="width: 551px; height: 24px; left: 33px; top: 112px; position: absolute; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Where: {{ event.where }}</div>
                     <div style="width: 90%; height: 24px; left: 21px; top: 148px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                    <div style="width: 551px; height: 25px; left: 33px; top: 152px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">When: {{ event.when }}</div>
+                    <div style="width: 551px; height: 25px; left: 33px; top: 152px; position: absolute; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">When: {{ event.when }}</div>
                     
-                    <div style="width: 30%; height: 23px; left: 325px; top: 67px; position: absolute; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                    <div style="width: 30%; height: 23px; left: 380px; top: 70px; position: absolute; color: #061945; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Follow</div>
+                    <form method="POST" action="/dashboard"> <!-- style="width: 30%; height: 23px; left: 380px; top: 70px; position: absolute; color: #061945; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">-->
+                        <button class="followButton" name = "{{event.event_id}}" onclick="followFlip()">{% if event.registered %}
+                                                                                                            Unfollow
+                                                                                                        {% else %}
+                                                                                                            Follow
+                                                                                                        {% endif %}
+                        </button>
+                        <style>
+                            .followButton {
+                                display: flex;
+                                background: #ffffff;
+                                width: 30%; 
+                                height: 23px; 
+                                padding: 10px; 
+                                left: 325px; 
+                                top: 67px; 
+                                position: absolute; 
+                                box-shadow: 0px 2px 2px #04102c; 
+                                border-radius: 10px; justify-content: 
+                                center; align-items: 
+                                center; gap: 10px; 
+                                display: inline-flex;
+                                color: #061945;
+                                font-size: 14px;
+                                font-family: system-ui;
+                            }
+                        </style>
+                        <script>
+                            var button = document.querySelector(".followButton");
+                        
+                          // Function to toggle the global variable and update the button text
+                            function followFlip() {
+                                var button = document.querySelector(".followButton");
+                                if(button.textContent === "Unfollow")
+                                {
+                                    button.textContent = "Follow";
+                                }
+                                else
+                                {
+                                    button.textContent = "Unfollow"; 
+                                }
+                            }
+                        </script>
+                     </form>
                
                     
                 </div>
@@ -137,27 +173,27 @@
                         <div class="eventPost">
                             <div style="width: 623px; height: 451px; position: relative; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 30px; overflow: hidden">
                             <div style="width: 623px; height: 98px; left: 0px; top: 0px; position: absolute; background: #061945"></div>
-                            <div style="width: 356px; height: 39px; left: 15px; top: 27px; position: absolute; color: white; font-size: 28px; font-family: Inter; font-weight: 400; word-wrap: break-word">{{ event.Event_Name }}</div>
+                            <div style="width: 356px; height: 39px; left: 15px; top: 27px; position: absolute; color: white; font-size: 28px; font-family: system-ui; font-weight: 400; word-wrap: break-word">{{ event.Event_Name }}</div>
                             <div style="width: 579px; height: 60px; padding: 10px; left: 21px; top: 368px; position: absolute; background: #061945; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
-                                <div style="width: 96px; height: 29px; color: white; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">Register</div>
+                                <div style="width: 96px; height: 29px; color: white; font-size: 24px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Register</div>
                             </div>
                             <div style="height: 52px; padding-left: 6px; padding-right: 8px; left: 380px; top: 7px; position: absolute; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; overflow: hidden; justify-content: center; align-items: center; display: inline-flex">
-                                <div style="width: 198px; height: 52px; color: #061945; font-size: 16px; font-family: Inter; font-weight: 400; word-wrap: break-word">Hosted by: {{ event.Coordinator_Name }}</div>
+                                <div style="width: 198px; height: 52px; color: #061945; font-size: 16px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Hosted by: {{ event.Coordinator_Name }}</div>
                             </div>
                             <div style="height: 136px; padding-top: 11px; padding-bottom: 10px; padding-left: 9px; padding-right: 35px; left: 20px; top: 186px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; overflow: hidden; justify-content: flex-start; align-items: center; display: inline-flex">
-                                <div style="width: 535px; height: 115px; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Description: {{ event.Event_Description }}</div>
+                                <div style="width: 535px; height: 115px; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Description: {{ event.Event_Description }}</div>
                             </div>
                             <div style="padding-top: 3px; padding-bottom: 6px; padding-left: 12px; padding-right: 14px; left: 20px; top: 143px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; overflow: hidden; justify-content: center; align-items: center; display: inline-flex">
-                                <div style="width: 553px; height: 24px; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Tags: {{ event.Event_Tags }}</div>
+                                <div style="width: 553px; height: 24px; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Tags: {{ event.Event_Tags }}</div>
                             </div>
                             <div style="width: 579px; height: 26px; left: 21px; top: 330px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50)"></div>
-                            <div style="width: 94px; height: 25px; left: 31px; top: 331px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Contact: {{ event.Coordinator_Email }}</div>
+                            <div style="width: 94px; height: 25px; left: 31px; top: 331px; position: absolute; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Contact: {{ event.Coordinator_Email }}</div>
                             <div style="width: 272px; height: 25px; left: 21px; top: 108px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                            <div style="width: 264px; height: 24px; left: 33px; top: 109px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Where: {{ event.Event_Location }}</div>
+                            <div style="width: 264px; height: 24px; left: 33px; top: 109px; position: absolute; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Where: {{ event.Event_Location }}</div>
                             <div style="width: 287px; height: 24px; left: 312px; top: 109px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                            <div style="width: 273px; height: 25px; left: 319px; top: 108px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">When: {{ event.Event_Time }}</div>
+                            <div style="width: 273px; height: 25px; left: 319px; top: 108px; position: absolute; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">When: {{ event.Event_Time }}</div>
                             <div style="width: 212px; height: 26px; left: 380px; top: 64px; position: absolute; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                            <div style="width: 184px; height: 23px; left: 392px; top: 67px; position: absolute; text-align: center; color: #061945; font-size: 16px; font-family: Inter; font-weight: 400; word-wrap: break-word">Follow</div>
+                            <div style="width: 184px; height: 23px; left: 392px; top: 67px; position: absolute; text-align: center; color: #061945; font-size: 16px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Follow</div>
                         </div>
                     {% endfor %}
                 </div>
@@ -168,50 +204,50 @@
         <td style="display: flex; justify-content: center; align-items: center; height: 100%">
             <div style="width: 623px; height: 451px; position: relative; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 30px; overflow: hidden">
                 <div style="width: 623px; height: 98px; left: 0px; top: 0px; position: absolute; background: #061945"></div>
-                <div style="width: 356px; height: 39px; left: 15px; top: 27px; position: absolute; color: white; font-size: 28px; font-family: Inter; font-weight: 400; word-wrap: break-word">{{ event[0] }}</div>
+                <div style="width: 356px; height: 39px; left: 15px; top: 27px; position: absolute; color: white; font-size: 28px; font-family: system-ui; font-weight: 400; word-wrap: break-word">{{ event[0] }}</div>
                 <div style="width: 579px; height: 60px; padding: 10px; left: 21px; top: 368px; position: absolute; background: #061945; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
-                    <div style="width: 96px; height: 29px; color: white; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">Register</div>
+                    <div style="width: 96px; height: 29px; color: white; font-size: 24px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Register</div>
                 </div>
                 <div style="height: 52px; padding-left: 6px; padding-right: 8px; left: 380px; top: 7px; position: absolute; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; overflow: hidden; justify-content: center; align-items: center; display: inline-flex">
-                    <div style="width: 198px; height: 52px; color: #061945; font-size: 16px; font-family: Inter; font-weight: 400; word-wrap: break-word">Hosted by: {{ event[1] }}</div>
+                    <div style="width: 198px; height: 52px; color: #061945; font-size: 16px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Hosted by: {{ event[1] }}</div>
                 </div>
                 <div style="height: 136px; padding-top: 11px; padding-bottom: 10px; padding-left: 9px; padding-right: 35px; left: 20px; top: 186px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; overflow: hidden; justify-content: flex-start; align-items: center; display: inline-flex">
-                    <div style="width: 535px; height: 115px; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Description: {{ event[5] }}</div>
+                    <div style="width: 535px; height: 115px; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Description: {{ event[5] }}</div>
                 </div>
                 <div style="padding-top: 3px; padding-bottom: 6px; padding-left: 12px; padding-right: 14px; left: 20px; top: 143px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; overflow: hidden; justify-content: center; align-items: center; display: inline-flex">
-                    <div style="width: 553px; height: 24px; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Tags: {{ event[4] }}</div>
+                    <div style="width: 553px; height: 24px; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Tags: {{ event[4] }}</div>
                 </div>
                 <div style="width: 579px; height: 26px; left: 21px; top: 330px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50)"></div>
-                <div style="width: 94px; height: 25px; left: 31px; top: 331px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Contact: {{ event[6] }}</div>
+                <div style="width: 94px; height: 25px; left: 31px; top: 331px; position: absolute; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Contact: {{ event[6] }}</div>
                 <div style="width: 272px; height: 25px; left: 21px; top: 108px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                <div style="width: 264px; height: 24px; left: 33px; top: 109px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Where: {{ event[2] }}</div>
+                <div style="width: 264px; height: 24px; left: 33px; top: 109px; position: absolute; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Where: {{ event[2] }}</div>
                 <div style="width: 287px; height: 24px; left: 312px; top: 109px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                <div style="width: 273px; height: 25px; left: 319px; top: 108px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">When: {{ event[3] }}</div>
+                <div style="width: 273px; height: 25px; left: 319px; top: 108px; position: absolute; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">When: {{ event[3] }}</div>
                 <div style="width: 212px; height: 26px; left: 380px; top: 64px; position: absolute; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                <div style="width: 184px; height: 23px; left: 392px; top: 67px; position: absolute; text-align: center; color: #061945; font-size: 16px; font-family: Inter; font-weight: 400; word-wrap: break-word">Follow</div>
+                <div style="width: 184px; height: 23px; left: 392px; top: 67px; position: absolute; text-align: center; color: #061945; font-size: 16px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Follow</div>
             </div>
             -->
             <!--<div style="width: 623px; height: 451px; position: relative; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 30px; overflow: hidden; margin-bottom: 30px">
                 <div style="width: 623px; height: 98px; left: 0px; top: 0px; position: absolute; background: #061945"></div>
-                <div style="width: 356px; height: 39px; left: 15px; top: 27px; position: absolute; color: white; font-size: 28px; font-family: Inter; font-weight: 400; word-wrap: break-word">{{ event[0] }}</div>
+                <div style="width: 356px; height: 39px; left: 15px; top: 27px; position: absolute; color: white; font-size: 28px; font-family: system-ui; font-weight: 400; word-wrap: break-word">{{ event[0] }}</div>
                 <div style="width: 579px; height: 60px; padding: 10px; left: 21px; top: 368px; position: absolute; background: #061945; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
-                  <div style="width: 96px; height: 29px; color: white; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">Register</div>
+                  <div style="width: 96px; height: 29px; color: white; font-size: 24px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Register</div>
                 </div>
                 <div style="padding-top: 9px; padding-bottom: 6px; padding-left: 6px; padding-right: 10px; left: 388px; top: 11px; position: absolute; background: white; justify-content: flex-start; align-items: center; display: inline-flex">
-                  <div style="width: 196px; height: 55px; color: #061945; font-size: 16px; font-family: Inter; font-weight: 400; word-wrap: break-word">Hosted by: {{ event[1] }}</div>
+                  <div style="width: 196px; height: 55px; color: #061945; font-size: 16px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Hosted by: {{ event[1] }}</div>
                 </div>
                 <div style="height: 136px; padding-top: 11px; padding-bottom: 10px; padding-left: 9px; padding-right: 35px; left: 20px; top: 186px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; overflow: hidden; justify-content: flex-start; align-items: center; display: inline-flex">
-                  <div style="width: 535px; height: 115px; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Description: {{ event[5] }}</div>
+                  <div style="width: 535px; height: 115px; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Description: {{ event[5] }}</div>
                 </div>
                 <div style="padding-top: 3px; padding-bottom: 6px; padding-left: 12px; padding-right: 14px; left: 20px; top: 143px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; overflow: hidden; justify-content: center; align-items: center; display: inline-flex">
-                  <div style="width: 553px; height: 24px; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Tags: {{ event[4] }}</div>
+                  <div style="width: 553px; height: 24px; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Tags: {{ event[4] }}</div>
                 </div>
                 <div style="width: 579px; height: 26px; left: 21px; top: 330px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50)"></div>
-                <div style="width: 94px; height: 25px; left: 31px; top: 331px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Contact: {{ event[6] }}</div>
+                <div style="width: 94px; height: 25px; left: 31px; top: 331px; position: absolute; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Contact: {{ event[6] }}</div>
                 <div style="width: 272px; height: 25px; left: 21px; top: 108px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                <div style="width: 264px; height: 24px; left: 33px; top: 109px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Where: {{ event[2] }}</div>
+                <div style="width: 264px; height: 24px; left: 33px; top: 109px; position: absolute; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Where: {{ event[2] }}</div>
                 <div style="width: 287px; height: 24px; left: 312px; top: 109px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
-                <div style="width: 273px; height: 25px; left: 319px; top: 108px; position: absolute; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">When: {{ event[3] }}</div>
+                <div style="width: 273px; height: 25px; left: 319px; top: 108px; position: absolute; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">When: {{ event[3] }}</div>
               </div>
  
  
@@ -275,13 +311,44 @@
   </div>
         {% endif %}
       </div>
-        
-                <!--<div style="width: 146px; height: 28px; left: 337px; top: 12px; position: absolute; text-align: center; color: white; font-size: 30px; font-family: Alegreya Sans; font-weight: 500; word-wrap: break-word">Dashboard</div>
-                <div style="width: 192px; height: 28px; left: 571px; top: 11px; position: absolute; text-align: center; color: white; font-size: 30px; font-family: Alegreya Sans; font-weight: 500; word-wrap: break-word">Recommended</div>
-                <div style="width: 155px; height: 28px; left: 851px; top: 10px; position: absolute; text-align: center; color: white; font-size: 30px; font-family: Alegreya Sans; font-weight: 500; word-wrap: break-word">My Events</div>
-                <img style="width: 49px; height: 49px; left: 1267px; top: 0px; position: absolute" src="https://via.placeholder.com/49x49" /> -->
+    
                 
     </div>
+
+
+    <!-- Button for posting -->
+    <style>
+        .postbutton {
+            border: none;
+            padding: 10px;
+            margin: 10px 10px;
+            text-align: center;
+            text-decoration: none;
+            color: #012a5c;
+            font-size: 50px;
+            font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-weight: 500;
+            width: 60px;
+            height: 60px;
+            background-color: #d7e6f8;
+            border-radius: 30px;
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+
+        }
+        .postbutton:hover {
+            background-color: #b1d4ff;
+            transition: 0.1s;
+        }
+    </style>
+    <button class="postbutton", onclick="window.location.href ='posting';" title="Create a post">+</button>
+
+
     <!-- Filters sidebar -->
 
     <div id="filtersContainer" style="width: 210px; height: calc(100vh - 55px); left: 0px; top: 55px; position: fixed; overflow-y: hidden;">
@@ -631,5 +698,4 @@
                 document.getElementById("filtersContainer").style.overflowY = "hidden";
             });
         </script>
-<!-- </div> -->
 {% endblock %}
