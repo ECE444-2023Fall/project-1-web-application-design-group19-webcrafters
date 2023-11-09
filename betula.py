@@ -147,7 +147,11 @@ def dashboard():
     connection = odbc.connect(connection_string)
 
     #Get the user from the USER_DATA table
-    get_user_table_data_query = f"SELECT * FROM USER_DATA WHERE User_Email = \'{session['email']}\'"
+    try:
+        get_user_table_data_query = f"SELECT * FROM USER_DATA WHERE User_Email = \'{session['email']}\'"
+    except:
+        redirect('/login')
+
     select_user_cursor = connection.cursor()
     select_user_cursor.execute(get_user_table_data_query)
     dataset = select_user_cursor.fetchall()
