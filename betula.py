@@ -149,13 +149,14 @@ def dashboard():
     #Get the user from the USER_DATA table
     get_user_table_data_query = f"SELECT * FROM USER_DATA WHERE User_Email = \'{session['email']}\'"
     select_user_cursor = connection.cursor()
+
     select_user_cursor.execute(get_user_table_data_query)
     dataset = select_user_cursor.fetchall()
 
     # Get Column Names
     headers = [column[0] for column in select_user_cursor.description]
     user_df = pd.DataFrame(columns=headers, data=dataset)
-
+    
     print(user_df.head)
     
     #Get the user's tags and stringency
@@ -204,13 +205,10 @@ def dashboard():
 
         registered = False
 
-        print(event_id)
         if userRegisteredEvents is not None:
             if str(event_id) in userRegisteredEvents:
-                print('Registered!')
                 registered = True
             else:
-                print('Not registered!')
                 registered = False
 
         #If we are stringent, only add events that match with our tags
@@ -315,8 +313,6 @@ def dashboard():
                         userRegisteredEvents.remove(element)
                 
                 amountRegistered = len(userRegisteredEvents)
-
-                print(f"Removed Spaces?: {userRegisteredEvents}")
 
                 #if the event clicked is not already counted add it
                 if not(str(event_pressed) in userRegisteredEvents):
@@ -607,7 +603,9 @@ def myEvents():
                 #    userRegisteredEvents = userRegisteredEvents + "," + str(event_pressed)
                 #if they have clicked it a second time, unregister them!
                 #else:
-                userRegisteredEvents.remove(str(event_pressed))
+                print(f"User registered event in myEvents {userRegisteredEvents}")
+                print(event_pressed)
+                userRegisteredEvents.remove((event_pressed))
                 print(f"Current Registered Events {userRegisteredEvents}")
                 if userRegisteredEvents is not None:
                     userRegisteredEvents = ','.join(userRegisteredEvents)
