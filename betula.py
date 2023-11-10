@@ -549,10 +549,19 @@ def myEvents():
             event_id = row['event_id']
 
             registered = True
-            organization = row['organization_name']
+            try:
+                organization = row['organization_name']
+            except:
+                organization = "Not available"
 
-            where = row['event_location_common_name'] + ", " + row['event_street_address'] + ", " + row['event_city']
-            when = row['event_date'] + " | " + row['event_start_time'] + " to " + row['event_end_time']
+            try:
+                where = row['event_location_common_name'] + ", " + row['event_street_address'] + ", " + row['event_city']
+            except:
+                where = "Not available"
+            try:
+                when = row['event_date'] + " | " + row['event_start_time'] + " to " + row['event_end_time']
+            except:
+                when = "Not available"
 
             currEvent = Event(name = row['event_name'], organization = organization, where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'], event_id = event_id, registered = registered)
             eventsList.append(currEvent)
