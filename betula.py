@@ -523,17 +523,21 @@ def myEvents():
     eventsList = []
 
     #If the user has saved events
-    if userRegisteredEvents is not None and len(userRegisteredEvents) != 0:
+    if userRegisteredEvents != None and len(userRegisteredEvents) != 0:
         userRegisteredEvents = userRegisteredEvents.split(',')
         hasSavedEvents = True
 
         
-        placeholders = ", ".join(["?"] * len(userRegisteredEvents))
+        # Filter out non-integer elements and convert valid ones to integers
+        userRegisteredEvents = [int(event) for event in userRegisteredEvents if event.isdigit()]
 
-        #Get the events from the events table
-        get_events_query = f"SELECT * FROM EVENT_DATA WHERE event_id IN (" + placeholders + ")"
-        select_user_cursor.execute(get_events_query, userRegisteredEvents)
-        dataset = select_user_cursor.fetchall()
+        if userRegisteredEvents:
+            placeholders = ', '.join(['?' for _ in userRegisteredEvents])
+
+            # Get the events from the events table
+            get_events_query = f"SELECT * FROM EVENT_DATA WHERE event_id IN ({placeholders})"
+            select_user_cursor.execute(get_events_query, userRegisteredEvents)
+            dataset = select_user_cursor.fetchall()
 
         # Get Column Names and match dataframe
         headers = [column[0] for column in select_user_cursor.description]
@@ -565,55 +569,84 @@ def myEvents():
 
     if request.method == 'POST':
         
+        button_pressed = None
         event_pressed = None
+        organization_pressed = None
 
         #Get the button pressed from the events on the screen
         index = 0
         for event in eventsList:
             if str(event.event_id) in request.form:
+                button_pressed = "register"
                 event_pressed = event.event_id
                 eventsList[index].registered = True
                 eventsList.remove(eventsList[index])
                 break
 
+            elif str(event.organization) in request.form:
+                button_pressed = "follow"
+                organization_pressed = event.organization
+                break
+
             index += 1
         
-        print(f"Clicked {event_pressed}")
 
-        print(f"User Registered Events: {userRegisteredEvents}")
+        # unregister the event
+        if button_pressed == "register":
+            print(f"Clicked {event_pressed}")
 
-        #Add it to the user's registered events
-        if userRegisteredEvents is not None:
- 
-            #if the event clicked is not already counted add it
-            #if not(str(event_pressed) in userRegisteredEvents):
-                #userRegisteredEvents = str(userRegisteredEvents)
-            #    userRegisteredEvents = str(','.join(userRegisteredEvents))
-            #    userRegisteredEvents = userRegisteredEvents + "," + str(event_pressed)
-            #if they have clicked it a second time, unregister them!
-            #else:
-            userRegisteredEvents.remove(str(event_pressed))
-            print(f"Current Registered Events {userRegisteredEvents}")
+            print(f"User Registered Events: {userRegisteredEvents}")
+
+            #Add it to the user's registered events
             if userRegisteredEvents is not None:
-                userRegisteredEvents = ','.join(userRegisteredEvents)
+    
+                #if the event clicked is not already counted add it
+                #if not(str(event_pressed) in userRegisteredEvents):
+                    #userRegisteredEvents = str(userRegisteredEvents)
+                #    userRegisteredEvents = str(','.join(userRegisteredEvents))
+                #    userRegisteredEvents = userRegisteredEvents + "," + str(event_pressed)
+                #if they have clicked it a second time, unregister them!
+                #else:
+                userRegisteredEvents.remove(str(event_pressed))
+                print(f"Current Registered Events {userRegisteredEvents}")
+                if userRegisteredEvents is not None:
+                    userRegisteredEvents = ','.join(userRegisteredEvents)
+                
+                userRegisteredEvents = str(userRegisteredEvents)
+
+            else:
+                userRegisteredEvents = str(event_pressed)
+
+            print(f"USER REGISTERED EVENTS: {userRegisteredEvents}")
+
+            #placeholders = ",".join(["?"] * len(userRegisteredEvents))
+
+            #Update the user table with what the user pressed
+            params = [userRegisteredEvents, session['email']]
+            update_table_query = f"UPDATE USER_DATA SET event_id = \'" + userRegisteredEvents + f"\' WHERE User_Email = \'{session['email']}\'"
+            print(update_table_query)
+            select_user_cursor.execute(update_table_query)
             
-            userRegisteredEvents = str(userRegisteredEvents)
+            if userRegisteredEvents is None or len(userRegisteredEvents) == 0:
+                hasSavedEvents = False
 
-        else:
-            userRegisteredEvents = str(event_pressed)
 
-        print(f"USER REGISTERED EVENTS: {userRegisteredEvents}")
+        # follow or unfollow the organization
+        elif button_pressed == "follow":
+            if organization_pressed in userTags:
+                userTags.remove(organization_pressed)
+            else:
+                userTags.append(organization_pressed)
 
-        #placeholders = ",".join(["?"] * len(userRegisteredEvents))
+            # Joining the tags properly for the SQL query
+            updated_user_tags = ','.join(userTags)
 
-        #Update the user table with what the user pressed
-        params = [userRegisteredEvents, session['email']]
-        update_table_query = f"UPDATE USER_DATA SET event_id = \'" + userRegisteredEvents + f"\' WHERE User_Email = \'{session['email']}\'"
-        print(update_table_query)
-        select_user_cursor.execute(update_table_query)
-        
-        if userRegisteredEvents is None or len(userRegisteredEvents) == 0:
-            hasSavedEvents = False
+            # Prepare the SQL query with proper placeholders to avoid SQL injection
+            update_table_query = "UPDATE USER_DATA SET user_tags = \'" + updated_user_tags + f"\' WHERE User_Email = \'{session['email']}\'"
+
+            # Execute the query using placeholders and the updated user tags
+            select_user_cursor.execute(update_table_query)
+
         
     #Save table and close database
     connection.commit()
