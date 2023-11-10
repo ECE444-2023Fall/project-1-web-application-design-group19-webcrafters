@@ -1,9 +1,7 @@
-{% extends "base2.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
+
 
 {% block title %}Betula{% endblock %}
 
-{% block page_content %}
 <!DOCTYPE html>
 <html>
 
@@ -353,18 +351,18 @@
           // Update the tag display
           updateTagDisplay();
           
-          // // Fetch the selected tags
-          // const tagSelect = document.getElementById('filter');
-          // const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.text);
+          // Fetch the selected tags
+          const tagSelect = document.getElementById('filter');
+          const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.text);
           
-          // // Send the tags to the server
-          // fetch('/print-tags', {
-          //     method: 'POST',
-          //     headers: {
-          //         'Content-Type': 'application/json',
-          //     },
-          //     body: JSON.stringify({tags: selectedTags}),
-          // })
+          // Send the tags to the server
+          fetch('/print-tags', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({tags: selectedTags}),
+          })
           // .then(response => response.blob())
           // .then(blob => {
           //     const url = window.URL.createObjectURL(blob);
@@ -487,4 +485,3 @@ function collectProfileData() {
   </body>
 
 </html>
-{% endblock %}

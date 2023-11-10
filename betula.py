@@ -172,6 +172,8 @@ def dashboard():
     else:
         userStringency = 0
 
+    print('These are the user tags: ', userTags)
+
     userRegisteredEvents = user_df['event_id'].values[0]
 
     if userRegisteredEvents is not None:
@@ -418,6 +420,8 @@ def download_csv():
 @app.route('/userprofile', methods=['GET', 'POST'])
 def userprofile():
     #Get the user from session email
+    print("SESSION PRINT:")
+    print(session)
     
     # Link form to User_Data Table in DB
     connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
@@ -440,22 +444,27 @@ def userprofile():
     if name == 'None':
         name = 'Guest'
 
+    print('This is the name: ', name)
+
     password = str((user_df["password"].values[0]))
     email = str(user_df["user_email"].values[0])
     
     #These are the tags we have from the user's database, can we 
     tags = user_df["user_tags"].values[0]
 
-    print(tags)
+    print('These are the user tags: ', tags)
 
     tagsList = []
     if tags is not None:
         tagsList = tags.split(",")
 
-    session.setdefault('name', name)
-    session.setdefault('password', password)
-    session.setdefault('email', email)
-    session.setdefault('selected_filters', tagsList)
+    session['name'] = name
+    session['password'] = password
+    session['email'] = email
+    session['selected_filters'] = tagsList
+
+    print("SESSION PRINT after updating:")
+    print(session)
 
 
     if request.method == 'POST':
