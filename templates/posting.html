@@ -183,7 +183,9 @@
       </div>
     </form>
     <script>
+      // Function to update variables with form data
       function updateVariables() {
+          // Get values from form elements
           let organization = document.getElementById('organization').value;
           let campus = Array.from(document.querySelectorAll('input[name="campus"]:checked')).map(el => el.value);
           let event = document.getElementById('event').value;
@@ -199,75 +201,90 @@
           let faculty = Array.from(document.querySelectorAll('input[name="faculty"]:checked')).map(el => el.value);
           let cost = document.getElementById('cost').value;
           let tags = document.getElementById('tags').value;
-  
+
+          // Return an object with updated variables
           return { organization, campus, event, description, date, startTime, endTime, street, city, postal, commonName, college, faculty, cost, tags };
       }
-  
+
+      // Event listener for 'organization' input
       document.getElementById('organization').addEventListener('input', function() {
           updateVariables();
       });
-  
-      // Campus checkboxes
+
+      // Event listeners for campus-related inputs
       document.querySelectorAll('input[name="campus"]').forEach(el => {
           el.addEventListener('change', function() {
               updateVariables();
           });
       });
-  
+
+      // Event listener for 'event' input
       document.getElementById('event').addEventListener('input', function() {
           updateVariables();
       });
-  
+
+      // Event listener for 'description' input
       document.getElementById('description').addEventListener('input', function() {
           updateVariables();
       });
-  
+
+      // Event listener for 'date' input
       document.getElementById('date').addEventListener('input', function() {
           updateVariables();
       });
-  
+
+      // Event listener for 'startTime' input
       document.getElementById('startTime').addEventListener('input', function() {
           updateVariables();
       });
-  
+
+      // Event listener for 'endTime' input
       document.getElementById('endTime').addEventListener('input', function() {
           updateVariables();
       });
-  
+
+      // Event listener for 'street' input
       document.getElementById('street').addEventListener('input', function() {
           updateVariables();
       });
-  
+
+      // Event listener for 'city' input
       document.getElementById('city').addEventListener('input', function() {
           updateVariables();
       });
-  
+
+      // Event listener for 'postal' input
       document.getElementById('postal').addEventListener('input', function() {
           updateVariables();
       });
-  
+
+      // Event listener for 'commonName' input
       document.getElementById('commonName').addEventListener('input', function() {
           updateVariables();
       });
-  
+
+      // Event listener for 'college' dropdown
       document.getElementById('college').addEventListener('change', function() {
           updateVariables();
       });
-  
-      // Faculty checkboxes
+
+      // Event listeners for faculty-related inputs
       document.querySelectorAll('input[name="faculty"]').forEach(el => {
           el.addEventListener('change', function() {
               updateVariables();
           });
       });
-  
+
+      // Event listener for 'cost' input
       document.getElementById('cost').addEventListener('input', function() {
           updateVariables();
       });
-  
+
+      // Event listener for 'tags' input
       document.getElementById('tags').addEventListener('input', function() {
           updateVariables();
       });
+
     </script>
     <br>
   </div>

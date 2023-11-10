@@ -388,6 +388,8 @@ def save_to_csv():
     output.seek(0)
     return Response(output, mimetype="text/csv", headers={"Content-Disposition":"attachment;filename=profileData.csv"})
 
+
+
 @app.route('/saveToCSV', methods=['POST'])
 def save_to_csv_endpoint():
     data = request.json
@@ -422,6 +424,7 @@ def userprofile():
   
 @app.route('/posting', methods=['GET', 'POST'])
 def posting():
+    #Initialize Variables
     organization = None
     campus = None
     event = None
@@ -439,8 +442,16 @@ def posting():
     tags = None
     form = PostingForm()
 
+    # Check if the form is submitted using POST
     if request.method == 'POST':
-        # Get form data
+        # Get form 
+        # Set default values for 'name' and 'email' in session if they don't exist
+        if 'name' not in session:
+            session['name'] = 'Guest'
+        if 'email' not in session:
+            session['email'] = 'guest@guest.com'
+
+        # Retrieve form data
         organization = request.form.get('organization')
         campus_list = request.form.getlist('campus')
         campus = concatenate_list(campus_list)
@@ -459,22 +470,21 @@ def posting():
         cost = request.form.get('cost')
         tags = request.form.get('tags')
 
+        # Database connection setup
         connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
         connection = odbc.connect(connection_string)
 
-        #INSERT INTO EVENT_DATA (Event_name, Organization_Name, Target_Campus, Event_Description, Event_Date, Event_Start_Time, Event_End_Time, Event_Street_Address, Event_City, Event_Postal_Code, Event_Location_Common_Name, Target_College, Target_Faculty, Event_Cost, Tags)
-        #VALUES ('{event}', '{organization}', '{campus}', '{description}', '{date}', '{startTime}', '{endTime}', '{street}', '{city}', '{postal}', '{commonName}', '{college}', '{faculty}', '{cost}', '{tags}')
-        #how to get Coordinator_Name, Coordinator_Email, Coordinator_Username into database
-        #(create_event_query, (event, organization, campus, description, date, startTime, endTime, street, city, postal, commonName, college, faculty, cost, tags) )
+        # SQL query to insert event data into the database
         create_event_query = '''
-                INSERT INTO EVENT_DATA (Event_name, Organization_Name, Target_Campus, Event_Description, Event_Date, Event_Start_Time, Event_End_Time, Event_Street_Address, Event_City, Event_Postal_Code, Event_Location_Common_Name, Target_College, Target_Faculty, Event_Cost, Tags)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO EVENT_DATA (Event_name, Coordinator_Name, Coordinator_Email, Coordinator_Username, Organization_Name, Target_Campus, Event_Description, Event_Date, Event_Start_Time, Event_End_Time, Event_Street_Address, Event_City, Event_Postal_Code, Event_Location_Common_Name, Target_College, Target_Faculty, Event_Cost, Tags)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 '''
         
         cursor = connection.cursor()
 
         try:
-            cursor.execute(create_event_query, (event, organization, campus, description, date, startTime, endTime, street, city, postal, commonName, college, faculty, cost, tags) )
+            # Execute the SQL query with form data and session values
+            cursor.execute(create_event_query, (event, session['name'], session['email'], session['name'], organization, campus, description, date, startTime, endTime, street, city, postal, commonName, college, faculty, cost, tags) )
             connection.commit() # Line needed to ensure DB on server is updated
             print("Event added successfully")
         except:
@@ -485,6 +495,7 @@ def posting():
 
         print("Cursors and DB Closed")
 
+        # Render the posting.html template with form data
         return render_template('posting.html', form=form, organization=organization, campus = campus, event = event, description = description, date = date, startTime = startTime, endTime = endTime, street = street, city = city, postal = postal, commonName = commonName, college = college, faculty = faculty, cost = cost, tags = tags)
 
   
