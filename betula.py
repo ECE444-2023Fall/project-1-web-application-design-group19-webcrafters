@@ -125,29 +125,11 @@ def events():
     return render_template('event.html', events=events)
 
 
-@app.route('/posting', methods=['GET'])
-def render_posting():
-    form = PostingForm()
-    organization = None
-    campus = None
-    event = None
-    description = None
-    date = None
-    startTime = None
-    endTime = None
-    street = None
-    city = None
-    postal = None
-    commonName = None
-    college = None
-    faculty = None
-    cost = None
-    tags = None
-    return render_template('posting.html', form=form, organization=organization, campus = campus, event = event, description = description, date = date, startTime = startTime, endTime = endTime, street = street, city = city, postal = postal, commonName = commonName, college = college, faculty = faculty, cost = cost, tags = tags)
+def concatenate_list(items, delimiter=' '):
+    return delimiter.join(items)
 
-
-@app.route('/post_success', methods=['POST'])
-def submit_posting():
+@app.route('/posting', methods=['GET', 'POST'])
+def posting():
     organization = None
     campus = None
     event = None
@@ -166,37 +148,41 @@ def submit_posting():
     form = PostingForm()
 
     if request.method == 'POST':
-        organization = request.form['organization']
-        campus = request.form.getlist('campus')
-        event = request.form['event']
-        description = request.form['description']
-        date = request.form['date']
-        startTime = request.form['startTime']
-        endTime = request.form['endTime']
-        street = request.form['street']
-        city = request.form['city']
-        postal = request.form['postal']
-        commonName = request.form['commonName']
-        college = request.form['college']
-        faculty = request.form.getlist('faculty')
-        cost = request.form['cost']
-        tags = request.form['tags']
-
+        # Get form data
+        organization = request.form.get('organization')
+        campus_list = request.form.getlist('campus')
+        campus = concatenate_list(campus_list)
+        event = request.form.get('event')
+        description = request.form.get('description')
+        date = request.form.get('date')
+        startTime = request.form.get('startTime')
+        endTime = request.form.get('endTime')
+        street = request.form.get('street')
+        city = request.form.get('city')
+        postal = request.form.get('postal')
+        commonName = request.form.get('commonName')
+        college = request.form.get('college')
+        faculty_list = request.form.getlist('faculty')
+        faculty = concatenate_list(faculty_list)
+        cost = request.form.get('cost')
+        tags = request.form.get('tags')
 
         connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
         connection = odbc.connect(connection_string)
 
+        #INSERT INTO EVENT_DATA (Event_name, Organization_Name, Target_Campus, Event_Description, Event_Date, Event_Start_Time, Event_End_Time, Event_Street_Address, Event_City, Event_Postal_Code, Event_Location_Common_Name, Target_College, Target_Faculty, Event_Cost, Tags)
         #VALUES ('{event}', '{organization}', '{campus}', '{description}', '{date}', '{startTime}', '{endTime}', '{street}', '{city}', '{postal}', '{commonName}', '{college}', '{faculty}', '{cost}', '{tags}')
         #how to get Coordinator_Name, Coordinator_Email, Coordinator_Username into database
-        create_user_query = f'''
-                            INSERT INTO EVENT_DATA (Event_name, Organization_Name, Event_Description, Event_Street_Address, Event_City, Event_Postal_Code, Event_Location_Common_Name, Tags)
-                            VALUES ('{event}', '{organization}', '{description}', '{street}', '{city}', '{postal}', '{commonName}', '{tags}')
-                            '''
+        #(create_event_query, (event, organization, campus, description, date, startTime, endTime, street, city, postal, commonName, college, faculty, cost, tags) )
+        create_event_query = '''
+                INSERT INTO EVENT_DATA (Event_name, Organization_Name, Target_Campus, Event_Description, Event_Date, Event_Start_Time, Event_End_Time, Event_Street_Address, Event_City, Event_Postal_Code, Event_Location_Common_Name, Target_College, Target_Faculty, Event_Cost, Tags)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                '''
         
         cursor = connection.cursor()
 
         try:
-            cursor.execute(create_user_query)
+            cursor.execute(create_event_query, (event, organization, campus, description, date, startTime, endTime, street, city, postal, commonName, college, faculty, cost, tags) )
             connection.commit() # Line needed to ensure DB on server is updated
             print("Event added successfully")
         except:
@@ -207,4 +193,4 @@ def submit_posting():
 
         print("Cursors and DB Closed")
 
-    return render_template('post_success.html', form=form, organization=organization, campus = campus, event = event, description = description, date = date, startTime = startTime, endTime = endTime, street = street, city = city, postal = postal, commonName = commonName, college = college, faculty = faculty, cost = cost, tags = tags)
+        return render_template('posting.html', form=form, organization=organization, campus = campus, event = event, description = description, date = date, startTime = startTime, endTime = endTime, street = street, city = city, postal = postal, commonName = commonName, college = college, faculty = faculty, cost = cost, tags = tags)

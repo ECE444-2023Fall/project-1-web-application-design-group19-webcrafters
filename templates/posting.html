@@ -83,7 +83,7 @@
     <div style="text-align: center; position: relative; color: black; font-size: 15px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Fields with a * are required fields</div><br>
 
     <br>
-    <form method="POST" action="{{ url_for('submit_posting') }}">
+    <form method="POST" action="{{ url_for('posting') }}">
       {{ form.hidden_tag() }}
       <div class="form-group">
           <label for="organization">Organization Name *</label>
@@ -182,6 +182,93 @@
           {{ form.post(class="button") }}
       </div>
     </form>
+    <script>
+      function updateVariables() {
+          let organization = document.getElementById('organization').value;
+          let campus = Array.from(document.querySelectorAll('input[name="campus"]:checked')).map(el => el.value);
+          let event = document.getElementById('event').value;
+          let description = document.getElementById('description').value;
+          let date = document.getElementById('date').value;
+          let startTime = document.getElementById('startTime').value;
+          let endTime = document.getElementById('endTime').value;
+          let street = document.getElementById('street').value;
+          let city = document.getElementById('city').value;
+          let postal = document.getElementById('postal').value;
+          let commonName = document.getElementById('commonName').value;
+          let college = document.getElementById('college').value;
+          let faculty = Array.from(document.querySelectorAll('input[name="faculty"]:checked')).map(el => el.value);
+          let cost = document.getElementById('cost').value;
+          let tags = document.getElementById('tags').value;
+  
+          return { organization, campus, event, description, date, startTime, endTime, street, city, postal, commonName, college, faculty, cost, tags };
+      }
+  
+      document.getElementById('organization').addEventListener('input', function() {
+          updateVariables();
+      });
+  
+      // Campus checkboxes
+      document.querySelectorAll('input[name="campus"]').forEach(el => {
+          el.addEventListener('change', function() {
+              updateVariables();
+          });
+      });
+  
+      document.getElementById('event').addEventListener('input', function() {
+          updateVariables();
+      });
+  
+      document.getElementById('description').addEventListener('input', function() {
+          updateVariables();
+      });
+  
+      document.getElementById('date').addEventListener('input', function() {
+          updateVariables();
+      });
+  
+      document.getElementById('startTime').addEventListener('input', function() {
+          updateVariables();
+      });
+  
+      document.getElementById('endTime').addEventListener('input', function() {
+          updateVariables();
+      });
+  
+      document.getElementById('street').addEventListener('input', function() {
+          updateVariables();
+      });
+  
+      document.getElementById('city').addEventListener('input', function() {
+          updateVariables();
+      });
+  
+      document.getElementById('postal').addEventListener('input', function() {
+          updateVariables();
+      });
+  
+      document.getElementById('commonName').addEventListener('input', function() {
+          updateVariables();
+      });
+  
+      document.getElementById('college').addEventListener('change', function() {
+          updateVariables();
+      });
+  
+      // Faculty checkboxes
+      document.querySelectorAll('input[name="faculty"]').forEach(el => {
+          el.addEventListener('change', function() {
+              updateVariables();
+          });
+      });
+  
+      document.getElementById('cost').addEventListener('input', function() {
+          updateVariables();
+      });
+  
+      document.getElementById('tags').addEventListener('input', function() {
+          updateVariables();
+      });
+    </script>
     <br>
   </div>
 </body>

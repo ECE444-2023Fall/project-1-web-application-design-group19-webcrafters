@@ -90,7 +90,7 @@ dataset = select_cursor.fetchall()
 # Get Column Names
 headers = [column[0] for column in select_cursor.description]
 
-df = pd.DataFrame(columns=headers, data=dataset)
+df = pd.DataFrame(data=dataset)
 print(df)
 
 
