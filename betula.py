@@ -150,7 +150,7 @@ def dashboard():
     try:
         get_user_table_data_query = f"SELECT * FROM USER_DATA WHERE User_Email = \'{session['email']}\'"
     except:
-        return redirect('/login')
+        return redirect(url_for('login'))
 
     select_user_cursor = connection.cursor()
     select_user_cursor.execute(get_user_table_data_query)
