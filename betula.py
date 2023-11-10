@@ -350,6 +350,76 @@ def events():
     return render_template('event.html', events=events)
 
 
+def concatenate_list(items, delimiter=' '):
+    return delimiter.join(items)
+
+
+
+@app.route('/print-tags', methods=['POST'])
+def print_tags():
+    data = request.json
+    tags = data.get('tags', [])
+    print('Received tags:', tags)
+    
+    # Convert tags to CSV format
+    csv_data = '"Tags"\n"' + ",".join(tags) + '"'
+    
+    # Create a response with the CSV data
+    response = Response(csv_data, content_type="text/csv")
+    response.headers["Content-Disposition"] = "attachment; filename=tags.csv"
+    return response
+
+
+
+class FilterForm(FlaskForm):
+    filter = SelectMultipleField('Select Filters', choices=[('Tag 1', 'Tag 1'), ('Tag 2', 'Tag 2'), ('Tag 3', 'Tag 3'), ('Tag 4', 'Tag 4'), ('Tag 5', 'Tag 5'), ('Tag 6', 'Tag 6'), ('Tag 7', 'Tag 7'), ('Tag 8', 'Tag 8'), ('Tag 9', 'Tag 9'), ('Tag 10', 'Tag 10'), ('Tag 11', 'Tag 11'),('Tag 12', 'Tag 12'), ('Tag 13', 'Tag 13'), ('Tag 14', 'Tag 14')], widget=ListWidget(prefix_label=False), option_widget=CheckboxInput())
+    submit = SubmitField('Apply Filters')   
+
+def save_to_csv():
+    
+    name = session.get('name', 'Guest')
+    email = session.get('email', 'guest@guest.com')
+    phone = session.get('phone', '123-456-7890')
+    tags = session.get('tags', [])
+    output = StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['Name', 'Email', 'Phone', 'Tags'])
+    writer.writerow([name, email, phone, ', '.join(tags)])
+    output.seek(0)
+    return Response(output, mimetype="text/csv", headers={"Content-Disposition":"attachment;filename=profileData.csv"})
+
+@app.route('/saveToCSV', methods=['POST'])
+def save_to_csv_endpoint():
+    data = request.json
+    session['name'] = data.get('name', 'Guest')
+    session['email'] = data.get('email', 'guest@guest.com')
+    session['phone'] = data.get('phone', '123-456-7890')
+    session['selected_filters'] = data.get('tags', [])
+    return save_to_csv()
+
+@app.route('/download_csv', methods=['GET'])
+def download_csv():
+    return save_to_csv()
+
+@app.route('/userprofile', methods=['GET', 'POST'])
+def userprofile():
+    session.setdefault('name', 'Guest')
+    session.setdefault('phone', '123-456-7890')
+    session.setdefault('email', 'guest@guest.com')
+    session.setdefault('selected_filters', [])
+    form = FilterForm()
+    if request.method == 'POST':
+        if 'filter_form' in request.form and form.validate_on_submit():
+            session['selected_filters'] = request.form.getlist('filters[]')
+        elif 'name' in request.form:
+            session['name'] = request.form.get('name')
+        elif 'email' in request.form:
+            session['email'] = request.form.get('email')
+        elif 'phone' in request.form:
+            session['phone'] = request.form.get('phone')
+    return render_template('userprofile.html', name=session['name'], email=session['email'], form=form, phone=session['phone'], selected_filters=session['selected_filters'])
+
+  
 @app.route('/posting', methods=['GET', 'POST'])
 def posting():
     organization = None
@@ -368,20 +438,180 @@ def posting():
     cost = None
     tags = None
     form = PostingForm()
-    if form.validate_on_submit():
-        organization = form.organization.data
-        campus = form.campus.data
-        event = form.event.data
-        description = form.description.data
-        date = form.date.data
-        startTime = form.startTime.data
-        endTime = form.endTime.data
-        street = form.street.data
-        city = form.city.data
-        postal = form.postal.data
-        commonName = form.commonName.data
-        college = form.college.data
-        faculty = form.faculty.data
-        cost = form.cost.data
-        tags = form.tags.data
-    return render_template('posting.html', form=form)
+
+    if request.method == 'POST':
+        # Get form data
+        organization = request.form.get('organization')
+        campus_list = request.form.getlist('campus')
+        campus = concatenate_list(campus_list)
+        event = request.form.get('event')
+        description = request.form.get('description')
+        date = request.form.get('date')
+        startTime = request.form.get('startTime')
+        endTime = request.form.get('endTime')
+        street = request.form.get('street')
+        city = request.form.get('city')
+        postal = request.form.get('postal')
+        commonName = request.form.get('commonName')
+        college = request.form.get('college')
+        faculty_list = request.form.getlist('faculty')
+        faculty = concatenate_list(faculty_list)
+        cost = request.form.get('cost')
+        tags = request.form.get('tags')
+
+        connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+        connection = odbc.connect(connection_string)
+
+        #INSERT INTO EVENT_DATA (Event_name, Organization_Name, Target_Campus, Event_Description, Event_Date, Event_Start_Time, Event_End_Time, Event_Street_Address, Event_City, Event_Postal_Code, Event_Location_Common_Name, Target_College, Target_Faculty, Event_Cost, Tags)
+        #VALUES ('{event}', '{organization}', '{campus}', '{description}', '{date}', '{startTime}', '{endTime}', '{street}', '{city}', '{postal}', '{commonName}', '{college}', '{faculty}', '{cost}', '{tags}')
+        #how to get Coordinator_Name, Coordinator_Email, Coordinator_Username into database
+        #(create_event_query, (event, organization, campus, description, date, startTime, endTime, street, city, postal, commonName, college, faculty, cost, tags) )
+        create_event_query = '''
+                INSERT INTO EVENT_DATA (Event_name, Organization_Name, Target_Campus, Event_Description, Event_Date, Event_Start_Time, Event_End_Time, Event_Street_Address, Event_City, Event_Postal_Code, Event_Location_Common_Name, Target_College, Target_Faculty, Event_Cost, Tags)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                '''
+        
+        cursor = connection.cursor()
+
+        try:
+            cursor.execute(create_event_query, (event, organization, campus, description, date, startTime, endTime, street, city, postal, commonName, college, faculty, cost, tags) )
+            connection.commit() # Line needed to ensure DB on server is updated
+            print("Event added successfully")
+        except:
+            print("Event not added")
+        
+        cursor.close()
+        connection.close()
+
+        print("Cursors and DB Closed")
+
+        return render_template('posting.html', form=form, organization=organization, campus = campus, event = event, description = description, date = date, startTime = startTime, endTime = endTime, street = street, city = city, postal = postal, commonName = commonName, college = college, faculty = faculty, cost = cost, tags = tags)
+
+  
+@app.route('/myEvents', methods=['GET', 'POST'])
+def myEvents():
+    
+    # Link form to User_Data Table in DB
+    connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+    connection = odbc.connect(connection_string)
+
+    #Get the user from the USER_DATA table
+    get_user_table_data_query = f"SELECT * FROM USER_DATA WHERE User_Email = \'{session['email']}\'"
+    select_user_cursor = connection.cursor()
+    select_user_cursor.execute(get_user_table_data_query)
+    dataset = select_user_cursor.fetchall()
+
+    # Get Column Names
+    headers = [column[0] for column in select_user_cursor.description]
+    user_df = pd.DataFrame(columns=headers, data=dataset)
+
+    #Get the user's saved events
+    userRegisteredEvents = user_df['event_id'].values[0]
+
+    #Stores if the user has any saved events
+    hasSavedEvents = False
+
+    
+    #Store the events to render
+    eventsList = []
+
+    #If the user has saved events
+    if userRegisteredEvents is not None and len(userRegisteredEvents) != 0:
+        userRegisteredEvents = userRegisteredEvents.split(',')
+        hasSavedEvents = True
+
+        
+        placeholders = ", ".join(["?"] * len(userRegisteredEvents))
+
+        #Get the events from the events table
+        get_events_query = f"SELECT * FROM EVENT_DATA WHERE event_id IN (" + placeholders + ")"
+        select_user_cursor.execute(get_events_query, userRegisteredEvents)
+        dataset = select_user_cursor.fetchall()
+
+        # Get Column Names and match dataframe
+        headers = [column[0] for column in select_user_cursor.description]
+        events_df = pd.DataFrame(columns=headers, data=dataset)
+            
+        #close access to the databse
+        #select_user_cursor.close()
+        #connection.close()
+
+        #Iterate through events and add matches matches
+        for index, row in events_df.iterrows():
+            #Get the event_id
+            event_id = row['event_id']
+
+            registered = True
+            organization = row['organization_name']
+
+            where = row['event_location_common_name'] + ", " + row['event_street_address'] + ", " + row['event_city']
+            when = row['event_date'] + " | " + row['event_start_time'] + " to " + row['event_end_time']
+
+            currEvent = Event(name = row['event_name'], organization = organization, where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'], event_id = event_id, registered = registered)
+            eventsList.append(currEvent)
+    
+    #Make sure to close the database as soon as possible
+    #else:
+        #close access to the databse
+        #select_user_cursor.close()
+        #connection.close()
+
+    if request.method == 'POST':
+        
+        event_pressed = None
+
+        #Get the button pressed from the events on the screen
+        index = 0
+        for event in eventsList:
+            if str(event.event_id) in request.form:
+                event_pressed = event.event_id
+                eventsList[index].registered = True
+                eventsList.remove(eventsList[index])
+                break
+
+            index += 1
+        
+        print(f"Clicked {event_pressed}")
+
+        print(f"User Registered Events: {userRegisteredEvents}")
+
+        #Add it to the user's registered events
+        if userRegisteredEvents is not None:
+ 
+            #if the event clicked is not already counted add it
+            #if not(str(event_pressed) in userRegisteredEvents):
+                #userRegisteredEvents = str(userRegisteredEvents)
+            #    userRegisteredEvents = str(','.join(userRegisteredEvents))
+            #    userRegisteredEvents = userRegisteredEvents + "," + str(event_pressed)
+            #if they have clicked it a second time, unregister them!
+            #else:
+            userRegisteredEvents.remove(str(event_pressed))
+            print(f"Current Registered Events {userRegisteredEvents}")
+            if userRegisteredEvents is not None:
+                userRegisteredEvents = ','.join(userRegisteredEvents)
+            
+            userRegisteredEvents = str(userRegisteredEvents)
+
+        else:
+            userRegisteredEvents = str(event_pressed)
+
+        print(f"USER REGISTERED EVENTS: {userRegisteredEvents}")
+
+        #placeholders = ",".join(["?"] * len(userRegisteredEvents))
+
+        #Update the user table with what the user pressed
+        params = [userRegisteredEvents, session['email']]
+        update_table_query = f"UPDATE USER_DATA SET event_id = \'" + userRegisteredEvents + f"\' WHERE User_Email = \'{session['email']}\'"
+        print(update_table_query)
+        select_user_cursor.execute(update_table_query)
+        
+        if userRegisteredEvents is None or len(userRegisteredEvents) == 0:
+            hasSavedEvents = False
+        
+    #Save table and close database
+    connection.commit()
+    select_user_cursor.close()
+    connection.close()
+
+    return render_template('saved.html', events = eventsList, hasSavedEvents = hasSavedEvents)
+
