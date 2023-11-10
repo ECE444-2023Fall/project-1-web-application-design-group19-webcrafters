@@ -94,7 +94,35 @@ def login():
         password = form.password.data
         session["email"] = email
         print("Got email!")
-        return redirect(url_for('dashboard'))
+        
+        # Set Up Connection to DB
+        connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+        connection = odbc.connect(connection_string)
+
+        check_user_exists_query = f'''SELECT COUNT(*) 
+                                FROM USER_DATA
+                                WHERE USER_EMAIL = '{email}' and PASSWORD = '{password}'
+                            '''
+        
+        cursor = connection.cursor()
+
+        try:
+            cursor.execute(check_user_exists_query)
+            # Only attempt to redirect user to dashboard if login credentials are valid and exists in User_Data table
+            if cursor.fetchone()[0] > 0:
+                print("Login Successful")
+                cursor.close()
+                connection.close()
+                print("Cursors and DB Closed")
+                return redirect(url_for('dashboard'))
+            else:
+                print("Login Unsuccessful")
+        except:
+            print("Connection Failed")
+    
+        cursor.close()
+        connection.close()
+        print("Cursors and DB Closed")
     return render_template('login.html', form=form, email=email, password=password)
 
 
