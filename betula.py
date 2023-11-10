@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from flask import Flask, render_template, session, redirect, url_for, flash, request, Response, jsonify
 from wtforms.widgets import ListWidget, CheckboxInput
 
@@ -29,8 +30,8 @@ class Event():
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, 
             sort_keys=True, indent=4)
-    
-    def __init__(self, iden, name, organization, where, when, tags, description, contact):
+
+    def __init__(self, iden, name, organization, where, when, tags, description, contact, registered, event_id):
         self.iden = iden
         self.name = name
         self.organization = organization
@@ -39,6 +40,8 @@ class Event():
         self.tags = tags
         self.description = description
         self.contact = contact
+        self.registered = registered
+        self.event_id = event_id
 
 # jsonEvent = {iden:iden, name:name, organization:organization, where:where, when:when, tags:tags, description:description, contact:contact}
 
@@ -162,6 +165,8 @@ def dashboard():
     # Get Column Names
     headers = [column[0] for column in select_user_cursor.description]
     user_df = pd.DataFrame(columns=headers, data=dataset)
+
+    print(user_df.head)
     
     #Get the user's tags and stringency
     userTags = None
@@ -177,7 +182,13 @@ def dashboard():
     else:
         userStringency = 0
 
+    userRegisteredEvents = user_df['event_id'].values[0]
 
+    if userRegisteredEvents is not None:
+        userRegisteredEvents = userRegisteredEvents.split(',')
+
+    print(f"User Registered Events {userRegisteredEvents}")
+        
     #Now that we have the user information, let's grab the events
     eventsList = []
     jsonEventsList = []
@@ -192,11 +203,27 @@ def dashboard():
     #Randomize our database
     events_df = events_df.sample(frac=1)
 
+    #print(events_df.head)
+
     #Maximum amount of recommendations to give to user at a time
     MAX_RECOMMENDATIONS = 10
 
     #Iterate through events and add matches matches
     for index, row in events_df.iterrows():
+        #Get the event_id
+        event_id = row['event_id']
+
+        registered = False
+
+        print(event_id)
+        if userRegisteredEvents is not None:
+            if str(event_id) in userRegisteredEvents:
+                print('Registered!')
+                registered = True
+            else:
+                print('Not registered!')
+                registered = False
+
         #If we are stringent, only add events that match with our tags
         if (userStringency):
             tagMatch = False
@@ -208,24 +235,50 @@ def dashboard():
                 #Otherwise skip!
                 continue
 
+            #Try to get organization, otherwise state it as unavailable
+            try:
+                organization = row['organization_name']
+            except:
+                organization = "Not available"
+
             for tag in rowTags:
-                if tag in userTags:
+                if tag in userTags or organization in userTags:
                     tagMatch = True
 
             if tagMatch:
                 
-                where = row['event_location_common_name'] + ", " + row['event_street_address'] + ", " + row['event_city']
-                when = row['event_date'] + " | " + row['event_start_time'] + " to " + row['event_end_time']
+                try:
+                    where = row['event_location_common_name'] + ", " + row['event_street_address'] + ", " + row['event_city']
+                except:
+                    where = "Not available"
+                try:
+                    when = row['event_date'] + " | " + row['event_start_time'] + " to " + row['event_end_time']
+                except:
+                    when = "Not available"
 
-                currEvent = Event(iden = index, name = row['event_name'], organization = row['organization_name'], where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'])
+                currEvent = Event(iden = index, name = row['event_name'], organization = organization, where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'], event_id = event_id, registered = registered)
+
                 eventsList.append(currEvent)
                 jsonEventsList.append(currEvent.__dict__)
         #Otherwise, add any event!
         else:
-            where = row['event_location_common_name'] + ", " + row['event_street_address'] + ", " + row['event_city']
-            when = row['event_date'] + " | " + row['event_start_time'] + " to " + row['event_end_time']
+            try:
+                where = row['event_location_common_name'] + ", " + row['event_street_address'] + ", " + row['event_city']
+            except:
+                where = "Not available"
+            try:
+                when = row['event_date'] + " | " + row['event_start_time'] + " to " + row['event_end_time']
+            except:
+                when = "Not available"
 
-            currEvent = Event(iden = index, name = row['event_name'], organization = row['organization_name'], where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'])
+            #Try to get organization, otherwise state it as unavailable
+            try:
+                organization = row['organization_name']
+            except:
+                organization = "Not available"
+
+            currEvent = Event(iden = index, name = row['event_name'], organization = organization, where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'], event_id = event_id, registered = registered)
+
             eventsList.append(currEvent)
             jsonEventsList.append(currEvent.__dict__)
 
@@ -233,11 +286,79 @@ def dashboard():
         if (len(eventsList) == MAX_RECOMMENDATIONS):
             break
 
+
+     #The user pressed a button
+    if request.method == 'POST':
+        
+        event_pressed = None
+
+        #Get the button pressed from the events on the screen
+        index = 0
+        for event in eventsList:
+            if str(event.event_id) in request.form:
+                event_pressed = event.event_id
+                if eventsList[index].registered == True:
+                    eventsList[index].registered = False
+                else:
+                    eventsList[index].registered = True
+                break
+
+            index += 1
+        
+        print(f"Clicked {event_pressed}")
+
+        print(f"User Registered Events: {userRegisteredEvents}")
+
+        #Add it to the user's registered events
+        if userRegisteredEvents is not None:
+ 
+            #Remove any blank space if there are any
+            for element in userRegisteredEvents:
+                if element == '':
+                    userRegisteredEvents.remove(element)
+            
+            amountRegistered = len(userRegisteredEvents)
+
+            print(f"Removed Spaces?: {userRegisteredEvents}")
+
+            #if the event clicked is not already counted add it
+            if not(str(event_pressed) in userRegisteredEvents):
+                #userRegisteredEvents = str(userRegisteredEvents)
+                userRegisteredEvents = str(','.join(userRegisteredEvents))
+                if (amountRegistered > 0):
+                    userRegisteredEvents = userRegisteredEvents + "," + str(event_pressed)
+                else:
+                    userRegisteredEvents = str(event_pressed)
+            #if they have clicked it a second time, unregister them!
+            else:
+                userRegisteredEvents.remove(str(event_pressed))
+                print(f"Current Registered Events {userRegisteredEvents}")
+                if userRegisteredEvents is not None:
+                    userRegisteredEvents = ','.join(userRegisteredEvents)
+            
+            userRegisteredEvents = str(userRegisteredEvents)
+
+        else:
+            userRegisteredEvents = str(event_pressed)
+
+        print(f"USER REGISTERED EVENTS: {userRegisteredEvents}")
+
+        #placeholders = ",".join(["?"] * len(userRegisteredEvents))
+
+        #Update the user table with what the user pressed
+        params = [userRegisteredEvents, session['email']]
+        update_table_query = f"UPDATE USER_DATA SET event_id = \'" + userRegisteredEvents + f"\' WHERE User_Email = \'{session['email']}\'"
+        print(update_table_query)
+        select_user_cursor.execute(update_table_query)
+
+    #Save table and close database
+    connection.commit()
     select_user_cursor.close()
     connection.close()
 
-    return render_template('dashboard.html', jsonEvents = json.dumps(jsonEventsList), events = eventsList, facultyTags = facultyTags, topicTags=topicTags, priceTags=priceTags)
+    return render_template('dashboard.html', jsonEvents = json.dumps(jsonEventsList), events = eventsList, facultyTags = facultyTags, topicTags=topicTags, priceTags=priceTags, curPage = "dash")
 
+  
 @app.route('/eventsdemo', methods=['GET', 'POST'])
 def events():
     events = [['Event Name', 'Host Name', 'UofT', 'October 31st', "Social, Sports", "Description", "sean.pourgoutzidis@mail.utoronto.ca"], ['Event Name 2', 'Host Name 2' , "UofT", "October 31st", "Free, Food", "Description 2", "sean.pourgoutzidis@mail.utoronto.ca"], ['Event Name 3', 'Host Name 3' , "UofT", "October 31st", "Professional", "Description 3", "sean.pourgoutzidis@mail.utoronto.ca"]]
@@ -263,14 +384,15 @@ def print_tags():
 
 
 class FilterForm(FlaskForm):
-    filter = SelectMultipleField('Select Filters', choices=[('Tag 1', 'Tag 1'), ('Tag 2', 'Tag 2'), ('Tag 3', 'Tag 3'), ('Tag 4', 'Tag 4')], widget=ListWidget(prefix_label=False), option_widget=CheckboxInput())
-    submit = SubmitField('Apply Filters')  
+    filter = SelectMultipleField('Select Filters', choices=[('Tag 1', 'Tag 1'), ('Tag 2', 'Tag 2'), ('Tag 3', 'Tag 3'), ('Tag 4', 'Tag 4'), ('Tag 5', 'Tag 5'), ('Tag 6', 'Tag 6'), ('Tag 7', 'Tag 7'), ('Tag 8', 'Tag 8'), ('Tag 9', 'Tag 9'), ('Tag 10', 'Tag 10'), ('Tag 11', 'Tag 11'),('Tag 12', 'Tag 12'), ('Tag 13', 'Tag 13'), ('Tag 14', 'Tag 14')], widget=ListWidget(prefix_label=False), option_widget=CheckboxInput())
+    submit = SubmitField('Apply Filters')   
 
 def save_to_csv():
+    
     name = session.get('name', 'Guest')
     email = session.get('email', 'guest@guest.com')
     phone = session.get('phone', '123-456-7890')
-    tags = session.get('selected_filters', [])
+    tags = session.get('tags', [])
     output = StringIO()
     writer = csv.writer(output)
     writer.writerow(['Name', 'Email', 'Phone', 'Tags'])
@@ -298,8 +420,9 @@ def userprofile():
             session['email'] = request.form.get('email')
         elif 'phone' in request.form:
             session['phone'] = request.form.get('phone')
-    return render_template('userprofile.html', name=session['name'], email=session['email'], form=form, phone=session['phone'], selected_filters=session['selected_filters'])
+    return render_template('userprofile.html', name=session['name'], email=session['email'], form=form, phone=session['phone'], selected_filters=session['selected_filters'], curPage = "user")
 
+  
 @app.route('/posting', methods=['GET', 'POST'])
 def posting():
     organization = None
@@ -344,3 +467,130 @@ def save_to_csv_endpoint():
     session['phone'] = data.get('phone', '123-456-7890')
     session['selected_filters'] = data.get('tags', [])
     return save_to_csv()
+  
+@app.route('/myEvents', methods=['GET', 'POST'])
+def myEvents():
+    
+    # Link form to User_Data Table in DB
+    connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+    connection = odbc.connect(connection_string)
+
+    #Get the user from the USER_DATA table
+    get_user_table_data_query = f"SELECT * FROM USER_DATA WHERE User_Email = \'{session['email']}\'"
+    select_user_cursor = connection.cursor()
+    select_user_cursor.execute(get_user_table_data_query)
+    dataset = select_user_cursor.fetchall()
+
+    # Get Column Names
+    headers = [column[0] for column in select_user_cursor.description]
+    user_df = pd.DataFrame(columns=headers, data=dataset)
+
+    #Get the user's saved events
+    userRegisteredEvents = user_df['event_id'].values[0]
+
+    #Stores if the user has any saved events
+    hasSavedEvents = False
+
+    
+    #Store the events to render
+    eventsList = []
+
+    #If the user has saved events
+    if userRegisteredEvents is not None and len(userRegisteredEvents) != 0:
+        userRegisteredEvents = userRegisteredEvents.split(',')
+        hasSavedEvents = True
+
+        
+        placeholders = ", ".join(["?"] * len(userRegisteredEvents))
+
+        #Get the events from the events table
+        get_events_query = f"SELECT * FROM EVENT_DATA WHERE event_id IN (" + placeholders + ")"
+        select_user_cursor.execute(get_events_query, userRegisteredEvents)
+        dataset = select_user_cursor.fetchall()
+
+        # Get Column Names and match dataframe
+        headers = [column[0] for column in select_user_cursor.description]
+        events_df = pd.DataFrame(columns=headers, data=dataset)
+            
+        #close access to the databse
+        #select_user_cursor.close()
+        #connection.close()
+
+        #Iterate through events and add matches matches
+        for index, row in events_df.iterrows():
+            #Get the event_id
+            event_id = row['event_id']
+
+            registered = True
+            organization = row['organization_name']
+
+            where = row['event_location_common_name'] + ", " + row['event_street_address'] + ", " + row['event_city']
+            when = row['event_date'] + " | " + row['event_start_time'] + " to " + row['event_end_time']
+
+            currEvent = Event(name = row['event_name'], organization = organization, where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'], event_id = event_id, registered = registered)
+            eventsList.append(currEvent)
+    
+    #Make sure to close the database as soon as possible
+    #else:
+        #close access to the databse
+        #select_user_cursor.close()
+        #connection.close()
+
+    if request.method == 'POST':
+        
+        event_pressed = None
+
+        #Get the button pressed from the events on the screen
+        index = 0
+        for event in eventsList:
+            if str(event.event_id) in request.form:
+                event_pressed = event.event_id
+                eventsList[index].registered = True
+                eventsList.remove(eventsList[index])
+                break
+
+            index += 1
+        
+        print(f"Clicked {event_pressed}")
+
+        print(f"User Registered Events: {userRegisteredEvents}")
+
+        #Add it to the user's registered events
+        if userRegisteredEvents is not None:
+ 
+            #if the event clicked is not already counted add it
+            #if not(str(event_pressed) in userRegisteredEvents):
+                #userRegisteredEvents = str(userRegisteredEvents)
+            #    userRegisteredEvents = str(','.join(userRegisteredEvents))
+            #    userRegisteredEvents = userRegisteredEvents + "," + str(event_pressed)
+            #if they have clicked it a second time, unregister them!
+            #else:
+            userRegisteredEvents.remove(str(event_pressed))
+            print(f"Current Registered Events {userRegisteredEvents}")
+            if userRegisteredEvents is not None:
+                userRegisteredEvents = ','.join(userRegisteredEvents)
+            
+            userRegisteredEvents = str(userRegisteredEvents)
+
+        else:
+            userRegisteredEvents = str(event_pressed)
+
+        print(f"USER REGISTERED EVENTS: {userRegisteredEvents}")
+
+        #placeholders = ",".join(["?"] * len(userRegisteredEvents))
+
+        #Update the user table with what the user pressed
+        params = [userRegisteredEvents, session['email']]
+        update_table_query = f"UPDATE USER_DATA SET event_id = \'" + userRegisteredEvents + f"\' WHERE User_Email = \'{session['email']}\'"
+        print(update_table_query)
+        select_user_cursor.execute(update_table_query)
+        
+        if userRegisteredEvents is None or len(userRegisteredEvents) == 0:
+            hasSavedEvents = False
+        
+    #Save table and close database
+    connection.commit()
+    select_user_cursor.close()
+    connection.close()
+
+    return render_template('saved.html', events = eventsList, hasSavedEvents = hasSavedEvents, curPage = "myEvents")
