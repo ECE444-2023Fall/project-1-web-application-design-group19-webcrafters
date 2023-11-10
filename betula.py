@@ -457,11 +457,11 @@ def userprofile():
     session.setdefault('email', email)
     session.setdefault('selected_filters', tagsList)
 
-    form = FilterForm()
+
     if request.method == 'POST':
         print("POST!")
-        if 'filter_form' in request.form and form.validate_on_submit():
-            #session['selected_filters'] = request.form.getlist('filters[]')
+        if 'filter_form' in request.form:
+            session['selected_filters'] = request.form.getlist('filters[]')
             print('hello!')
             print(session['selected_filters'])
         elif 'name' in request.form:
@@ -481,8 +481,8 @@ def userprofile():
             print(update_table_query)
             select_user_cursor.execute(update_table_query)
 
-        elif 'phone' in request.form:
-            session['password'] = request.form.get('phone')
+        elif 'password' in request.form:
+            session['password'] = request.form.get('password')
 
             #Update the user's name based on what was returned
             update_table_query = f"UPDATE USER_DATA SET password = \'" + session['password'] + f"\' WHERE User_Email = \'{session['email']}\'"
@@ -494,7 +494,7 @@ def userprofile():
     select_user_cursor.close()
     connection.close()
 
-    return render_template('userprofile.html', name=session['name'], email=session['email'], form=form, password=session['password'], selected_filters=session['selected_filters'])
+    return render_template('userprofile.html', name=session['name'], email=session['email'], password=session['password'], selected_filters=session['selected_filters'])
 
 
   
