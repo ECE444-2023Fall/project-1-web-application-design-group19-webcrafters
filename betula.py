@@ -275,12 +275,16 @@ def dashboard():
      #The user pressed a button
     if request.method == 'POST':
         
+        button_pressed = None
         event_pressed = None
+        organization_pressed = None
+
 
         #Get the button pressed from the events on the screen
         index = 0
         for event in eventsList:
             if str(event.event_id) in request.form:
+                button_pressed = "register"
                 event_pressed = event.event_id
                 if eventsList[index].registered == True:
                     eventsList[index].registered = False
@@ -288,60 +292,86 @@ def dashboard():
                     eventsList[index].registered = True
                 break
 
+            elif str(event.organization) in request.form:
+                button_pressed = "follow"
+                organization_pressed = event.organization
+                break
+
             index += 1
         
-        print(f"Clicked {event_pressed}")
+        
+        # register or unregister the event
+        if button_pressed == "register":
+            print(f"Clicked {event_pressed}")
 
-        print(f"User Registered Events: {userRegisteredEvents}")
+            print(f"User Registered Events: {userRegisteredEvents}")
 
-        #Add it to the user's registered events
-        if userRegisteredEvents is not None:
- 
-            #Remove any blank space if there are any
-            for element in userRegisteredEvents:
-                if element == '':
-                    userRegisteredEvents.remove(element)
-            
-            amountRegistered = len(userRegisteredEvents)
+            #Add it to the user's registered events
+            if userRegisteredEvents is not None:
+    
+                #Remove any blank space if there are any
+                for element in userRegisteredEvents:
+                    if element == '':
+                        userRegisteredEvents.remove(element)
+                
+                amountRegistered = len(userRegisteredEvents)
 
-            print(f"Removed Spaces?: {userRegisteredEvents}")
+                print(f"Removed Spaces?: {userRegisteredEvents}")
 
-            #if the event clicked is not already counted add it
-            if not(str(event_pressed) in userRegisteredEvents):
-                #userRegisteredEvents = str(userRegisteredEvents)
-                userRegisteredEvents = str(','.join(userRegisteredEvents))
-                if (amountRegistered > 0):
-                    userRegisteredEvents = userRegisteredEvents + "," + str(event_pressed)
+                #if the event clicked is not already counted add it
+                if not(str(event_pressed) in userRegisteredEvents):
+                    #userRegisteredEvents = str(userRegisteredEvents)
+                    userRegisteredEvents = str(','.join(userRegisteredEvents))
+                    if (amountRegistered > 0):
+                        userRegisteredEvents = userRegisteredEvents + "," + str(event_pressed)
+                    else:
+                        userRegisteredEvents = str(event_pressed)
+                #if they have clicked it a second time, unregister them!
                 else:
-                    userRegisteredEvents = str(event_pressed)
-            #if they have clicked it a second time, unregister them!
+                    userRegisteredEvents.remove(str(event_pressed))
+                    print(f"Current Registered Events {userRegisteredEvents}")
+                    if userRegisteredEvents is not None:
+                        userRegisteredEvents = ','.join(userRegisteredEvents)
+                
+                userRegisteredEvents = str(userRegisteredEvents)
+
             else:
-                userRegisteredEvents.remove(str(event_pressed))
-                print(f"Current Registered Events {userRegisteredEvents}")
-                if userRegisteredEvents is not None:
-                    userRegisteredEvents = ','.join(userRegisteredEvents)
-            
-            userRegisteredEvents = str(userRegisteredEvents)
+                userRegisteredEvents = str(event_pressed)
 
-        else:
-            userRegisteredEvents = str(event_pressed)
+            print(f"USER REGISTERED EVENTS: {userRegisteredEvents}")
 
-        print(f"USER REGISTERED EVENTS: {userRegisteredEvents}")
+            #placeholders = ",".join(["?"] * len(userRegisteredEvents))
 
-        #placeholders = ",".join(["?"] * len(userRegisteredEvents))
+            #Update the user table with what the user pressed
+            params = [userRegisteredEvents, session['email']]
+            update_table_query = f"UPDATE USER_DATA SET event_id = \'" + userRegisteredEvents + f"\' WHERE User_Email = \'{session['email']}\'"
+            print(update_table_query)
+            select_user_cursor.execute(update_table_query)
 
-        #Update the user table with what the user pressed
-        params = [userRegisteredEvents, session['email']]
-        update_table_query = f"UPDATE USER_DATA SET event_id = \'" + userRegisteredEvents + f"\' WHERE User_Email = \'{session['email']}\'"
-        print(update_table_query)
-        select_user_cursor.execute(update_table_query)
+
+        # follow or unfollow the organization
+        elif button_pressed == "follow":
+            if organization_pressed in userTags:
+                userTags.remove(organization_pressed)
+            else:
+                userTags.append(organization_pressed)
+
+            # Joining the tags properly for the SQL query
+            updated_user_tags = ','.join(userTags)
+
+            # Prepare the SQL query with proper placeholders to avoid SQL injection
+            update_table_query = "UPDATE USER_DATA SET user_tags = \'" + updated_user_tags + f"\' WHERE User_Email = \'{session['email']}\'"
+
+            # Execute the query using placeholders and the updated user tags
+            select_user_cursor.execute(update_table_query)
+
 
     #Save table and close database
     connection.commit()
     select_user_cursor.close()
     connection.close()
 
-    return render_template('dashboard.html', events = eventsList)
+    return render_template('dashboard.html', events = eventsList, userTags = userTags)
 
   
 @app.route('/eventsdemo', methods=['GET', 'POST'])
@@ -470,6 +500,18 @@ def myEvents():
     headers = [column[0] for column in select_user_cursor.description]
     user_df = pd.DataFrame(columns=headers, data=dataset)
 
+    #Get the user's tags
+    userTags = None
+
+    try:    
+        userTags = user_df['user_tags'].values[0]
+    except:
+        print('User was not found')
+
+    if userTags is not None:
+        userTags = userTags.split(',')
+        
+
     #Get the user's saved events
     userRegisteredEvents = user_df['event_id'].values[0]
 
@@ -578,5 +620,5 @@ def myEvents():
     select_user_cursor.close()
     connection.close()
 
-    return render_template('saved.html', events = eventsList, hasSavedEvents = hasSavedEvents)
+    return render_template('saved.html', events = eventsList, hasSavedEvents = hasSavedEvents, userTags = userTags)
 
