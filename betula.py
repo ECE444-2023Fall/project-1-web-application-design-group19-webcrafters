@@ -341,7 +341,7 @@ def dashboard():
     select_user_cursor.close()
     connection.close()
 
-    return render_template('dashboard.html', events = eventsList)
+    return render_template('dashboard.html', events = eventsList, curPage = "dash")
 
   
 @app.route('/eventsdemo', methods=['GET', 'POST'])
@@ -414,7 +414,7 @@ def userprofile():
             session['email'] = request.form.get('email')
         elif 'phone' in request.form:
             session['phone'] = request.form.get('phone')
-    return render_template('userprofile.html', name=session['name'], email=session['email'], form=form, phone=session['phone'], selected_filters=session['selected_filters'])
+    return render_template('userprofile.html', name=session['name'], email=session['email'], form=form, phone=session['phone'], selected_filters=session['selected_filters'], curPage = "user")
 
   
 @app.route('/posting', methods=['GET', 'POST'])
@@ -579,5 +579,5 @@ def myEvents():
     select_user_cursor.close()
     connection.close()
 
-    return render_template('saved.html', events = eventsList, hasSavedEvents = hasSavedEvents)
+    return render_template('saved.html', events = eventsList, hasSavedEvents = hasSavedEvents, curPage = "myEvents")
 
