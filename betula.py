@@ -11,6 +11,7 @@ from wtforms.validators import DataRequired, Email
 from wtforms import SelectMultipleField, widgets
 import csv
 from io import StringIO
+import json
 
 from pypyodbc_main import pypyodbc as odbc
 #import pypyodbc as odbc
@@ -26,7 +27,12 @@ logger = logging.getLogger()
 
 #Event class for easy access of event information when rendering
 class Event():
-    def __init__(self, name, organization, where, when, tags, description, contact, registered, event_id):
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, 
+            sort_keys=True, indent=4)
+
+    def __init__(self, iden, name, organization, where, when, tags, description, contact, registered, event_id):
+        self.iden = iden
         self.name = name
         self.organization = organization
         self.where = where
@@ -36,6 +42,8 @@ class Event():
         self.contact = contact
         self.registered = registered
         self.event_id = event_id
+
+# jsonEvent = {iden:iden, name:name, organization:organization, where:where, when:when, tags:tags, description:description, contact:contact}
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
@@ -141,13 +149,15 @@ def join():
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
-    
+    facultyTags = ["Faculty of Applied Science and Engineering", "Trinity College", "University College", "St. Michael's College", "Victoria College"]
+    topicTags = ["Professional", "Cultural", "Social Work/Charity", "Fitness", "Social", "Sports"]
+    priceTags = ["Free", "Paid", "Free Food"]
     # Link form to User_Data Table in DB
     connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
     connection = odbc.connect(connection_string)
 
     #Get the user from the USER_DATA table
-    get_user_table_data_query = f"SELECT * FROM USER_DATA WHERE User_Email = \'{session['email']}\'"
+    get_user_table_data_query = f"SELECT * FROM USER_DATA WHERE User_Email = '{session['email']}'"
     select_user_cursor = connection.cursor()
     select_user_cursor.execute(get_user_table_data_query)
     dataset = select_user_cursor.fetchall()
@@ -181,6 +191,7 @@ def dashboard():
         
     #Now that we have the user information, let's grab the events
     eventsList = []
+    jsonEventsList = []
     get_user_table_data_query = f"SELECT * FROM EVENT_DATA"
     select_user_cursor.execute(get_user_table_data_query)
     dataset = select_user_cursor.fetchall()
@@ -245,8 +256,10 @@ def dashboard():
                 except:
                     when = "Not available"
 
-                currEvent = Event(name = row['event_name'], organization = organization, where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'], event_id = event_id, registered = registered)
+                currEvent = Event(iden = index, name = row['event_name'], organization = organization, where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'], event_id = event_id, registered = registered)
+
                 eventsList.append(currEvent)
+                jsonEventsList.append(currEvent.__dict__)
         #Otherwise, add any event!
         else:
             try:
@@ -264,8 +277,10 @@ def dashboard():
             except:
                 organization = "Not available"
 
-            currEvent = Event(name = row['event_name'], organization = organization, where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'], event_id = event_id, registered = registered)
+            currEvent = Event(iden = index, name = row['event_name'], organization = organization, where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'], event_id = event_id, registered = registered)
+
             eventsList.append(currEvent)
+            jsonEventsList.append(currEvent.__dict__)
 
         #If we have reached the maximum amount of recommendations, break out of loop
         if (len(eventsList) == MAX_RECOMMENDATIONS):
@@ -341,7 +356,7 @@ def dashboard():
     select_user_cursor.close()
     connection.close()
 
-    return render_template('dashboard.html', events = eventsList, curPage = "dash")
+    return render_template('dashboard.html', jsonEvents = json.dumps(jsonEventsList), events = eventsList, facultyTags = facultyTags, topicTags=topicTags, priceTags=priceTags, curPage = "dash")
 
   
 @app.route('/eventsdemo', methods=['GET', 'POST'])
@@ -384,15 +399,6 @@ def save_to_csv():
     writer.writerow([name, email, phone, ', '.join(tags)])
     output.seek(0)
     return Response(output, mimetype="text/csv", headers={"Content-Disposition":"attachment;filename=profileData.csv"})
-
-@app.route('/saveToCSV', methods=['POST'])
-def save_to_csv_endpoint():
-    data = request.json
-    session['name'] = data.get('name', 'Guest')
-    session['email'] = data.get('email', 'guest@guest.com')
-    session['phone'] = data.get('phone', '123-456-7890')
-    session['selected_filters'] = data.get('tags', [])
-    return save_to_csv()
 
 @app.route('/download_csv', methods=['GET'])
 def download_csv():
@@ -453,6 +459,14 @@ def posting():
         tags = form.tags.data
     return render_template('posting.html', form=form)
 
+@app.route('/saveToCSV', methods=['POST'])
+def save_to_csv_endpoint():
+    data = request.json
+    session['name'] = data.get('name', 'Guest')
+    session['email'] = data.get('email', 'guest@guest.com')
+    session['phone'] = data.get('phone', '123-456-7890')
+    session['selected_filters'] = data.get('tags', [])
+    return save_to_csv()
   
 @app.route('/myEvents', methods=['GET', 'POST'])
 def myEvents():
@@ -580,4 +594,3 @@ def myEvents():
     connection.close()
 
     return render_template('saved.html', events = eventsList, hasSavedEvents = hasSavedEvents, curPage = "myEvents")
-
