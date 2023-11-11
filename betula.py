@@ -495,8 +495,8 @@ def posting():
 
         print("Cursors and DB Closed")
 
-        # Render the posting.html template with form data
-        return render_template('posting.html', form=form, organization=organization, campus = campus, event = event, description = description, date = date, startTime = startTime, endTime = endTime, street = street, city = city, postal = postal, commonName = commonName, college = college, faculty = faculty, cost = cost, tags = tags)
+    # Render the posting.html template with form data
+    return render_template('posting.html', form=form, organization=organization, campus = campus, event = event, description = description, date = date, startTime = startTime, endTime = endTime, street = street, city = city, postal = postal, commonName = commonName, college = college, faculty = faculty, cost = cost, tags = tags)
 
   
 @app.route('/myEvents', methods=['GET', 'POST'])
