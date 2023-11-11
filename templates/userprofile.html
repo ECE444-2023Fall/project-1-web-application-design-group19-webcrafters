@@ -282,10 +282,12 @@
 
               <label>
                 <input type="checkbox" id="stringency" name="stringency" value="True" {% if stringency_value == 'True' %}checked{% endif %}>
-                  Tag stringency (dashboard events will match these tags)
+                  Tag stringency (events will be filtered to match these tags or the organizations you follow)
               </label>
             </div>
           </form>
+
+          <button type="button" class="btn btn-primary" onclick="redirectToIndex()">Logout</button>
 
         </div>
       </div>
@@ -333,6 +335,10 @@
     </div>
     </div> -->
     <script>
+
+      function redirectToIndex() {
+          window.location.href = '/';
+      }
 
       document.addEventListener('DOMContentLoaded', function() {
         var checkbox = document.getElementById('stringency');
