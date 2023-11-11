@@ -116,8 +116,12 @@ def login():
                 print("Cursors and DB Closed")
                 return redirect(url_for('dashboard'))
             else:
+                # Keep invalid login message general for security measures 
+                # to not alert hackers of which part of the login credentials is incorrect
+                flash("Invalid Login")
                 print("Login Unsuccessful")
         except:
+            flash("Server down. Try again later.")
             print("Connection Failed")
     
         cursor.close()
