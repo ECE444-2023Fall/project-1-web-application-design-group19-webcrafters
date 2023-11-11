@@ -351,7 +351,9 @@ def dashboard():
 
         # follow or unfollow the organization
         elif button_pressed == "follow":
-            if organization_pressed in userTags:
+            if userTags == None:
+                userTags = [organization_pressed]
+            elif organization_pressed in userTags:
                 userTags.remove(organization_pressed)
             else:
                 userTags.append(organization_pressed)
@@ -646,7 +648,9 @@ def myEvents():
 
         # follow or unfollow the organization
         elif button_pressed == "follow":
-            if organization_pressed in userTags:
+            if userTags == None:
+                userTags = [organization_pressed]
+            elif organization_pressed in userTags:
                 userTags.remove(organization_pressed)
             else:
                 userTags.append(organization_pressed)
