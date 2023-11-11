@@ -10,6 +10,7 @@ from wtforms import widgets, StringField, SubmitField, SelectField, SelectMultip
 from wtforms.validators import DataRequired, Email
 from wtforms import SelectMultipleField, widgets
 import csv
+import json
 from io import StringIO
 
 from pypyodbc_main import pypyodbc as odbc
@@ -461,7 +462,7 @@ def userprofile():
     session['name'] = name
     session['password'] = password
     session['email'] = email
-    session['selected_filters'] = tagsList
+    session['selected_filters'] = json.dumps(tagsList)
 
     print("SESSION PRINT after updating:")
     print(session)

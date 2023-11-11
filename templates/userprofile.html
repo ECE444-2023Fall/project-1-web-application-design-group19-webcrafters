@@ -1,7 +1,9 @@
-
+{% extends "base2.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}Betula{% endblock %}
 
+{% block page_content %}
 <!DOCTYPE html>
 <html>
 
@@ -38,6 +40,7 @@
       });
     });
   </script>
+
 
   <style>
     body {
@@ -251,7 +254,7 @@
                       <option value="Victoria College">Victoria College</option>
                       <option value="Professional">Professional</option>
                       <option value="Cultural">Cultural</option>
-                      <option value="Soical Work/Charity">Soical Work / Charity</option>
+                      <option value="Soical Work/Charity">Social Work / Charity</option>
                       <option value="Fitness">Fitness</option>
                       <option value="Social">Social</option>
                       <option value="Sports">Sports</option>
@@ -405,11 +408,14 @@
         localStorage.setItem('selectedTags', JSON.stringify(selectedTags));
       }
 
-      // This function loads the selected tags from localStorage and selects them in the form
+      // This function loads the selected tags from the database filter variable and selects them in the form
       function loadSelectedTags() {
-        const selectedTags = JSON.parse(localStorage.getItem('selectedTags'));
+        var selectedFilters = {{ selected_filters | tojson | safe }};
+        const selectedTags = JSON.parse(selectedFilters);
         const tagSelect = document.getElementById('filter');
         const tagDisplay = document.getElementById('tagDisplay');
+
+        console.log("SELECTED TAGS: ", selectedTags)
 
         if (selectedTags && selectedTags.length) {
           selectedTags.forEach(tag => {
@@ -435,7 +441,7 @@
         saveSelectedTags();  // Save the selected tags to localStorage
       });
 
-      // Load the selected tags from localStorage when the page is loaded
+      // Load the selected tags from database when the page is loaded
       window.onload = function () {
         loadSelectedTags();
         updateTagDisplay();
@@ -485,3 +491,4 @@ function collectProfileData() {
   </body>
 
 </html>
+{% endblock %}
