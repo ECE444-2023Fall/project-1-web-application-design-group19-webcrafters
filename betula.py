@@ -171,6 +171,7 @@ def dashboard():
         userTags = userTags.split(',')
         userStringency = user_df['recs_must_match'].values[0]
     else:
+        userTags = None
         userStringency = 0
 
     userRegisteredEvents = user_df['event_id'].values[0]
