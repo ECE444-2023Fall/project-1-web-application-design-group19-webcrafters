@@ -387,8 +387,12 @@ def print_tags():
     # Combine the updated tags with the club tags
     final_tags = list(set(updated_tags + club_tags))
 
+    final_tags_string = ','.join(final_tags)
+    final_tags_string = final_tags_string.replace("\'", "")
+    final_tags_string = final_tags_string.replace("\"", "")
+
     # Update the user's tags in the database
-    update_table_query = f"UPDATE USER_DATA SET user_tags = \'{','.join(final_tags)}\' WHERE User_Email = \'{session['email']}\'"
+    update_table_query = f"UPDATE USER_DATA SET user_tags = \'" + final_tags_string + f"\' WHERE User_Email = \'{session['email']}\'"
     select_user_cursor.execute(update_table_query)
 
     # Save table and close database
