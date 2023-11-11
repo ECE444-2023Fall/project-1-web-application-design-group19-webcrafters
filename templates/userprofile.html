@@ -275,9 +275,17 @@
             </div>
           </div>
 
-          <!-- <form method="POST">
-            <a name = "filter_form" onclick="collectProfileData()" class="btn btn-primary">Save Profile</a>
-          </form> -->
+          <form method="POST" id="stringencyForm" action="/userprofile">
+            <div class="checkbox">
+              <!-- Hidden input to ensure 'stringency' key is always present -->
+              <input type="hidden" name="stringency" value="False">
+
+              <label>
+                <input type="checkbox" id="stringency" name="stringency" value="True" {% if stringency_value == 'True' %}checked{% endif %}>
+                  Tag stringency (dashboard events will match these tags)
+              </label>
+            </div>
+          </form>
 
         </div>
       </div>
@@ -325,6 +333,20 @@
     </div>
     </div> -->
     <script>
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var checkbox = document.getElementById('stringency');
+        var form = document.getElementById('stringencyForm');
+
+        // event listener to detect changes in the checkbox 
+        checkbox.addEventListener('change', function() {
+            // update the hidden input value based on checkbox state
+            document.querySelector('input[name="stringency"]').value = checkbox.checked ? 'True' : 'False';
+            form.submit();
+        });
+      });
+
+
       function hideAllForms() {
         document.getElementById('nameEditForm').style.display = 'none';
         document.getElementById('emailEditForm').style.display = 'none';

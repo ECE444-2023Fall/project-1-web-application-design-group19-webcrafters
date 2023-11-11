@@ -477,11 +477,18 @@ def userprofile():
     if tags is not None:
         tagsList = tags.split(",")
 
+
+    userStringency = user_df['recs_must_match'].values[0]
+    if userStringency is None:
+        userStringency = False
+
+
     session['name'] = name
     session['password'] = password
     session['email'] = email
     session['selected_filters'] = json.dumps(tagsList)
-
+    session['stringency_value'] = str(userStringency)
+    
     print("SESSION PRINT after updating:")
     print(session)
 
@@ -504,7 +511,7 @@ def userprofile():
             oldEmail = session['email']
             session['email'] = request.form.get('email')
 
-            #Update the user's name based on what was returned
+            #Update the user's email based on what was returned
             update_table_query = f"UPDATE USER_DATA SET user_email = \'" + session['email'] + f"\' WHERE User_Email = \'{oldEmail}\'"
             print(update_table_query)
             select_user_cursor.execute(update_table_query)
@@ -512,8 +519,18 @@ def userprofile():
         elif 'password' in request.form:
             session['password'] = request.form.get('password')
 
-            #Update the user's name based on what was returned
+            #Update the user's password based on what was returned
             update_table_query = f"UPDATE USER_DATA SET password = \'" + session['password'] + f"\' WHERE User_Email = \'{session['email']}\'"
+            print(update_table_query)
+            select_user_cursor.execute(update_table_query)
+        
+        elif 'stringency' in request.form:
+            print("IN HERE!!!")
+            session['stringency_value'] = request.form.get('stringency')
+            print('STRINGENCY VALUE: ', session['stringency_value'])
+
+            #Update the user's stringency based on what was returned
+            update_table_query = f"UPDATE USER_DATA SET recs_must_match = \'" + session['stringency_value'] + f"\' WHERE User_Email = \'{session['email']}\'"
             print(update_table_query)
             select_user_cursor.execute(update_table_query)
 
@@ -522,7 +539,7 @@ def userprofile():
     select_user_cursor.close()
     connection.close()
 
-    return render_template('userprofile.html', name=session['name'], email=session['email'], password=session['password'], selected_filters=session['selected_filters'])
+    return render_template('userprofile.html', name=session['name'], email=session['email'], password=session['password'], selected_filters=session['selected_filters'], stringency_value=session['stringency_value'])
 
 
   
