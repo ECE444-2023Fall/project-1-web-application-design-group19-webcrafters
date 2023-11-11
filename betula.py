@@ -196,7 +196,7 @@ def dashboard():
     #print(events_df.head)
 
     #Maximum amount of recommendations to give to user at a time
-    MAX_RECOMMENDATIONS = 10
+    MAX_RECOMMENDATIONS = 10000
 
     #Iterate through events and add matches matches
     for index, row in events_df.iterrows():
@@ -277,6 +277,7 @@ def dashboard():
         event_pressed = None
         organization_pressed = None
 
+        print(request.form)
 
         #Get the button pressed from the events on the screen
         index = 0
@@ -296,6 +297,8 @@ def dashboard():
                 break
 
             index += 1
+
+        print(f"Button pressed is {button_pressed}")
         
         
         # register or unregister the event
@@ -617,6 +620,8 @@ def myEvents():
                 userRegisteredEvents.remove((event_pressed))
                 print(f"Current Registered Events {userRegisteredEvents}")
                 if userRegisteredEvents is not None:
+                    #Convert back to string to avoid error
+                    userRegisteredEvents = [str(event) for event in userRegisteredEvents]
                     userRegisteredEvents = ','.join(userRegisteredEvents)
                 
                 userRegisteredEvents = str(userRegisteredEvents)
