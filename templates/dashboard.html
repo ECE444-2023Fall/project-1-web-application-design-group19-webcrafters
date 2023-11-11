@@ -3,7 +3,7 @@
 
 {% block title %}Betula{% endblock %}
 
-{% block page_content %}
+{# {% block page_content %}
     <div style="left: 250px; top: 80px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex">
         <div style="color: black; font-size: 24px; font-family: Roboto; font-weight: 400; text-transform: uppercase; letter-spacing: 2.40px; word-wrap: break-word">Search</div>
         <style>
@@ -51,6 +51,8 @@
             <a href="#">Option 3</a>
         </div>
     </div>
+
+{% endblock %} #}
 
 {% block content %}
 <script type="text/javascript" charset="utf-8">
@@ -192,48 +194,10 @@
         </div>
     </div>
     
-    <!-- Show Events -->
-        
-    <table style="display: flex; justify-content: center; align-items: center; height: 100%; padding-top: 250px; padding-left: 30px">
-        {% if events|length == 0 %}
-            <td id="noevents" style="display: flex; justify-content: center; align-items: center; height: 100%; margin-bottom: 30px">
-                <h2>No Events</h2>
-            </td>
-        {% else %}
-            <td id="noevents" style="display: none; justify-content: center; align-items: center; height: 100%; margin-bottom: 30px">
-                <h2>No Events</h2>
-            </td>
-        {% endif %}
-        
-        {% for event in events %}
-        <td id="{{'event' ~ event.iden}}" style="display: flex; justify-content: center; align-items: center; height: 100%; margin-bottom: 30px">
-            <div style="width: 623px; height: 508px; position: relative; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 30px; overflow: hidden">
-                <div style="width: 623px; height: 98px; left: 0px; top: 0px; position: absolute; background: #061945"></div>
-                <div style="width: 356px; height: 39px; left: 15px; top: 27px; position: absolute; color: white; font-size: 28px; font-family: Inter; font-weight: 400; word-wrap: break-word">{{ event.name }}</div>
-                <div style="width: 570px; height: 60px; padding: 10px; left: 21px; top: 425px; position: absolute; background: #061945; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
-                  <div style="width: 96px; height: 29px; color: white; font-size: 24px; font-family: Inter; font-weight: 400; word-wrap: break-word">Register</div>
-                </div>
-                <div style="height: 52px; padding-left: 6px; padding-right: 8px; left: 380px; top: 7px; position: absolute; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; overflow: hidden; justify-content: center; align-items: center; display: inline-flex">
-                  <div style="width: 198px; height: 52px; color: #061945; font-size: 16px; font-family: Inter; font-weight: 400; word-wrap: break-word">Hosted by: {{ event.organization }}</div>
-                </div>
-                <div style="height: 136px; padding-top: 11px; padding-bottom: 10px; padding-left: 9px; padding-right: 27px; left: 21px; top: 236px; position: absolute; background: #25355A; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px; overflow: hidden; justify-content: flex-start; align-items: center; display: inline-flex">
-                  <div style="width: 535px; height: 115px; color: white; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Description: {{ event.description}} </div>
-
-{#        </div>-->
-  
-    <!--<div style="width: 345px; height: 228px; left: 262px; top: 351px; position: absolute; background: #D9D9D9; border-radius: 30px"></div>-->
-    <!--<div style="width: 345px; height: 228px; left: 668px; top: 351px; position: absolute; background: #D9D9D9; border-radius: 30px"></div>-->
+   
     
     <!-- Show Events -->
-    {% raw %}
-   <!-- <table style="display: flex; justify-content: center; align-items: center; height: 100%; padding-top: 250px; padding-left: 30px">
-
-        {% for event in events %}
-
-  
-        <td style="display: flex; justify-content: center; align-items: center; height: 100%; margin-bottom: 30px"> --> 
-     {% endraw %}
-     <style>
+    <style>
         /* Style for the event contatiner */
         .eventContainer {
             display: flex;
@@ -242,7 +206,10 @@
             overflow-y: auto;
             overflow-x: hidden;
             padding: 40px;
-             width: 100%;
+            width: 100%;
+            margin-top:200px;
+            margin-left:200px;
+            background-color: rgba(0, 0, 0, 0);
         }
     
         /* Style for the event post */
@@ -262,10 +229,21 @@
         
     </style>
 
-    <div class="eventContatiner">
+    <div class="eventContainer">
         <div class="eventGrid">
+            {% if events|length == 0 %}
+            <div id="noevents" style="display: flex; justify-content: center; align-items: center; height: 100%; margin-bottom: 30px">
+                <h2>No Events</h2>
+            </div>
+            {% else %}
+            <div id="noevents" style="display: none; justify-content: center; align-items: center; height: 100%; margin-bottom: 30px">
+                <h2>No Events</h2>
+            </div>
+            {% endif %}
+
             {% for event in events %} 
-            <div class="eventPost">
+            <div id="{{'event' ~ event.iden}}" class="eventPost">
+            {# <div class="eventPost"> #}
                 <div style=" height: 508px; position: relative; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 30px; overflow: hidden">
                     <div style="width: 623px; height: 98px; left: 0px; top: 0px; position: relative; background: #061945"></div>
                     <div style="width: 356px; height: 39px; left: 15px; top: 27px; position: absolute; color: white; font-size: 28px; font-family: Inter; font-weight: 400; word-wrap: break-word">{{ event.name }}</div>
@@ -338,14 +316,12 @@
                     
                     <div style="width: 30%; height: 23px; left: 325px; top: 67px; position: absolute; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50); border-radius: 10px"></div>
                     <div style="width: 30%; height: 23px; left: 380px; top: 70px; position: absolute; color: #061945; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Follow</div>
-               
-#}
                 </div>
-                </div>
-          </td>
-        {% endfor %}
-   </table>
-    </div>
+            </div>
+          {# </td> #}
+            {% endfor %}
+   {# </table> #}
+    {# </div> #}
         </div>
     </div>
 
@@ -389,280 +365,281 @@
 
     <!-- Filters sidebar -->
 
-    <div id="filtersContainer" style="width: 210px; height: calc(100vh - 55px); left: 0px; top: 55px; position: fixed; overflow-y: hidden;">
+    <div id="filtersContainer" style="background-color:#5078a9;width: 210px; height: calc(100vh - 55px); left: 0px; top: 55px; position: fixed; overflow-y: hidden;">
 
-    <div style="height: 100%; left: 53px; top: 30px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 1px; display: inline-flex">
-        <div style="color: white; font-size: 24px; font-family: system-ui; font-weight: 500; word-wrap: break-word">Filters</div>
-        <br>
+        <div style="height: 100%; left: 53px; top: 30px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 1px; display: inline-flex">
+            <div style="color: white; font-size: 24px; font-family: system-ui; font-weight: 500; word-wrap: break-word">Filters</div>
+            <br>
 
-        <!-- Styling for Events Filter -->
-        <style>
-            .facultyFilter 
-            {
-                display: flex;
-                align-items: center;
-                color: white; 
-                font-size: 20px; 
-                font-family: system-ui; 
-                font-weight: 350; 
-                word-wrap: break-word;
-                position: relative; 
-                margin-bottom: 0px;
-            }
-
-            .facultyFilter a 
-            {
-                color: white;
-                text-decoration: none; /* Remove underlines from the link */
-            }
-
-            /* Style for the text that shows/hides the dropdown */
-            .facultyDropdown-text 
-            {
-                cursor: pointer;
-            }
-
-            /* Style for the dropdown menu */
-            .facultyDropdown 
-            {
-                display: none;
-                margin-left: 20px; 
-                margin-top: 0px;
-            }
-
-            /* Style for the checkboxes */
-            .checkbox-label 
-            {
-                display: block;
-                margin: 4px;
-                font-family: 'system-ui';
-                font-weight: 250;
-                color: white;
-            }
-
-            .right-arrow::after 
-            {
-                content: " ▶";
-                margin-right: 8px;
-                cursor: pointer;
-            }
-
-            .down-arrow::after 
-            {
-                content: " ▼";
-                margin-right: 8px;
-                cursor: pointer;
-            }
-        </style>
-
-        <div id="facFilter" class="facultyFilter" onclick="facultyDropdown()">
-            <span class="right-arrow" id="facultyArrowIcon"></span>
-            <a href="#"><span>Faculty</span></a>
-        </div>
-         <div class="facultyDropdown" id="facultyDrop">
-              {% for faculty in facultyTags %}
-              <label class="checkbox-label">
-                  <input id="{{faculty|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{faculty}}')">{{faculty}}
-              </label>
-              {% endfor %}
-          </div>
-       
-        <br>
-        
-        <!-- Functions for Faculty Filter -->
-        <script>
-            function facultyDropdown() 
-            {
-                var dropdown = document.getElementById("facultyDrop");
-                // Check if the dropdown is currently visible or hidden
-                if (dropdown.style.display === "block") {
-                    dropdown.style.display = "none"; // If visible, hide the dropdown
-                    document.getElementById("facultyArrowIcon").classList.remove("down-arrow");
-                    document.getElementById("facultyArrowIcon").classList.add("right-arrow");
-                } else {
-                    dropdown.style.display = "block"; // If hidden, show the dropdown
-                    document.getElementById("facultyArrowIcon").classList.remove("right-arrow");
-                    document.getElementById("facultyArrowIcon").classList.add("down-arrow");
+            <!-- Styling for Events Filter -->
+            <style>
+                .facultyFilter 
+                {
+                    display: flex;
+                    align-items: center;
+                    color: white; 
+                    font-size: 20px; 
+                    font-family: system-ui; 
+                    font-weight: 350; 
+                    word-wrap: break-word;
+                    position: relative; 
+                    margin-bottom: 0px;
                 }
-            }
 
+                .facultyFilter a 
+                {
+                    color: white;
+                    text-decoration: none; /* Remove underlines from the link */
+                }
+
+                /* Style for the text that shows/hides the dropdown */
+                .facultyDropdown-text 
+                {
+                    cursor: pointer;
+                }
+
+                /* Style for the dropdown menu */
+                .facultyDropdown 
+                {
+                    display: none;
+                    margin-left: 20px; 
+                    margin-top: 0px;
+                }
+
+                /* Style for the checkboxes */
+                .checkbox-label 
+                {
+                    display: block;
+                    margin: 4px;
+                    font-family: 'system-ui';
+                    font-weight: 250;
+                    color: white;
+                }
+
+                .right-arrow::after 
+                {
+                    content: " ▶";
+                    margin-right: 8px;
+                    cursor: pointer;
+                }
+
+                .down-arrow::after 
+                {
+                    content: " ▼";
+                    margin-right: 8px;
+                    cursor: pointer;
+                }
+            </style>
+
+            <div id="facFilter" class="facultyFilter" onclick="facultyDropdown()">
+                <span class="right-arrow" id="facultyArrowIcon"></span>
+                <a href="#"><span>Faculty</span></a>
+            </div>
+            <div class="facultyDropdown" id="facultyDrop">
+                {% for faculty in facultyTags %}
+                <label class="checkbox-label">
+                    <input id="{{faculty|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{faculty}}')">{{faculty}}
+                </label>
+                {% endfor %}
+            </div>
+        
+            <br>
             
-        </script>
+            <!-- Functions for Faculty Filter -->
+            <script>
+                function facultyDropdown() 
+                {
+                    var dropdown = document.getElementById("facultyDrop");
+                    // Check if the dropdown is currently visible or hidden
+                    if (dropdown.style.display === "block") {
+                        dropdown.style.display = "none"; // If visible, hide the dropdown
+                        document.getElementById("facultyArrowIcon").classList.remove("down-arrow");
+                        document.getElementById("facultyArrowIcon").classList.add("right-arrow");
+                    } else {
+                        dropdown.style.display = "block"; // If hidden, show the dropdown
+                        document.getElementById("facultyArrowIcon").classList.remove("right-arrow");
+                        document.getElementById("facultyArrowIcon").classList.add("down-arrow");
+                    }
+                }
 
-        <!-- Styling for Topics Filter -->
-        <style>
-            .topcisFilter 
-            {
-                display: flex;
-                align-items: center;
-                color: white; 
-                font-size: 20px; 
-                font-family: system-ui; 
-                font-weight: 350; 
-                word-wrap: break-word;
-            }
-        
-            .topcisFilter a 
-            {
-                color: white;
-                text-decoration: none; /* Remove underlines from the link */
-            }
-        
-            .topicsDropdown-container 
-            {
+                
+            </script>
+
+            <!-- Styling for Topics Filter -->
+            <style>
+                .topcisFilter 
+                {
+                    display: flex;
+                    align-items: center;
+                    color: white; 
+                    font-size: 20px; 
+                    font-family: system-ui; 
+                    font-weight: 350; 
+                    word-wrap: break-word;
+                }
+            
+                .topcisFilter a 
+                {
+                    color: white;
+                    text-decoration: none; /* Remove underlines from the link */
+                }
+            
+                .topicsDropdown-container 
+                {
+                        position: relative;
+                        display: inline-block;
+                }
+                
+                /* Style for the text that shows/hides the dropdown */
+                .topicsDropdown-text 
+                {
+                    cursor: pointer;
+                }
+
+                /* Style for the dropdown menu */
+                .topicsDropdown 
+                {
+                    display: none;
+                    margin-left: 20px; 
+                }
+
+                /* Style for the checkboxes */
+                .checkbox-label 
+                {
+                    display: block;
+                    margin: 4px;
+                    font-family: 'system-ui';
+                    font-weight: 250;
+                    color: white;
+                }
+            </style>
+
+            <div id="topFilter" class="topcisFilter" onclick="topicDropdown()">
+                <span class="right-arrow" id="topicArrowIcon"></span>
+                <a href="#"><span>Topics</span></a>
+            </div>
+            <div class="topicsDropdown" id="topicsDrop">
+                {% for topic in topicTags %}
+                <label class="checkbox-label">
+                    <input id="{{topic|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{topic}}')">{{topic}}
+                </label>
+                {% endfor %}
+            </div>
+            <br>
+
+            <!-- Functions for Topic Filter -->
+            <script>
+                function topicDropdown() 
+                {
+                    var dropdown = document.getElementById("topicsDrop");
+                    // Check if the dropdown is currently visible or hidden
+                    if (dropdown.style.display === "block") {
+                        dropdown.style.display = "none"; // If visible, hide the dropdown
+                        document.getElementById("topicArrowIcon").classList.remove("down-arrow");
+                        document.getElementById("topicArrowIcon").classList.add("right-arrow");
+                    } else {
+                        dropdown.style.display = "block"; // If hidden, show the dropdown
+                        document.getElementById("topicArrowIcon").classList.remove("right-arrow");
+                        document.getElementById("topicArrowIcon").classList.add("down-arrow");
+                    }
+                }
+            </script>
+
+            <!-- Styling for Price Filter -->
+            <style>
+                .priceFilter 
+                {
+                    display: flex;
+                    align-items: center;
+                    color: white; 
+                    font-size: 20px; 
+                    font-family: system-ui; 
+                    font-weight: 350; 
+                    word-wrap: break-word;
+                }
+            
+                .priceFilter a 
+                {
+                    color: white;
+                    text-decoration: none; /* Remove underlines from the link */
+                }
+            
+                .priceDropdown-container 
+                {
                     position: relative;
                     display: inline-block;
-            }
-            
-            /* Style for the text that shows/hides the dropdown */
-            .topicsDropdown-text 
-            {
-                cursor: pointer;
-            }
-
-            /* Style for the dropdown menu */
-            .topicsDropdown 
-            {
-                display: none;
-                margin-left: 20px; 
-            }
-
-            /* Style for the checkboxes */
-            .checkbox-label 
-            {
-                display: block;
-                margin: 4px;
-                font-family: 'system-ui';
-                font-weight: 250;
-                color: white;
-            }
-        </style>
-
-        <div id="topFilter" class="topcisFilter" onclick="topicDropdown()">
-            <span class="right-arrow" id="topicArrowIcon"></span>
-            <a href="#"><span>Topics</span></a>
-        </div>
-        <div class="topicsDropdown" id="topicsDrop">
-            {% for topic in topicTags %}
-            <label class="checkbox-label">
-                <input id="{{topic|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{topic}}')">{{topic}}
-            </label>
-            {% endfor %}
-        </div>
-        <br>
-
-        <!-- Functions for Topic Filter -->
-        <script>
-            function topicDropdown() 
-            {
-                var dropdown = document.getElementById("topicsDrop");
-                // Check if the dropdown is currently visible or hidden
-                if (dropdown.style.display === "block") {
-                    dropdown.style.display = "none"; // If visible, hide the dropdown
-                    document.getElementById("topicArrowIcon").classList.remove("down-arrow");
-                    document.getElementById("topicArrowIcon").classList.add("right-arrow");
-                } else {
-                    dropdown.style.display = "block"; // If hidden, show the dropdown
-                    document.getElementById("topicArrowIcon").classList.remove("right-arrow");
-                    document.getElementById("topicArrowIcon").classList.add("down-arrow");
                 }
-            }
-        </script>
-
-        <!-- Styling for Price Filter -->
-        <style>
-            .priceFilter 
-            {
-                display: flex;
-                align-items: center;
-                color: white; 
-                font-size: 20px; 
-                font-family: system-ui; 
-                font-weight: 350; 
-                word-wrap: break-word;
-            }
-        
-            .priceFilter a 
-            {
-                color: white;
-                text-decoration: none; /* Remove underlines from the link */
-            }
-        
-            .priceDropdown-container 
-            {
-                position: relative;
-                display: inline-block;
-            }
-            
-            /* Style for the text that shows/hides the dropdown */
-            .priceDropdown-text 
-            {
-                cursor: pointer;
-            }
-
-            /* Style for the dropdown menu */
-            .priceDropdown 
-            {
-                display: none;
-                margin-left: 20px; 
-            }
-
-            /* Style for the checkboxes */
-            .checkbox-label 
-            {
-                display: block;
-                margin: 4px;
-                font-family: 'system-ui';
-                font-weight: 250;
-                color: white;
-            }
-        </style>
-      
-        <div id="priFilter" class="priceFilter" onclick="priceDropdown()">
-            <span class="right-arrow" id="priceArrowIcon"></span>
-            <a href="#"><span>Price</span></a>
-        </div>
-        <div class="priceDropdown" id="priceDrop">
-            {% for price in priceTags %}
-            <label class="checkbox-label">
-                <input id="{{price|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{price}}')">{{price}}
-            </label>
-            {% endfor %}
-        </div>
-        <br>
-
-        <br>
-        <!-- Functions for Price Filter -->
-        <script>
-            // Define the function to be called
-            function priceDropdown() 
-            {
-                var dropdown = document.getElementById("priceDrop");
-                // Check if the dropdown is currently visible or hidden
-                if (dropdown.style.display === "block") {
-                    dropdown.style.display = "none"; // If visible, hide the dropdown
-                    document.getElementById("priceArrowIcon").classList.remove("down-arrow");
-                    document.getElementById("priceArrowIcon").classList.add("right-arrow");
-                } else {
-                    dropdown.style.display = "block"; // If hidden, show the dropdown
-                    document.getElementById("priceArrowIcon").classList.remove("right-arrow");
-                    document.getElementById("priceArrowIcon").classList.add("down-arrow");
+                
+                /* Style for the text that shows/hides the dropdown */
+                .priceDropdown-text 
+                {
+                    cursor: pointer;
                 }
-            }
+
+                /* Style for the dropdown menu */
+                .priceDropdown 
+                {
+                    display: none;
+                    margin-left: 20px; 
+                }
+
+                /* Style for the checkboxes */
+                .checkbox-label 
+                {
+                    display: block;
+                    margin: 4px;
+                    font-family: 'system-ui';
+                    font-weight: 250;
+                    color: white;
+                }
+            </style>
+        
+            <div id="priFilter" class="priceFilter" onclick="priceDropdown()">
+                <span class="right-arrow" id="priceArrowIcon"></span>
+                <a href="#"><span>Price</span></a>
+            </div>
+            <div class="priceDropdown" id="priceDrop">
+                {% for price in priceTags %}
+                <label class="checkbox-label">
+                    <input id="{{price|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{price}}')">{{price}}
+                </label>
+                {% endfor %}
+            </div>
+            <br>
+
+            <br>
+            <!-- Functions for Price Filter -->
+            <script>
+                // Define the function to be called
+                function priceDropdown() 
+                {
+                    var dropdown = document.getElementById("priceDrop");
+                    // Check if the dropdown is currently visible or hidden
+                    if (dropdown.style.display === "block") {
+                        dropdown.style.display = "none"; // If visible, hide the dropdown
+                        document.getElementById("priceArrowIcon").classList.remove("down-arrow");
+                        document.getElementById("priceArrowIcon").classList.add("right-arrow");
+                    } else {
+                        dropdown.style.display = "block"; // If hidden, show the dropdown
+                        document.getElementById("priceArrowIcon").classList.remove("right-arrow");
+                        document.getElementById("priceArrowIcon").classList.add("down-arrow");
+                    }
+                }
+            </script>
+        </div>
+
+        <!-- Filters container script -->
+        <script>
+            document.getElementById("filtersContainer").addEventListener("mouseenter", function() {
+                // Scroll when cursor is at filters
+                document.getElementById("filtersContainer").style.overflowY = "auto";
+            });
+            
+            document.getElementById("filtersContainer").addEventListener("mouseleave", function() {
+                // No scroll when cursor leaves filters
+                document.getElementById("filtersContainer").style.overflowY = "hidden";
+            });
         </script>
     </div>
-
-    <!-- Filters container script -->
-    <script>
-        document.getElementById("filtersContainer").addEventListener("mouseenter", function() {
-            // Scroll when cursor is at filters
-            document.getElementById("filtersContainer").style.overflowY = "auto";
-        });
-        
-        document.getElementById("filtersContainer").addEventListener("mouseleave", function() {
-            // No scroll when cursor leaves filters
-            document.getElementById("filtersContainer").style.overflowY = "hidden";
-        });
-    </script>
 </div>
 {% endblock %}
