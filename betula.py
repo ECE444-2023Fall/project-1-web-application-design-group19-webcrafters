@@ -354,33 +354,51 @@ def events():
 
 
 
+possible_event_tags = ["Faculty of Applied Science and Engineering","Trinity College","University College","St. Michael's College",
+                       "Victoria College","Professional","Cultural","Social Work/Charity","Fitness","Social","Sports","Free",
+                       "Paid","Free Food"]
 
+# NEW
 @app.route('/print-tags', methods=['POST'])
 def print_tags():
     data = request.json
-    tags = data.get('tags', [])
-    print('Received tags:', tags)
+    new_event_tags = data.get('tags', [])  # New event tags to replace existing event tags
 
     # Link form to User_Data Table in DB
     connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
     connection = odbc.connect(connection_string)
     select_user_cursor = connection.cursor()
 
-    tagsString = str(",".join(tags))
+    # Retrieve the current user tags from the database
+    select_tags_query = f"SELECT user_tags FROM USER_DATA WHERE User_Email = \'{session['email']}\'"
+    select_user_cursor.execute(select_tags_query)
+    current_tags = set(select_user_cursor.fetchone()[0].split(","))  # Assuming tags are stored as a comma-separated string
 
-    #Update the user's tags based on what was returned
-    update_table_query = f"UPDATE USER_DATA SET user_tags = \'" + tagsString + f"\' WHERE User_Email = \'{session['email']}\'"
-    print(update_table_query)
+    # Determine the existing event tags
+    existing_event_tags = current_tags.intersection(set(possible_event_tags))
+
+    # Determine the club tags by subtracting the existing event tags from the current tags
+    club_tags = list(current_tags - existing_event_tags)
+
+    # Replace existing event tags with new event tags
+    new_event_tags_str = ",".join(new_event_tags)
+    updated_tags = [tag if tag not in existing_event_tags else new_event_tags_str for tag in current_tags]
+
+    # Combine the updated tags with the club tags
+    final_tags = list(set(updated_tags + club_tags))
+
+    # Update the user's tags in the database
+    update_table_query = f"UPDATE USER_DATA SET user_tags = \'{','.join(final_tags)}\' WHERE User_Email = \'{session['email']}\'"
     select_user_cursor.execute(update_table_query)
 
-    #Save table and close database
+    # Save table and close database
     connection.commit()
     select_user_cursor.close()
     connection.close()
-    
+
     # Convert tags to CSV format
-    csv_data = '"Tags"\n"' + ",".join(tags) + '"'
-    
+    csv_data = '"Tags"\n"' + ",".join(final_tags) + '"'
+
     # Create a response with the CSV data
     response = Response(csv_data, content_type="text/csv")
     response.headers["Content-Disposition"] = "attachment; filename=tags.csv"
