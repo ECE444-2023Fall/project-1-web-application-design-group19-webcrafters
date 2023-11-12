@@ -41,6 +41,7 @@
     });
   </script>
 
+
   <style>
     body {
       font-family: system-ui;
@@ -170,10 +171,10 @@
 
           <!-- Inline Form for updating the name -->
           <div id="nameEditForm" style="display: none; width: 100%; padding: 10px 0; border-bottom: 1px #FFFFFF solid;">
-            <form action="/userprofile" method="post">
+            <form action="/userprofile" method="POST">
               <label for="name">Enter your name:</label>
               <input type="text" id="name" name="name">
-              <input type="submit" value="Update Name">
+              <input name = "name" type="submit" value="Update Name">
             </form>
           </div>
 
@@ -194,14 +195,14 @@
           </div>
           <!-- Inline Form for updating the name -->
           <div id="emailEditForm" style="display: none; width: 100%; padding: 10px 0; border-bottom: 1px #FFFFFF solid;">
-            <form action="/userprofile" method="post">
+            <form action="/userprofile" method="POST">
               <label for="email">Enter your email:</label>
               <input type="text" id="email" name="email">
-              <input type="submit" value="Update Email">
+              <input name = "email" type="submit" value="Update Email">
             </form>
           </div>
 
-          <!-- Phone number section -->
+          <!-- Password section -->
           <div
             style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%; height: auto; border-bottom: 1px #FFFFFF solid; padding: 14px 0;">
             <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start;">
@@ -209,20 +210,20 @@
                 Password </div>
               <div
                 style="color: #717171; font-size: 14px; font-family: system-ui; font-weight: 400; line-height: 18px; margin-top: 5px;">
-                {{ phone }}</div>
+                {{ password }}</div>
             </div>
-            <div style="cursor: pointer;" onclick="togglePhoneNumberEditForm()">
+            <div style="cursor: pointer;" onclick="togglePasswordEditForm()">
               <span
                 style="color: #222222; font-size: 14px; font-family: system-ui; font-weight: 600; text-decoration: underline; line-height: 20.02px;">Edit</span>
             </div>
           </div>
-          <!-- Inline Form for updating the phone number -->
-          <div id="phoneNumberEditForm"
+          <!-- Inline Form for updating the password -->
+          <div id="passwordEditForm"
             style="display: none; width: 100%; padding: 10px 0; border-bottom: 1px #FFFFFF solid;">
-            <form action="/userprofile" method="post" id="phoneNumberForm">
-              <label for="phone">Enter your password:</label>
-              <input type="text" id="phone" name="phone">
-              <input type="submit" value="Update Password">
+            <form action="/userprofile" method="POST" id="passwordForm">
+              <label for="password">Enter your password:</label>
+              <input type="text" id="password" name="password">
+              <input name = "password" type="submit" value="Update Password">
             </form>
 
           </div>
@@ -241,7 +242,7 @@
               <!-- Filters form wrapped inside the column div -->
               <div id="tagEditForm"
                 style="display: none; width: 100%; padding: 10px 0; border-bottom: 1px #FFFFFF solid;">
-                <form method="post" id="tagForm">
+                <form method="POST" id="tagForm">
                   <div class="form-group">
                     <!-- <label for="filter">Select Tag:</label> -->
                     <select data-placeholder="Select Tags..." multiple class="chosen-select" id="filter" name="filters[]"
@@ -249,11 +250,11 @@
                       <option value="Faculty of Applied Science and Engineering">Faculty of Applied Science and Engineering</option>
                       <option value="Trinity College">Trinity College</option>
                       <option value="University College">University College</option>
-                      <option value="St. Michael's College">St. Michael's College</option>\
+                      <option value="St. Michaels College">St. Michaels College</option>\
                       <option value="Victoria College">Victoria College</option>
                       <option value="Professional">Professional</option>
                       <option value="Cultural">Cultural</option>
-                      <option value="Soical Work/Charity">Soical Work / Charity</option>
+                      <option value="Social Work/Charity">Social Work / Charity</option>
                       <option value="Fitness">Fitness</option>
                       <option value="Social">Social</option>
                       <option value="Sports">Sports</option>
@@ -262,7 +263,7 @@
                       <option value="Free Food">Free Food</option>
                     </select>
                   </div>
-                  <button type="submit" class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+                  <button name = "filter_form" type="submit" class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
                 </form>
               </div>
             </div>
@@ -274,8 +275,19 @@
             </div>
           </div>
 
-          <a href="{{ url_for('download_csv') }}" class="btn btn-primary">Save Profile</a>
+          <form method="POST" id="stringencyForm" action="/userprofile">
+            <div class="checkbox">
+              <!-- Hidden input to ensure 'stringency' key is always present -->
+              <input type="hidden" name="stringency" value="False">
 
+              <label>
+                <input type="checkbox" id="stringency" name="stringency" value="True" {% if stringency_value == 'True' %}checked{% endif %}>
+                  Tag stringency (events will be filtered to match these tags or the organizations you follow)
+              </label>
+            </div>
+          </form>
+
+          <button type="button" class="btn btn-primary" onclick="redirectToIndex()">Logout</button>
 
         </div>
       </div>
@@ -323,12 +335,27 @@
     </div>
     </div> -->
     <script>
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var checkbox = document.getElementById('stringency');
+        var form = document.getElementById('stringencyForm');
+
+        // event listener to detect changes in the checkbox 
+        checkbox.addEventListener('change', function() {
+            // update the hidden input value based on checkbox state
+            document.querySelector('input[name="stringency"]').value = checkbox.checked ? 'True' : 'False';
+            form.submit();
+        });
+      });
+
+
       function hideAllForms() {
         document.getElementById('nameEditForm').style.display = 'none';
         document.getElementById('emailEditForm').style.display = 'none';
-        document.getElementById('phoneNumberEditForm').style.display = 'none';
+        document.getElementById('passwordEditForm').style.display = 'none';
         document.getElementById('tagEditForm').style.display = 'none';
       }
+
       function toggleNameEditForm() {
         hideAllForms();
         const formDiv = document.getElementById('nameEditForm');
@@ -341,41 +368,40 @@
         formDiv.style.display = 'block';
       }
 
-      function togglePhoneNumberEditForm() {
+      function togglePasswordEditForm() {
         hideAllForms();
-        const formDiv = document.getElementById('phoneNumberEditForm');
+        const formDiv = document.getElementById('passwordEditForm');
         formDiv.style.display = 'block';
       }
+
       function applyFilters() {
-    // Update the tag display
-    updateTagDisplay();
-    
-    // Fetch the selected tags
-    const tagSelect = document.getElementById('filter');
-    const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.text);
-    
-    // Send the tags to the server
-    fetch('/print-tags', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({tags: selectedTags}),
-    })
-    .then(response => response.blob())
-    .then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        a.download = 'tags.csv';
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-    });
-}
-
-
+          // Update the tag display
+          updateTagDisplay();
+          
+          // Fetch the selected tags
+          const tagSelect = document.getElementById('filter');
+          const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.text);
+          
+          // Send the tags to the server
+          fetch('/print-tags', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({tags: selectedTags}),
+          })
+          // .then(response => response.blob())
+          // .then(blob => {
+          //     const url = window.URL.createObjectURL(blob);
+          //     const a = document.createElement('a');
+          //     a.style.display = 'none';
+          //     a.href = url;
+          //     a.download = 'tags.csv';
+          //     document.body.appendChild(a);
+          //     a.click();
+          //     window.URL.revokeObjectURL(url);
+          // });
+      }
 
 
       function toggleTagEditForm() {
@@ -406,11 +432,14 @@
         localStorage.setItem('selectedTags', JSON.stringify(selectedTags));
       }
 
-      // This function loads the selected tags from localStorage and selects them in the form
+      // This function loads the selected tags from the database filter variable and selects them in the form
       function loadSelectedTags() {
-        const selectedTags = JSON.parse(localStorage.getItem('selectedTags'));
+        var selectedFilters = {{ selected_filters | tojson | safe }};
+        const selectedTags = JSON.parse(selectedFilters);
         const tagSelect = document.getElementById('filter');
         const tagDisplay = document.getElementById('tagDisplay');
+
+        console.log("SELECTED TAGS: ", selectedTags)
 
         if (selectedTags && selectedTags.length) {
           selectedTags.forEach(tag => {
@@ -436,7 +465,7 @@
         saveSelectedTags();  // Save the selected tags to localStorage
       });
 
-      // Load the selected tags from localStorage when the page is loaded
+      // Load the selected tags from database when the page is loaded
       window.onload = function () {
         loadSelectedTags();
         updateTagDisplay();
@@ -445,15 +474,15 @@
 function collectProfileData() {
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
-    const phone = document.getElementById('phone').value;
+    const password = document.getElementById('password').value;
     const tagSelect = document.getElementById('filter');  // Assuming the filter select has the id 'filter'
-    //const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.text);  // get the values of selected tags
+    const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.text);  // get the values of selected tags
 
     const profileData = {
-        name: name,
-        email: email,
-        phone: phone,
-       // tags: selectedTags
+      name: name,
+      email: email,
+      password: password,
+      tags: selectedTags
     };
     console.log(profileData); 
     // Send this data to the server
@@ -476,6 +505,11 @@ function collectProfileData() {
         window.URL.revokeObjectURL(url);
     });
 }
+
+
+      function redirectToIndex() {
+          window.location.href = '/';
+      }
 
       
     </script>
