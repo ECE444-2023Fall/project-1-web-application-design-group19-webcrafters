@@ -50,7 +50,7 @@
                             .registerButton {
                                 display:flex;
                                 background: #061945;
-                                width: 470px; 
+                                width: 90%; 
                                 height: 60px; 
                                 padding: 10px; 
                                 left: 21px; 
@@ -100,12 +100,13 @@
                     <div style="width: 551px; height: 25px; left: 33px; top: 152px; position: absolute; color: white; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">When: {{ event.when }}</div>
                     
                     <form method="POST"> <!-- style="width: 30%; height: 23px; left: 380px; top: 70px; position: absolute; color: #061945; font-size: 14px; font-family: system-ui; font-weight: 400; word-wrap: break-word">-->
-                        <button class="followButton" name = "{{event.organization}}" onclick="followFlip()">{% if event.organization not in userTags %}
-                                                                                                            Follow
-                                                                                                        {% else %}
-                                                                                                            Unfollow
-                                                                                                        {% endif %}
-                        </button>
+                        <button class="followButton" name = "{{event.organization}}" onclick="followFlip()">{% if userTags == None %}
+                                                                                                                Follow
+                                                                                                            {% elif event.organization not in userTags %}
+                                                                                                                Follow
+                                                                                                            {% else %}
+                                                                                                                Unfollow
+                                                                                                            {% endif %}
                         <style>
                             .followButton {
                                 display: flex;
