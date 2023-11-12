@@ -802,7 +802,7 @@ def myEvents():
             except:
                 when = "Not available"
 
-            currEvent = Event(name = row['event_name'], organization = organization, where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'], event_id = event_id, registered = registered)
+            currEvent = Event(iden = index, name = row['event_name'], organization = organization, where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'], event_id = event_id, registered = registered)
             eventsList.append(currEvent)
     
     #Make sure to close the database as soon as possible
