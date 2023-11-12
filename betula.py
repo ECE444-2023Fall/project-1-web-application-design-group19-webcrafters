@@ -470,30 +470,39 @@ def posting():
         cost = request.form.get('cost')
         tags = request.form.get('tags')
 
-        # Database connection setup
-        connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
-        connection = odbc.connect(connection_string)
+        if not all([organization, campus, event, description, date, startTime, endTime, college, cost]):
+            # Flash a reminder to fill in all fields
+            flash('Please fill in all required fields', 'warning')
+        else:
+            # Database connection setup
+            connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+            connection = odbc.connect(connection_string)
 
-        # SQL query to insert event data into the database
-        create_event_query = '''
-                INSERT INTO EVENT_DATA (Event_name, Coordinator_Name, Coordinator_Email, Coordinator_Username, Organization_Name, Target_Campus, Event_Description, Event_Date, Event_Start_Time, Event_End_Time, Event_Street_Address, Event_City, Event_Postal_Code, Event_Location_Common_Name, Target_College, Target_Faculty, Event_Cost, Tags)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                '''
-        
-        cursor = connection.cursor()
+            # SQL query to insert event data into the database
+            create_event_query = '''
+                    INSERT INTO EVENT_DATA (Event_name, Coordinator_Name, Coordinator_Email, Coordinator_Username, Organization_Name, Target_Campus, Event_Description, Event_Date, Event_Start_Time, Event_End_Time, Event_Street_Address, Event_City, Event_Postal_Code, Event_Location_Common_Name, Target_College, Target_Faculty, Event_Cost, Tags)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    '''
+            
+            cursor = connection.cursor()
 
-        try:
-            # Execute the SQL query with form data and session values
-            cursor.execute(create_event_query, (event, session['name'], session['email'], session['name'], organization, campus, description, date, startTime, endTime, street, city, postal, commonName, college, faculty, cost, tags) )
-            connection.commit() # Line needed to ensure DB on server is updated
-            print("Event added successfully")
-        except:
-            print("Event not added")
-        
-        cursor.close()
-        connection.close()
+            try:
+                # Execute the SQL query with form data and session values
+                cursor.execute(create_event_query, (event, session['name'], session['email'], session['name'], organization, campus, description, date, startTime, endTime, street, city, postal, commonName, college, faculty, cost, tags) )
+                connection.commit() # Line needed to ensure DB on server is updated
 
-        print("Cursors and DB Closed")
+                flash('Event added successfully', 'success')
+
+                cursor.close()
+                connection.close()
+                return redirect(url_for('dashboard'))
+            except:
+                flash('Error adding event. Please try again.', 'error')
+            
+            cursor.close()
+            connection.close()
+
+            print("Cursors and DB Closed")
 
     # Render the posting.html template with form data
     return render_template('posting.html', form=form, organization=organization, campus = campus, event = event, description = description, date = date, startTime = startTime, endTime = endTime, street = street, city = city, postal = postal, commonName = commonName, college = college, faculty = faculty, cost = cost, tags = tags)
