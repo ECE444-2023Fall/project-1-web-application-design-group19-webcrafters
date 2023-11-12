@@ -1,0 +1,69 @@
+{% extends "base2.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Betula{% endblock %}
+
+{% block page_content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    body {
+      margin: 0;
+    }
+    .page-content {
+      position: relative;
+      margin-top: 70px;
+      margin-left: 223px;
+      overscroll-behavior-y: contain;
+      z-index: 1;
+      max-height: calc(100vh - 70px);
+      max-width: calc(100vw - 223px);
+    }
+
+  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - Betula</title>
+</head>
+<body>
+  <div class="page-content">
+
+    <br>
+        <h1>SUCCESS!</h1>
+    
+        <p>Current org: {{ organization }}</p>
+      
+        <p>Current campus: {{ campus }}</p>
+        
+        <p>Current event: {{ event }}</p>
+      
+        <p>Current desc: {{ description }}</p>
+        
+        <p>Current date: {{ date }}</p>
+      
+        <p>Current start: {{ startTime }}</p>
+      
+        <p>Current end: {{ endTime }}</p>
+      
+        <p>Current street: {{ street }}</p>
+      
+        <p>Current city: {{ city }}</p>
+      
+        <p>Current postal: {{ postal }}</p>
+      
+        <p>Current common: {{ commonName }}</p>
+      
+        <p>Current college: {{ college }}</p>
+      
+        <p>Current faculty: {{ faculty }}</p>
+            
+        <p>Current cost: {{ cost }}</p>
+     
+        <p>Current tags: {{ tags }}</p>
+
+    <br>
+  </div>
+</body>
+</html>
+{% endblock %}
