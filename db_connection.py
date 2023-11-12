@@ -9,8 +9,8 @@ Documents:
 https://www.mssqltips.com/sqlservertip/4037/storing-passwords-in-a-secure-way-in-a-sql-server-database/
 '''
 
-from pypyodbc_main import pypyodbc as odbc # Run if on Mac Apple Silicon
-#import pypyodbc as odbc # Run if on Windows
+#from pypyodbc_main import pypyodbc as odbc # Run if on Mac Apple Silicon
+import pypyodbc as odbc # Run if on Windows
 import pandas as pd
 from credentials import db_username, db_password
 
@@ -63,7 +63,7 @@ query = '''
 
 check_table_exists_query = '''
         IF EXISTS (SELECT * 
-                    FROM DBO.USER_DATA)
+                    FROM DBO.EVENT_DATA)
     '''
 
 create_cursor = connection.cursor()
@@ -82,7 +82,7 @@ except:
     print("User Table not created")
 
 
-get_user_table_data_query = "SELECT * FROM USER_DATA"
+get_user_table_data_query = "SELECT * FROM EVENT_DATA"
 select_cursor = connection.cursor()
 select_cursor.execute(get_user_table_data_query)
 dataset = select_cursor.fetchall()
@@ -90,7 +90,7 @@ dataset = select_cursor.fetchall()
 # Get Column Names
 headers = [column[0] for column in select_cursor.description]
 
-df = pd.DataFrame(columns=headers, data=dataset)
+df = pd.DataFrame(data=dataset)
 print(df)
 
 

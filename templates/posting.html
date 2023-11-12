@@ -83,7 +83,7 @@
     <div style="text-align: center; position: relative; color: black; font-size: 15px; font-family: system-ui; font-weight: 400; word-wrap: break-word">Fields with a * are required fields</div><br>
 
     <br>
-    <form method="POST">
+    <form method="POST" action="{{ url_for('posting') }}">
       {{ form.hidden_tag() }}
       <div class="form-group">
           <label for="organization">Organization Name *</label>
@@ -157,16 +157,120 @@
       </div>
       <div class="form-group">
           <label for="cost">Cost *</label>
-          {{ form.cost(class="form-control") }}
+          <input type="number" name="cost" step="0.01" class="form-control" placeholder="Enter Cost" pattern="^\d+(\.\d{1,2})?$" title="Please enter a number with up to two decimal places">
       </div>
       <div class="form-group">
-          <label for="tags">Tags</label>
+          <label for="tags">Tags, Please enter comma separated </label>
           {{ form.tags(size=30, class="form-control") }}
       </div>
       <div class="form-group" style="text-align: center;">
           {{ form.post(class="button") }}
       </div>
     </form>
+    <script>
+      // Function to update variables with form data
+      function updateVariables() {
+          // Get values from form elements
+          let organization = document.getElementById('organization').value;
+          let campus = Array.from(document.querySelectorAll('input[name="campus"]:checked')).map(el => el.value);
+          let event = document.getElementById('event').value;
+          let description = document.getElementById('description').value;
+          let date = document.getElementById('date').value;
+          let startTime = document.getElementById('startTime').value;
+          let endTime = document.getElementById('endTime').value;
+          let street = document.getElementById('street').value;
+          let city = document.getElementById('city').value;
+          let postal = document.getElementById('postal').value;
+          let commonName = document.getElementById('commonName').value;
+          let college = document.getElementById('college').value;
+          let faculty = Array.from(document.querySelectorAll('input[name="faculty"]:checked')).map(el => el.value);
+          let cost = document.getElementById('cost').value;
+          let tags = document.getElementById('tags').value;
+
+          // Return an object with updated variables
+          return { organization, campus, event, description, date, startTime, endTime, street, city, postal, commonName, college, faculty, cost, tags };
+      }
+
+      // Event listener for 'organization' input
+      document.getElementById('organization').addEventListener('input', function() {
+          updateVariables();
+      });
+
+      // Event listeners for campus-related inputs
+      document.querySelectorAll('input[name="campus"]').forEach(el => {
+          el.addEventListener('change', function() {
+              updateVariables();
+          });
+      });
+
+      // Event listener for 'event' input
+      document.getElementById('event').addEventListener('input', function() {
+          updateVariables();
+      });
+
+      // Event listener for 'description' input
+      document.getElementById('description').addEventListener('input', function() {
+          updateVariables();
+      });
+
+      // Event listener for 'date' input
+      document.getElementById('date').addEventListener('input', function() {
+          updateVariables();
+      });
+
+      // Event listener for 'startTime' input
+      document.getElementById('startTime').addEventListener('input', function() {
+          updateVariables();
+      });
+
+      // Event listener for 'endTime' input
+      document.getElementById('endTime').addEventListener('input', function() {
+          updateVariables();
+      });
+
+      // Event listener for 'street' input
+      document.getElementById('street').addEventListener('input', function() {
+          updateVariables();
+      });
+
+      // Event listener for 'city' input
+      document.getElementById('city').addEventListener('input', function() {
+          updateVariables();
+      });
+
+      // Event listener for 'postal' input
+      document.getElementById('postal').addEventListener('input', function() {
+          updateVariables();
+      });
+
+      // Event listener for 'commonName' input
+      document.getElementById('commonName').addEventListener('input', function() {
+          updateVariables();
+      });
+
+      // Event listener for 'college' dropdown
+      document.getElementById('college').addEventListener('change', function() {
+          updateVariables();
+      });
+
+      // Event listeners for faculty-related inputs
+      document.querySelectorAll('input[name="faculty"]').forEach(el => {
+          el.addEventListener('change', function() {
+              updateVariables();
+          });
+      });
+
+      // Event listener for 'cost' input
+      document.getElementById('cost').addEventListener('input', function() {
+          updateVariables();
+      });
+
+      // Event listener for 'tags' input
+      document.getElementById('tags').addEventListener('input', function() {
+          updateVariables();
+      });
+
+    </script>
     <br>
   </div>
 </body>

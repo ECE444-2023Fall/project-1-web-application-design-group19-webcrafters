@@ -10,7 +10,9 @@ from wtforms import widgets, StringField, SubmitField, SelectField, SelectMultip
 from wtforms.validators import DataRequired, Email
 from wtforms import SelectMultipleField, widgets
 import csv
+import json
 from io import StringIO
+import json
 
 from pypyodbc_main import pypyodbc as odbc
 #import pypyodbc as odbc
@@ -26,7 +28,12 @@ logger = logging.getLogger()
 
 #Event class for easy access of event information when rendering
 class Event():
-    def __init__(self, name, organization, where, when, tags, description, contact, registered, event_id):
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, 
+            sort_keys=True, indent=4)
+
+    def __init__(self, iden, name, organization, where, when, tags, description, contact, registered, event_id):
+        self.iden = iden
         self.name = name
         self.organization = organization
         self.where = where
@@ -36,6 +43,8 @@ class Event():
         self.contact = contact
         self.registered = registered
         self.event_id = event_id
+
+# jsonEvent = {iden:iden, name:name, organization:organization, where:where, when:when, tags:tags, description:description, contact:contact}
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
@@ -72,7 +81,7 @@ class PostingForm(FlaskForm):
     city = StringField('City')
     postal = StringField('Postal Code')
     commonName = StringField('Commonly Referred to as (i.e. if space has a student-given name like "the pit" or "Back Campus")')
-    college = SelectField('College', choices=[('none', 'None'), ('innis','Innis College'), ('new', 'New College'), ('stmikes', "St. Michael's College"), ('trinity', 'Trinity College'), ('uc','University College'), ('vic', 'Victoria College'), ('woodsworth', 'Woodsworth College')], validators=[DataRequired()])
+    college = SelectField('College', choices=[('none', 'None'), ('innis','Innis College'), ('new', 'New College'), ('stmikes', "St. Michaels College"), ('trinity', 'Trinity College'), ('uc','University College'), ('vic', 'Victoria College'), ('woodsworth', 'Woodsworth College')], validators=[DataRequired()])
     faculty = SelectMultipleField('Faculty', choices=[('engineering','Applied Science and Engineering'), ('architecture', 'Architecture, Landscape and Design'), ('artsci', 'Arts and Science'), ('continuing', "Continuing Studies"), ('dentistry','Dentistry'), ('edu', 'Education'), ('info', 'Information'), ('kpe', 'Kinesiology and Physical Education'), ('law', 'Law'), ('management', 'Management'), ('med', 'Medicine'), ('music', 'Music'), ('nursing', 'Nursing'), ('pharm', 'Pharmacy'), ('publichealth', 'Public Health'), ('socwork', "Social Work")], validators=[DataRequired()])
     cost = SelectField('Cost', choices=[('free','Free'), ('under5', 'Under $5'), ('under10', 'Under $10'), ('under20', 'Under $20'), ('above20','$20+')], validators=[DataRequired()])
     tags = StringField('Tags')
@@ -94,7 +103,39 @@ def login():
         password = form.password.data
         session["email"] = email
         print("Got email!")
-        return redirect(url_for('dashboard'))
+        
+        # Set Up Connection to DB
+        connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+        connection = odbc.connect(connection_string)
+
+        check_user_exists_query = f'''SELECT COUNT(*) 
+                                FROM USER_DATA
+                                WHERE USER_EMAIL = '{email}' and PASSWORD = '{password}'
+                            '''
+        
+        cursor = connection.cursor()
+
+        try:
+            cursor.execute(check_user_exists_query)
+            # Only attempt to redirect user to dashboard if login credentials are valid and exists in User_Data table
+            if cursor.fetchone()[0] > 0:
+                print("Login Successful")
+                cursor.close()
+                connection.close()
+                print("Cursors and DB Closed")
+                return redirect(url_for('dashboard'))
+            else:
+                # Keep invalid login message general for security measures 
+                # to not alert hackers of which part of the login credentials is incorrect
+                flash("Invalid Login")
+                print("Login Unsuccessful")
+        except:
+            flash("Server down. Try again later.")
+            print("Connection Failed")
+    
+        cursor.close()
+        connection.close()
+        print("Cursors and DB Closed")
     return render_template('login.html', form=form, email=email, password=password)
 
 
@@ -141,7 +182,9 @@ def join():
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
-    
+    facultyTags = ["Faculty of Applied Science and Engineering", "Trinity College", "University College", "St. Michael's College", "Victoria College"]
+    topicTags = ["Professional", "Cultural", "Social Work/Charity", "Fitness", "Social", "Sports"]
+    priceTags = ["Free", "Paid", "Free Food"]
     # Link form to User_Data Table in DB
     connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
     connection = odbc.connect(connection_string)
@@ -151,7 +194,7 @@ def dashboard():
         get_user_table_data_query = f"SELECT * FROM USER_DATA WHERE User_Email = \'{session['email']}\'"
     except:
         return redirect(url_for('login'))
-
+      
     select_user_cursor = connection.cursor()
     select_user_cursor.execute(get_user_table_data_query)
     dataset = select_user_cursor.fetchall()
@@ -176,6 +219,8 @@ def dashboard():
     else:
         userStringency = 0
 
+    print('These are the user tags: ', userTags)
+
     userRegisteredEvents = user_df['event_id'].values[0]
 
     if userRegisteredEvents is not None:
@@ -185,6 +230,7 @@ def dashboard():
         
     #Now that we have the user information, let's grab the events
     eventsList = []
+    jsonEventsList = []
     get_user_table_data_query = f"SELECT * FROM EVENT_DATA"
     select_user_cursor.execute(get_user_table_data_query)
     dataset = select_user_cursor.fetchall()
@@ -249,8 +295,10 @@ def dashboard():
                 except:
                     when = "Not available"
 
-                currEvent = Event(name = row['event_name'], organization = organization, where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'], event_id = event_id, registered = registered)
+                currEvent = Event(iden = index, name = row['event_name'], organization = organization, where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'], event_id = event_id, registered = registered)
+
                 eventsList.append(currEvent)
+                jsonEventsList.append(currEvent.__dict__)
         #Otherwise, add any event!
         else:
             try:
@@ -268,8 +316,10 @@ def dashboard():
             except:
                 organization = "Not available"
 
-            currEvent = Event(name = row['event_name'], organization = organization, where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'], event_id = event_id, registered = registered)
+            currEvent = Event(iden = index, name = row['event_name'], organization = organization, where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'], event_id = event_id, registered = registered)
+
             eventsList.append(currEvent)
+            jsonEventsList.append(currEvent.__dict__)
 
         #If we have reached the maximum amount of recommendations, break out of loop
         if (len(eventsList) == MAX_RECOMMENDATIONS):
@@ -345,7 +395,7 @@ def dashboard():
     select_user_cursor.close()
     connection.close()
 
-    return render_template('dashboard.html', events = eventsList)
+    return render_template('dashboard.html', jsonEvents = json.dumps(jsonEventsList), events = eventsList, facultyTags = facultyTags, topicTags=topicTags, priceTags=priceTags, curPage = "dash")
 
   
 @app.route('/eventsdemo', methods=['GET', 'POST'])
@@ -354,17 +404,59 @@ def events():
     return render_template('event.html', events=events)
 
 
+def concatenate_list(items, delimiter=' '):
+    return delimiter.join(items)
 
 
+possible_event_tags = ["Faculty of Applied Science and Engineering","Trinity College","University College","St. Michaels College",
+                       "Victoria College","Professional","Cultural","Social Work/Charity","Fitness","Social","Sports","Free",
+                       "Paid","Free Food"]
+
+# NEW
 @app.route('/print-tags', methods=['POST'])
 def print_tags():
     data = request.json
-    tags = data.get('tags', [])
-    print('Received tags:', tags)
-    
+    new_event_tags = data.get('tags', [])  # New event tags to replace existing event tags
+
+    # Link form to User_Data Table in DB
+    connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+    connection = odbc.connect(connection_string)
+    select_user_cursor = connection.cursor()
+
+    # Retrieve the current user tags from the database
+    select_tags_query = f"SELECT user_tags FROM USER_DATA WHERE User_Email = \'{session['email']}\'"
+    select_user_cursor.execute(select_tags_query)
+    current_tags = set(select_user_cursor.fetchone()[0].split(","))  # Assuming tags are stored as a comma-separated string
+
+    # Determine the existing event tags
+    existing_event_tags = current_tags.intersection(set(possible_event_tags))
+
+    # Determine the club tags by subtracting the existing event tags from the current tags
+    club_tags = list(current_tags - existing_event_tags)
+
+    # Replace existing event tags with new event tags
+    new_event_tags_str = ",".join(new_event_tags)
+    updated_tags = [tag if tag not in existing_event_tags else new_event_tags_str for tag in current_tags]
+
+    # Combine the updated tags with the club tags
+    final_tags = list(set(updated_tags + club_tags))
+
+    final_tags_string = ','.join(final_tags)
+    final_tags_string = final_tags_string.replace("\'", "")
+    final_tags_string = final_tags_string.replace("\"", "")
+
+    # Update the user's tags in the database
+    update_table_query = f"UPDATE USER_DATA SET user_tags = \'" + final_tags_string + f"\' WHERE User_Email = \'{session['email']}\'"
+    select_user_cursor.execute(update_table_query)
+
+    # Save table and close database
+    connection.commit()
+    select_user_cursor.close()
+    connection.close()
+
     # Convert tags to CSV format
-    csv_data = '"Tags"\n"' + ",".join(tags) + '"'
-    
+    csv_data = '"Tags"\n"' + ",".join(final_tags) + '"'
+
     # Create a response with the CSV data
     response = Response(csv_data, content_type="text/csv")
     response.headers["Content-Disposition"] = "attachment; filename=tags.csv"
@@ -373,14 +465,15 @@ def print_tags():
 
 
 class FilterForm(FlaskForm):
-    filter = SelectMultipleField('Select Filters', choices=[('Tag 1', 'Tag 1'), ('Tag 2', 'Tag 2'), ('Tag 3', 'Tag 3'), ('Tag 4', 'Tag 4')], widget=ListWidget(prefix_label=False), option_widget=CheckboxInput())
-    submit = SubmitField('Apply Filters')  
+    filter = SelectMultipleField('Select Filters', choices=[('Tag 1', 'Tag 1'), ('Tag 2', 'Tag 2'), ('Tag 3', 'Tag 3'), ('Tag 4', 'Tag 4'), ('Tag 5', 'Tag 5'), ('Tag 6', 'Tag 6'), ('Tag 7', 'Tag 7'), ('Tag 8', 'Tag 8'), ('Tag 9', 'Tag 9'), ('Tag 10', 'Tag 10'), ('Tag 11', 'Tag 11'),('Tag 12', 'Tag 12'), ('Tag 13', 'Tag 13'), ('Tag 14', 'Tag 14')], widget=ListWidget(prefix_label=False), option_widget=CheckboxInput())
+    submit = SubmitField('Apply Filters')   
 
 def save_to_csv():
+    
     name = session.get('name', 'Guest')
     email = session.get('email', 'guest@guest.com')
     phone = session.get('phone', '123-456-7890')
-    tags = session.get('selected_filters', [])
+    tags = session.get('tags', [])
     output = StringIO()
     writer = csv.writer(output)
     writer.writerow(['Name', 'Email', 'Phone', 'Tags'])
@@ -388,40 +481,119 @@ def save_to_csv():
     output.seek(0)
     return Response(output, mimetype="text/csv", headers={"Content-Disposition":"attachment;filename=profileData.csv"})
 
-@app.route('/saveToCSV', methods=['POST'])
-def save_to_csv_endpoint():
-    data = request.json
-    session['name'] = data.get('name', 'Guest')
-    session['email'] = data.get('email', 'guest@guest.com')
-    session['phone'] = data.get('phone', '123-456-7890')
-    session['selected_filters'] = data.get('tags', [])
-    return save_to_csv()
-
 @app.route('/download_csv', methods=['GET'])
 def download_csv():
     return save_to_csv()
 
 @app.route('/userprofile', methods=['GET', 'POST'])
 def userprofile():
-    session.setdefault('name', 'Guest')
-    session.setdefault('phone', '123-456-7890')
-    session.setdefault('email', 'guest@guest.com')
-    session.setdefault('selected_filters', [])
-    form = FilterForm()
+    #Get the user from session email
+    print("SESSION PRINT:")
+    print(session)
+    
+    # Link form to User_Data Table in DB
+    connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+    connection = odbc.connect(connection_string)
+
+    #Get the user from the USER_DATA table
+    get_user_table_data_query = f"SELECT * FROM USER_DATA WHERE User_Email = \'{session['email']}\'"
+    select_user_cursor = connection.cursor()
+    select_user_cursor.execute(get_user_table_data_query)
+    dataset = select_user_cursor.fetchall()
+
+    # Get Column Names
+    headers = [column[0] for column in select_user_cursor.description]
+    user_df = pd.DataFrame(columns=headers, data=dataset)
+
+    print(user_df.head)
+
+    name = str(user_df["user_first_name"].values[0])
+
+    if name == 'None':
+        name = 'Guest'
+
+    print('This is the name: ', name)
+
+    password = str((user_df["password"].values[0]))
+    email = str(user_df["user_email"].values[0])
+    
+    #These are the tags we have from the user's database, can we 
+    tags = user_df["user_tags"].values[0]
+
+    print('These are the user tags: ', tags)
+
+    tagsList = []
+    if tags is not None:
+        tagsList = tags.split(",")
+
+
+    userStringency = user_df['recs_must_match'].values[0]
+    if userStringency is None:
+        userStringency = False
+
+
+    session['name'] = name
+    session['password'] = password
+    session['email'] = email
+    session['selected_filters'] = json.dumps(tagsList)
+    session['stringency_value'] = str(userStringency)
+    
+    print("SESSION PRINT after updating:")
+    print(session)
+
+
     if request.method == 'POST':
-        if 'filter_form' in request.form and form.validate_on_submit():
+        print("POST!")
+        if 'filter_form' in request.form:
             session['selected_filters'] = request.form.getlist('filters[]')
+            print('hello!')
+            print(session['selected_filters'])
         elif 'name' in request.form:
             session['name'] = request.form.get('name')
+
+            #Update the user's name based on what was returned
+            update_table_query = f"UPDATE USER_DATA SET user_first_name = \'" + session['name'] + f"\' WHERE User_Email = \'{session['email']}\'"
+            print(update_table_query)
+            select_user_cursor.execute(update_table_query)
+
         elif 'email' in request.form:
+            oldEmail = session['email']
             session['email'] = request.form.get('email')
-        elif 'phone' in request.form:
-            session['phone'] = request.form.get('phone')
-    return render_template('userprofile.html', name=session['name'], email=session['email'], form=form, phone=session['phone'], selected_filters=session['selected_filters'])
+
+            #Update the user's email based on what was returned
+            update_table_query = f"UPDATE USER_DATA SET user_email = \'" + session['email'] + f"\' WHERE User_Email = \'{oldEmail}\'"
+            print(update_table_query)
+            select_user_cursor.execute(update_table_query)
+
+        elif 'password' in request.form:
+            session['password'] = request.form.get('password')
+
+            #Update the user's password based on what was returned
+            update_table_query = f"UPDATE USER_DATA SET password = \'" + session['password'] + f"\' WHERE User_Email = \'{session['email']}\'"
+            print(update_table_query)
+            select_user_cursor.execute(update_table_query)
+        
+        elif 'stringency' in request.form:
+            print("IN HERE!!!")
+            session['stringency_value'] = request.form.get('stringency')
+            print('STRINGENCY VALUE: ', session['stringency_value'])
+
+            #Update the user's stringency based on what was returned
+            update_table_query = f"UPDATE USER_DATA SET recs_must_match = \'" + session['stringency_value'] + f"\' WHERE User_Email = \'{session['email']}\'"
+            print(update_table_query)
+            select_user_cursor.execute(update_table_query)
+
+    #Save table and close database
+    connection.commit()
+    select_user_cursor.close()
+    connection.close()
+
+    return render_template('userprofile.html', name=session['name'], email=session['email'], password=session['password'], selected_filters=session['selected_filters'], stringency_value=session['stringency_value'])
 
   
 @app.route('/posting', methods=['GET', 'POST'])
 def posting():
+    #Initialize Variables
     organization = None
     campus = None
     event = None
@@ -438,24 +610,80 @@ def posting():
     cost = None
     tags = None
     form = PostingForm()
-    if form.validate_on_submit():
-        organization = form.organization.data
-        campus = form.campus.data
-        event = form.event.data
-        description = form.description.data
-        date = form.date.data
-        startTime = form.startTime.data
-        endTime = form.endTime.data
-        street = form.street.data
-        city = form.city.data
-        postal = form.postal.data
-        commonName = form.commonName.data
-        college = form.college.data
-        faculty = form.faculty.data
-        cost = form.cost.data
-        tags = form.tags.data
-    return render_template('posting.html', form=form)
 
+    # Check if the form is submitted using POST
+    if request.method == 'POST':
+        # Get form 
+        # Set default values for 'name' and 'email' in session if they don't exist
+        if 'name' not in session:
+            session['name'] = 'Guest'
+        if 'email' not in session:
+            session['email'] = 'guest@guest.com'
+
+        # Retrieve form data
+        organization = request.form.get('organization')
+        campus_list = request.form.getlist('campus')
+        campus = concatenate_list(campus_list)
+        event = request.form.get('event')
+        description = request.form.get('description')
+        date = request.form.get('date')
+        startTime = request.form.get('startTime')
+        endTime = request.form.get('endTime')
+        street = request.form.get('street')
+        city = request.form.get('city')
+        postal = request.form.get('postal')
+        commonName = request.form.get('commonName')
+        college = request.form.get('college')
+        faculty_list = request.form.getlist('faculty')
+        faculty = concatenate_list(faculty_list)
+        cost = request.form.get('cost')
+        tags = request.form.get('tags')
+
+        if not all([organization, campus, event, description, date, startTime, endTime, college, cost]):
+            # Flash a reminder to fill in all fields
+            flash('Please fill in all required fields', 'warning')
+        else:
+            # Database connection setup
+            connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+            connection = odbc.connect(connection_string)
+
+            # SQL query to insert event data into the database
+            create_event_query = '''
+                    INSERT INTO EVENT_DATA (Event_name, Coordinator_Name, Coordinator_Email, Coordinator_Username, Organization_Name, Target_Campus, Event_Description, Event_Date, Event_Start_Time, Event_End_Time, Event_Street_Address, Event_City, Event_Postal_Code, Event_Location_Common_Name, Target_College, Target_Faculty, Event_Cost, Tags)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    '''
+            
+            cursor = connection.cursor()
+
+            try:
+                # Execute the SQL query with form data and session values
+                cursor.execute(create_event_query, (event, session['name'], session['email'], session['name'], organization, campus, description, date, startTime, endTime, street, city, postal, commonName, college, faculty, cost, tags) )
+                connection.commit() # Line needed to ensure DB on server is updated
+
+                flash('Event added successfully', 'success')
+
+                cursor.close()
+                connection.close()
+                return redirect(url_for('dashboard'))
+            except:
+                flash('Error adding event. Please try again.', 'error')
+            
+            cursor.close()
+            connection.close()
+
+            print("Cursors and DB Closed")
+
+    # Render the posting.html template with form data
+    return render_template('posting.html', form=form, organization=organization, campus = campus, event = event, description = description, date = date, startTime = startTime, endTime = endTime, street = street, city = city, postal = postal, commonName = commonName, college = college, faculty = faculty, cost = cost, tags = tags)
+
+@app.route('/saveToCSV', methods=['POST'])
+def save_to_csv_endpoint():
+    data = request.json
+    session['name'] = data.get('name', 'Guest')
+    session['email'] = data.get('email', 'guest@guest.com')
+    session['phone'] = data.get('phone', '123-456-7890')
+    session['selected_filters'] = data.get('tags', [])
+    return save_to_csv()
   
 @app.route('/myEvents', methods=['GET', 'POST'])
 def myEvents():
@@ -582,5 +810,4 @@ def myEvents():
     select_user_cursor.close()
     connection.close()
 
-    return render_template('saved.html', events = eventsList, hasSavedEvents = hasSavedEvents)
-
+    return render_template('saved.html', events = eventsList, hasSavedEvents = hasSavedEvents, curPage = "myEvents")
