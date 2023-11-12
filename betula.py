@@ -229,7 +229,7 @@ def dashboard():
                 organization = "Not available"
 
             for tag in rowTags:
-                if tag in userTags or organization in userTags:
+                if tag.capitalize() in userTags or organization in userTags:
                     tagMatch = True
 
             if tagMatch:
