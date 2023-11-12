@@ -3,7 +3,7 @@
 
 {% block title %}Betula{% endblock %}
 
-{% block page_content %}
+{# {% block page_content %}
     <div style="left: 250px; top: 80px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex">
         <div style="color: black; font-size: 24px; font-family: Roboto; font-weight: 400; text-transform: uppercase; letter-spacing: 2.40px; word-wrap: break-word">Search</div>
         <style>
@@ -52,60 +52,152 @@
         </div>
     </div>
 
-    <!-- Functions for the search bar -->
-    <script>
-    function searchDropdown() 
-    {
-        // Get the text input and the dropdown content elements
-        var input = document.getElementById("searchTextInput");
-        var dropdown = document.getElementById("searchDrop");
+{% endblock %} #}
 
-        // Show the dropdown if there is text in the input
-        if (input.value.length > 0) {
-            dropdown.style.display = "block";
-        } else{
-            dropdown.style.display = "none";
+{% block content %}
+<script type="text/javascript" charset="utf-8">
+    // Universal filtering function
+    function updateTag(checkboxObject, selectedTag) {
+        const allEvents = {{jsonEvents|safe}};
+        allEvents.forEach(event => {
+            const tags = event.tags.split(",");
+            // Check if event's list of tags includes the selected/deselected tag being filtered
+            if (tags.includes(selectedTag)) {
+                const currentEventElement = document.getElementById("event" + event.iden);
+                // Check if checkbox is checked or unchecked
+                if (checkboxObject.checked) {
+                    // If checkbox checked, show event
+                    currentEventElement.classList.remove("hiddenByTagFilter");
+                    currentEventElement.style.display = "flex";
+
+                    // Rerun search to see if event is still valid to be shown
+                    runNameSearch(document.getElementById("searchTextInput"));
+                } else {
+                    // If checkbox not checked, check if event has been hidden by search
+                    if (currentEventElement.classList.contains("hiddenByNameSearch")) {
+                        // If hidden, change label to be hidden by tag filtering (takes precedence)
+                        currentEventElement.classList.remove("hiddenByNameSearch");
+                        currentEventElement.classList.add("hiddenByTagFilter");
+                    } else {
+                        // If not hidden, hide it
+                        currentEventElement.classList.add("hiddenByTagFilter");
+                        currentEventElement.style.display = "none";
+                    }
+                }
+            }
+        });
+
+        checkIfNoEvents();
+    }
+    
+    // Main search function
+    function runNameSearch() {
+        const input = document.getElementById("searchTextInput").value;
+        const allEvents = {{jsonEvents|safe}};
+        
+        allEvents.forEach(event => {
+            const currentEventElement = document.getElementById("event" + event.iden);
+            
+            // Change event only if not hidden by tag filtering already
+            if (!currentEventElement.classList.contains("hiddenByTagFilter")) {
+                if (input.length === 0) {
+                    // If empty search bar, show all valid events
+                    currentEventElement.classList.remove("hiddenByNameSearch");
+                    currentEventElement.style.display = "flex";
+                } else if (event.name.toLowerCase().includes(input.toLowerCase())) {
+                    // If name of event includes the search string, show it
+                    currentEventElement.classList.remove("hiddenByNameSearch");
+                    currentEventElement.style.display = "flex";
+                } else {
+                    // If name of event does NOT include search string, hide it
+                    currentEventElement.classList.add("hiddenByNameSearch");
+                    currentEventElement.style.display = "none";
+                }
+            }
+        });
+        checkIfNoEvents();
+    }
+
+    function checkIfNoEvents() {
+        const allEvents = {{jsonEvents|safe}};
+        let hiddenCount = 0;
+        const noEventsElement = document.getElementById("noevents");
+
+        allEvents.forEach(event => {
+            // Check if each element is shown or hidden
+            const currentEventElement = document.getElementById("event" + event.iden);
+            if (currentEventElement.style.display === "none") {
+                hiddenCount++;
+            }
+        });
+
+        if (hiddenCount === allEvents.length) {
+            // If all elements hidden, show the 'no events' text
+            noEventsElement.style.display = "flex";
+        } else {
+            // If not all elements are hidden, hide the text
+            noEventsElement.style.display = "none";
         }
     }
+</script>
 
-    function onBlur()
-    {
-        // If the search bar loses focus, hide the drop down menu
-        var dropdown = document.getElementById("searchDrop");
-        dropdown.style.display = "none";
-    }
-    </script>
-
-        <!--<div style="align-self: stretch; height: 167px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-            <div style="width: 628px; padding: 8px; background: white; border-radius: 4px; border: 2px #73A2FF solid; justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
-                <div style="flex: 1 1 0; align-self: stretch; color: #404040; font-size: 24px; font-family: Roboto; font-weight: 400; word-wrap: break-word">Dropdown field data</div>
-                <div style="width: 10px; height: 10px; position: relative">
-                    <div style="width: 8px; height: 4px; left: 1px; top: 7px; position: absolute; border: 1px #404040 solid"></div>
+<div style="width: 100%; height: auto; position: relative; background: #F5F5F5; min-height: 100%">
+    <div style="width:100%; display:flex; flex-wrap:wrap">
+        <div style="left: 240px; top: 113px; position:absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex">
+            <div style="color: black; font-size: 24px; font-family: Roboto; font-weight: 400; text-transform: uppercase; letter-spacing: 2.40px; word-wrap: break-word">Search</div>
+            <style>
+    
+                /* Style for the dropdown content */
+                .dropdown-content {
+                    display: none;
+                    position: absolute;
+                    background-color: #f1f1f1;
+                    min-width: 300px;
+                    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                    z-index: 1;
+                }
+    
+                /* Style for the dropdown options */
+                .dropdown-content a {
+                    padding: 12px 16px;
+                    display: block;
+                    text-decoration: none;
+                    color: #333;
+                }
+    
+                /* Change the background color of dropdown options when hovered */
+                .dropdown-content a:hover {
+                    background-color: #ddd;
+                }
+    
+                /* Set sizing for search bar */
+                .searching input{
+                    width: 300px;
+                    height: 40px;
+                    font-size: 16px;
+                }
+            </style>
+    
+            <!-- Text input box -->
+            <div id = "search" class = "searching">
+                <input type="text" id="searchTextInput" oninput="runNameSearch()" onblur="onBlur()" placeholder="Event Name">
+                    
+                <!-- Dropdown content -->
+                <div id="searchDrop" class="dropdown-content">
+                    <!-- Can choose which events to show add links to top searchs here -->
+                    <a href="#">Option 1</a>
+                    <a href="#">Option 2</a>
+                    <a href="#">Option 3</a>
                 </div>
             </div>
-            <div style="width: 628px; padding-left: 8px; padding-right: 8px; padding-top: 12px; padding-bottom: 12px; background: white; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15); border-radius: 4px; border: 1px #DBDBDB solid; justify-content: flex-start; align-items: flex-start; gap: 8px; display: inline-flex">
-                <div style="flex: 1 1 0; align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 16px; display: inline-flex">
-                    <div style="align-self: stretch; color: #404040; font-size: 18px; font-family: Roboto; font-weight: 400; word-wrap: break-word">Option data</div>
-                    <div style="align-self: stretch; color: #404040; font-size: 18px; font-family: Roboto; font-weight: 400; word-wrap: break-word">Option data</div>
-                    <div style="align-self: stretch; color: #404040; font-size: 18px; font-family: Roboto; font-weight: 400; word-wrap: break-word">Option data</div>
-                </div>
-                <div style="width: 4px; height: 40px; background: #DBDBDB; border-radius: 2px"></div>
-            </div>
-        </div>-->
-  
-    <!--<div style="width: 345px; height: 228px; left: 262px; top: 351px; position: absolute; background: #D9D9D9; border-radius: 30px"></div>-->
-    <!--<div style="width: 345px; height: 228px; left: 668px; top: 351px; position: absolute; background: #D9D9D9; border-radius: 30px"></div>-->
+
+        </div>
+    </div>
+    
+   
     
     <!-- Show Events -->
-    {% raw %}
-   <!-- <table style="display: flex; justify-content: center; align-items: center; height: 100%; padding-top: 250px; padding-left: 30px">
-
-        {% for event in events %}
-
-  
-        <td style="display: flex; justify-content: center; align-items: center; height: 100%; margin-bottom: 30px"> --> 
-     {% endraw %}
-     <style>
+    <style>
         /* Style for the event contatiner */
         .eventContainer {
             display: flex;
@@ -114,7 +206,10 @@
             overflow-y: auto;
             overflow-x: hidden;
             padding: 40px;
-             width: 100%;
+            width: 100%;
+            margin-top:200px;
+            margin-left:200px;
+            background-color: rgba(0, 0, 0, 0);
         }
     
         /* Style for the event post */
@@ -134,10 +229,21 @@
         
     </style>
 
-    <div class="eventContatiner">
+    <div class="eventContainer">
         <div class="eventGrid">
+            {% if events|length == 0 %}
+            <div id="noevents" style="display: flex; justify-content: center; align-items: center; height: 100%; margin-bottom: 30px">
+                <h2>No Events</h2>
+            </div>
+            {% else %}
+            <div id="noevents" style="display: none; justify-content: center; align-items: center; height: 100%; margin-bottom: 30px">
+                <h2>No Events</h2>
+            </div>
+            {% endif %}
+
             {% for event in events %} 
-            <div class="eventPost">
+            <div id="{{'event' ~ event.iden}}" class="eventPost">
+            {# <div class="eventPost"> #}
                 <div style=" height: 508px; position: relative; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 30px; overflow: hidden">
                     <div style="width: 623px; height: 98px; left: 0px; top: 0px; position: relative; background: #061945"></div>
                     <div style="width: 356px; height: 39px; left: 15px; top: 27px; position: absolute; color: white; font-size: 28px; font-family: system-ui; font-weight: 400; word-wrap: break-word">{{ event.name }}</div>
@@ -250,15 +356,15 @@
                         </script>
                      </form>
                     
+
                 </div>
-                </div>
-        <!--</td>-->
-        {% endfor %}
-   <!--</table>-->
-    </div>
+            </div>
+          {# </td> #}
+            {% endfor %}
+   {# </table> #}
+    {# </div> #}
         </div>
     </div>
-
 
     <!-- End of Showing Events-->
 
@@ -300,338 +406,280 @@
 
     <!-- Filters sidebar -->
 
-    <div id="filtersContainer" style="width: 210px; height: calc(100vh - 55px); left: 0px; top: 55px; position: fixed; overflow-y: hidden;">
+    <div id="filtersContainer" style="background-color:#5078a9;width: 210px; height: calc(100vh - 55px); left: 0px; top: 55px; position: fixed; overflow-y: hidden;">
 
-    <div style="height: 100%; left: 53px; top: 30px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 1px; display: inline-flex">
-        <div style="color: white; font-size: 24px; font-family: system-ui; font-weight: 500; word-wrap: break-word">Filters</div>
-        <br>
+        <div style="height: 100%; left: 53px; top: 30px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 1px; display: inline-flex">
+            <div style="color: white; font-size: 24px; font-family: system-ui; font-weight: 500; word-wrap: break-word">Filters</div>
+            <br>
 
-        <!-- Styling for Events Filter -->
-        <style>
-            .facultyFilter 
-            {
-                display: flex;
-                align-items: center;
-                color: white; 
-                font-size: 20px; 
-                font-family: system-ui; 
-                font-weight: 350; 
-                word-wrap: break-word;
-                position: relative; 
-                margin-bottom: 0px;
-            }
-
-            .facultyFilter a 
-            {
-                color: white;
-                text-decoration: none; /* Remove underlines from the link */
-            }
-
-            /* Style for the text that shows/hides the dropdown */
-            .facultyDropdown-text 
-            {
-                cursor: pointer;
-            }
-
-            /* Style for the dropdown menu */
-            .facultyDropdown 
-            {
-                display: none;
-                margin-left: 20px; 
-                margin-top: 0px;
-            }
-
-            /* Style for the checkboxes */
-            .checkbox-label 
-            {
-                display: block;
-                margin: 4px;
-                font-family: 'system-ui';
-                font-weight: 250;
-                color: white;
-            }
-
-            .right-arrow::after 
-            {
-                content: " ▶";
-                margin-right: 8px;
-                cursor: pointer;
-            }
-
-            .down-arrow::after 
-            {
-                content: " ▼";
-                margin-right: 8px;
-                cursor: pointer;
-            }
-        </style>
-
-        <div id="facFilter" class="facultyFilter" onclick="facultyDropdown()">
-            <span class="right-arrow" id="facultyArrowIcon"></span>
-            <a href="#"><span>Faculty</span></a>
-        </div>
-        <div class="facultyDropdown" id="facultyDrop">
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 1
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 2
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 3
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 4
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 5
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 6
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 7
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 8
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 9
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 10
-            </label>
-        </div>
-        <br>
-        
-        <!-- Functions for Faculty Filter -->
-        <script>
-            function facultyDropdown() 
-            {
-                var dropdown = document.getElementById("facultyDrop");
-                // Check if the dropdown is currently visible or hidden
-                if (dropdown.style.display === "block") {
-                    dropdown.style.display = "none"; // If visible, hide the dropdown
-                    document.getElementById("facultyArrowIcon").classList.remove("down-arrow");
-                    document.getElementById("facultyArrowIcon").classList.add("right-arrow");
-                } else {
-                    dropdown.style.display = "block"; // If hidden, show the dropdown
-                    document.getElementById("facultyArrowIcon").classList.remove("right-arrow");
-                    document.getElementById("facultyArrowIcon").classList.add("down-arrow");
+            <!-- Styling for Events Filter -->
+            <style>
+                .facultyFilter 
+                {
+                    display: flex;
+                    align-items: center;
+                    color: white; 
+                    font-size: 20px; 
+                    font-family: system-ui; 
+                    font-weight: 350; 
+                    word-wrap: break-word;
+                    position: relative; 
+                    margin-bottom: 0px;
                 }
-            }
-        </script>
 
-        <!-- Styling for Topics Filter -->
-        <style>
-            .topcisFilter 
-            {
-                display: flex;
-                align-items: center;
-                color: white; 
-                font-size: 20px; 
-                font-family: system-ui; 
-                font-weight: 350; 
-                word-wrap: break-word;
-            }
+                .facultyFilter a 
+                {
+                    color: white;
+                    text-decoration: none; /* Remove underlines from the link */
+                }
+
+                /* Style for the text that shows/hides the dropdown */
+                .facultyDropdown-text 
+                {
+                    cursor: pointer;
+                }
+
+                /* Style for the dropdown menu */
+                .facultyDropdown 
+                {
+                    display: none;
+                    margin-left: 20px; 
+                    margin-top: 0px;
+                }
+
+                /* Style for the checkboxes */
+                .checkbox-label 
+                {
+                    display: block;
+                    margin: 4px;
+                    font-family: 'system-ui';
+                    font-weight: 250;
+                    color: white;
+                }
+
+                .right-arrow::after 
+                {
+                    content: " ▶";
+                    margin-right: 8px;
+                    cursor: pointer;
+                }
+
+                .down-arrow::after 
+                {
+                    content: " ▼";
+                    margin-right: 8px;
+                    cursor: pointer;
+                }
+            </style>
+
+            <div id="facFilter" class="facultyFilter" onclick="facultyDropdown()">
+                <span class="right-arrow" id="facultyArrowIcon"></span>
+                <a href="#"><span>Faculty</span></a>
+            </div>
+            <div class="facultyDropdown" id="facultyDrop">
+                {% for faculty in facultyTags %}
+                <label class="checkbox-label">
+                    <input id="{{faculty|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{faculty}}')">{{faculty}}
+                </label>
+                {% endfor %}
+            </div>
         
-            .topcisFilter a 
-            {
-                color: white;
-                text-decoration: none; /* Remove underlines from the link */
-            }
-        
-            .topicsDropdown-container 
-            {
+            <br>
+            
+            <!-- Functions for Faculty Filter -->
+            <script>
+                function facultyDropdown() 
+                {
+                    var dropdown = document.getElementById("facultyDrop");
+                    // Check if the dropdown is currently visible or hidden
+                    if (dropdown.style.display === "block") {
+                        dropdown.style.display = "none"; // If visible, hide the dropdown
+                        document.getElementById("facultyArrowIcon").classList.remove("down-arrow");
+                        document.getElementById("facultyArrowIcon").classList.add("right-arrow");
+                    } else {
+                        dropdown.style.display = "block"; // If hidden, show the dropdown
+                        document.getElementById("facultyArrowIcon").classList.remove("right-arrow");
+                        document.getElementById("facultyArrowIcon").classList.add("down-arrow");
+                    }
+                }
+
+                
+            </script>
+
+            <!-- Styling for Topics Filter -->
+            <style>
+                .topcisFilter 
+                {
+                    display: flex;
+                    align-items: center;
+                    color: white; 
+                    font-size: 20px; 
+                    font-family: system-ui; 
+                    font-weight: 350; 
+                    word-wrap: break-word;
+                }
+            
+                .topcisFilter a 
+                {
+                    color: white;
+                    text-decoration: none; /* Remove underlines from the link */
+                }
+            
+                .topicsDropdown-container 
+                {
+                        position: relative;
+                        display: inline-block;
+                }
+                
+                /* Style for the text that shows/hides the dropdown */
+                .topicsDropdown-text 
+                {
+                    cursor: pointer;
+                }
+
+                /* Style for the dropdown menu */
+                .topicsDropdown 
+                {
+                    display: none;
+                    margin-left: 20px; 
+                }
+
+                /* Style for the checkboxes */
+                .checkbox-label 
+                {
+                    display: block;
+                    margin: 4px;
+                    font-family: 'system-ui';
+                    font-weight: 250;
+                    color: white;
+                }
+            </style>
+
+            <div id="topFilter" class="topcisFilter" onclick="topicDropdown()">
+                <span class="right-arrow" id="topicArrowIcon"></span>
+                <a href="#"><span>Topics</span></a>
+            </div>
+            <div class="topicsDropdown" id="topicsDrop">
+                {% for topic in topicTags %}
+                <label class="checkbox-label">
+                    <input id="{{topic|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{topic}}')">{{topic}}
+                </label>
+                {% endfor %}
+            </div>
+            <br>
+
+            <!-- Functions for Topic Filter -->
+            <script>
+                function topicDropdown() 
+                {
+                    var dropdown = document.getElementById("topicsDrop");
+                    // Check if the dropdown is currently visible or hidden
+                    if (dropdown.style.display === "block") {
+                        dropdown.style.display = "none"; // If visible, hide the dropdown
+                        document.getElementById("topicArrowIcon").classList.remove("down-arrow");
+                        document.getElementById("topicArrowIcon").classList.add("right-arrow");
+                    } else {
+                        dropdown.style.display = "block"; // If hidden, show the dropdown
+                        document.getElementById("topicArrowIcon").classList.remove("right-arrow");
+                        document.getElementById("topicArrowIcon").classList.add("down-arrow");
+                    }
+                }
+            </script>
+
+            <!-- Styling for Price Filter -->
+            <style>
+                .priceFilter 
+                {
+                    display: flex;
+                    align-items: center;
+                    color: white; 
+                    font-size: 20px; 
+                    font-family: system-ui; 
+                    font-weight: 350; 
+                    word-wrap: break-word;
+                }
+            
+                .priceFilter a 
+                {
+                    color: white;
+                    text-decoration: none; /* Remove underlines from the link */
+                }
+            
+                .priceDropdown-container 
+                {
                     position: relative;
                     display: inline-block;
-            }
-            
-            /* Style for the text that shows/hides the dropdown */
-            .topicsDropdown-text 
-            {
-                cursor: pointer;
-            }
-
-            /* Style for the dropdown menu */
-            .topicsDropdown 
-            {
-                display: none;
-                margin-left: 20px; 
-            }
-
-            /* Style for the checkboxes */
-            .checkbox-label 
-            {
-                display: block;
-                margin: 4px;
-                font-family: 'system-ui';
-                font-weight: 250;
-                color: white;
-            }
-        </style>
-
-        <div id="topFilter" class="topcisFilter" onclick="topicDropdown()">
-            <span class="right-arrow" id="topicArrowIcon"></span>
-            <a href="#"><span>Topics</span></a>
-        </div>
-        <div class="topicsDropdown" id="topicsDrop">
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 1
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 2
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 3
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 4
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 5
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 6
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 7
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 8
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 9
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 10
-            </label>
-        </div>
-        <br>
-
-        <!-- Functions for Topic Filter -->
-        <script>
-            function topicDropdown() 
-            {
-                var dropdown = document.getElementById("topicsDrop");
-                // Check if the dropdown is currently visible or hidden
-                if (dropdown.style.display === "block") {
-                    dropdown.style.display = "none"; // If visible, hide the dropdown
-                    document.getElementById("topicArrowIcon").classList.remove("down-arrow");
-                    document.getElementById("topicArrowIcon").classList.add("right-arrow");
-                } else {
-                    dropdown.style.display = "block"; // If hidden, show the dropdown
-                    document.getElementById("topicArrowIcon").classList.remove("right-arrow");
-                    document.getElementById("topicArrowIcon").classList.add("down-arrow");
                 }
-            }
-        </script>
-
-        <!-- Styling for Price Filter -->
-        <style>
-            .priceFilter 
-            {
-                display: flex;
-                align-items: center;
-                color: white; 
-                font-size: 20px; 
-                font-family: system-ui; 
-                font-weight: 350; 
-                word-wrap: break-word;
-            }
-        
-            .priceFilter a 
-            {
-                color: white;
-                text-decoration: none; /* Remove underlines from the link */
-            }
-        
-            .priceDropdown-container 
-            {
-                position: relative;
-                display: inline-block;
-            }
-            
-            /* Style for the text that shows/hides the dropdown */
-            .priceDropdown-text 
-            {
-                cursor: pointer;
-            }
-
-            /* Style for the dropdown menu */
-            .priceDropdown 
-            {
-                display: none;
-                margin-left: 20px; 
-            }
-
-            /* Style for the checkboxes */
-            .checkbox-label 
-            {
-                display: block;
-                margin: 4px;
-                font-family: 'system-ui';
-                font-weight: 250;
-                color: white;
-            }
-        </style>
-
-        <div id="priFilter" class="priceFilter" onclick="priceDropdown()">
-            <span class="right-arrow" id="priceArrowIcon"></span>
-            <a href="#"><span>Price</span></a>
-        </div>
-        <div class="priceDropdown" id="priceDrop">
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 1
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 2
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 3
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 4
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 5
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 6
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 7
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 8
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 9
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 10
-            </label>
-        </div>
-        <br>
-
-        <br>
-        <!-- Functions for Price Filter -->
-        <script>
-            // Define the function to be called
-            function priceDropdown() 
-            {
-                var dropdown = document.getElementById("priceDrop");
-                // Check if the dropdown is currently visible or hidden
-                if (dropdown.style.display === "block") {
-                    dropdown.style.display = "none"; // If visible, hide the dropdown
-                    document.getElementById("priceArrowIcon").classList.remove("down-arrow");
-                    document.getElementById("priceArrowIcon").classList.add("right-arrow");
-                } else {
-                    dropdown.style.display = "block"; // If hidden, show the dropdown
-                    document.getElementById("priceArrowIcon").classList.remove("right-arrow");
-                    document.getElementById("priceArrowIcon").classList.add("down-arrow");
+                
+                /* Style for the text that shows/hides the dropdown */
+                .priceDropdown-text 
+                {
+                    cursor: pointer;
                 }
-            }
+
+                /* Style for the dropdown menu */
+                .priceDropdown 
+                {
+                    display: none;
+                    margin-left: 20px; 
+                }
+
+                /* Style for the checkboxes */
+                .checkbox-label 
+                {
+                    display: block;
+                    margin: 4px;
+                    font-family: 'system-ui';
+                    font-weight: 250;
+                    color: white;
+                }
+            </style>
+        
+            <div id="priFilter" class="priceFilter" onclick="priceDropdown()">
+                <span class="right-arrow" id="priceArrowIcon"></span>
+                <a href="#"><span>Price</span></a>
+            </div>
+            <div class="priceDropdown" id="priceDrop">
+                {% for price in priceTags %}
+                <label class="checkbox-label">
+                    <input id="{{price|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{price}}')">{{price}}
+                </label>
+                {% endfor %}
+            </div>
+            <br>
+
+            <br>
+            <!-- Functions for Price Filter -->
+            <script>
+                // Define the function to be called
+                function priceDropdown() 
+                {
+                    var dropdown = document.getElementById("priceDrop");
+                    // Check if the dropdown is currently visible or hidden
+                    if (dropdown.style.display === "block") {
+                        dropdown.style.display = "none"; // If visible, hide the dropdown
+                        document.getElementById("priceArrowIcon").classList.remove("down-arrow");
+                        document.getElementById("priceArrowIcon").classList.add("right-arrow");
+                    } else {
+                        dropdown.style.display = "block"; // If hidden, show the dropdown
+                        document.getElementById("priceArrowIcon").classList.remove("right-arrow");
+                        document.getElementById("priceArrowIcon").classList.add("down-arrow");
+                    }
+                }
+            </script>
+        </div>
+
+        <!-- Filters container script -->
+        <script>
+            document.getElementById("filtersContainer").addEventListener("mouseenter", function() {
+                // Scroll when cursor is at filters
+                document.getElementById("filtersContainer").style.overflowY = "auto";
+            });
+            
+            document.getElementById("filtersContainer").addEventListener("mouseleave", function() {
+                // No scroll when cursor leaves filters
+                document.getElementById("filtersContainer").style.overflowY = "hidden";
+            });
         </script>
     </div>
 

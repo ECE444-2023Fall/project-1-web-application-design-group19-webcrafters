@@ -69,26 +69,36 @@
     <ul>
         <!-- Betula title -->
         <li style="font-size: 40px; font-family: Sora; font-weight: 600;">
-            <b class="active" href="#dashboard" onclick="betula()">Betula</b>
+            <b href="/dashboard">Betula</b>
         </li>
         <!-- User profile icon -->
         <li style="float:right;">
-            <a href="#userprofile" onclick="myUser()">
+            <a href="/userprofile">
                 <img src="./static/images/user.png" alt="Profile Icon" width="37" height="37">
             </a>
         </li>
         <!-- My Events tab -->
         <li style="font-size: 30px; float:right; font-family: system-ui; font-weight: 400;">
-            <a href="#" onclick="myEvent()">My Events</a>
+            <a href="/myEvents">{% if curPage == "myEvents" %}
+                                    <b>My Events</b>
+                                {% else %}
+                                    My Events
+                                {% endif %}
+            </a>
         </li>
         <!-- Dashboard tab -->
         <li style="font-size: 30px; float:right; font-family: system-ui; font-weight: 400;">
-            <a href="#dashboard" onclick="dashboard()">Dashboard</a>
+            <a href="/dashboard">{% if curPage == "dash" %}
+                                    <b>Dashboard</b>
+                                {% else %}
+                                    Dashboard
+                                {% endif %}
+            </a>
         </li>
 
     </ul>
 
-    <!-- Functions for navbar -->
+    <!-- Functions for navbar 
     <script>
         function betula() 
         {
@@ -109,7 +119,7 @@
         {
             window.location.href ='userprofile';
         }
-    </script>
+    </script> -->
 
     <div style="width: 210px; height: 100%; left: 0px; position: fixed; background: #5078A9"></div>
 </body>
