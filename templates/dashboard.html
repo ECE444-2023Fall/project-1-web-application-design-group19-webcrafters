@@ -68,7 +68,7 @@
                 if (checkboxObject.checked) {
                     // If checkbox checked, show event
                     currentEventElement.classList.remove("hiddenByTagFilter");
-                    currentEventElement.style.display = "flex";
+                    currentEventElement.style.display = "grid";
 
                     // Rerun search to see if event is still valid to be shown
                     runNameSearch(document.getElementById("searchTextInput"));
@@ -103,11 +103,11 @@
                 if (input.length === 0) {
                     // If empty search bar, show all valid events
                     currentEventElement.classList.remove("hiddenByNameSearch");
-                    currentEventElement.style.display = "flex";
+                    currentEventElement.style.display = "grid";
                 } else if (event.name.toLowerCase().includes(input.toLowerCase())) {
                     // If name of event includes the search string, show it
                     currentEventElement.classList.remove("hiddenByNameSearch");
-                    currentEventElement.style.display = "flex";
+                    currentEventElement.style.display = "grid";
                 } else {
                     // If name of event does NOT include search string, hide it
                     currentEventElement.classList.add("hiddenByNameSearch");
