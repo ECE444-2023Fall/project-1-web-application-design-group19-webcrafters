@@ -287,7 +287,12 @@ def dashboard():
             if tagMatch:
                 
                 try:
-                    where = row['event_location_common_name'] + ", " + row['event_street_address'] + ", " + row['event_city']
+                    location_name = row['event_location_common_name']
+                    street_address = row['event_street_address']
+                    city = row['event_city']
+
+                    non_empty_values = [value for value in [location_name, street_address, city] if value is not None and value != '']
+                    where = ", ".join(map(str, non_empty_values)) if non_empty_values else "No location given"
                 except:
                     where = "Not available"
                 try:
@@ -302,7 +307,12 @@ def dashboard():
         #Otherwise, add any event!
         else:
             try:
-                where = row['event_location_common_name'] + ", " + row['event_street_address'] + ", " + row['event_city']
+                location_name = row['event_location_common_name']
+                street_address = row['event_street_address']
+                city = row['event_city']
+
+                non_empty_values = [value for value in [location_name, street_address, city] if value is not None and value != '']
+                where = ", ".join(map(str, non_empty_values)) if non_empty_values else "No location given"
             except:
                 where = "Not available"
             try:
@@ -316,7 +326,9 @@ def dashboard():
             except:
                 organization = "Not available"
 
-            currEvent = Event(iden = index, name = row['event_name'], organization = organization, where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'], event_id = event_id, registered = registered)
+            tags = row['tags'] if row['tags'] else "No tags given"
+
+            currEvent = Event(iden = index, name = row['event_name'], organization = organization, where = where, when = when, tags=tags, description = row['event_description'], contact = row['coordinator_email'], event_id = event_id, registered = registered)
 
             eventsList.append(currEvent)
             jsonEventsList.append(currEvent.__dict__)
