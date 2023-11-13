@@ -722,6 +722,10 @@ def save_to_csv_endpoint():
 @app.route('/myEvents', methods=['GET', 'POST'])
 def myEvents():
     
+    facultyTags = ["Faculty of Applied Science and Engineering", "Trinity College", "University College", "St. Michael's College", "Victoria College"]
+    topicTags = ["Professional", "Cultural", "Social Work/Charity", "Fitness", "Social", "Sports"]
+    priceTags = ["Free", "Paid", "Free Food"]
+
     # Link form to User_Data Table in DB
     connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
     connection = odbc.connect(connection_string)
@@ -757,6 +761,7 @@ def myEvents():
     
     #Store the events to render
     eventsList = []
+    jsonEventsList = []
 
     #If the user has saved events
     if userRegisteredEvents != None and len(userRegisteredEvents) != 0:
@@ -805,6 +810,7 @@ def myEvents():
 
             currEvent = Event(iden = index, name = row['event_name'], organization = organization, where = where, when = when, tags = row['tags'], description = row['event_description'], contact = row['coordinator_email'], event_id = event_id, registered = registered)
             eventsList.append(currEvent)
+            jsonEventsList.append(currEvent.__dict__)
     
     #Make sure to close the database as soon as possible
     #else:
@@ -904,5 +910,5 @@ def myEvents():
     select_user_cursor.close()
     connection.close()
 
-    return render_template('saved.html', events = eventsList, userTags = userTags, hasSavedEvents = hasSavedEvents, curPage = "myEvents")
+    return render_template('saved.html', events = eventsList, jsonEvents = json.dumps(jsonEventsList), userTags = userTags, hasSavedEvents = hasSavedEvents, curPage = "myEvents", facultyTags = facultyTags, topicTags=topicTags, priceTags=priceTags)
 

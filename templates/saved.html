@@ -1,6 +1,55 @@
 {% extends "base2.html" %}
 
 {% block content %}
+<script type="text/javascript" charset="utf-8">
+    // Universal filtering function
+    function updateTag(checkboxObject, selectedTag) {
+        const allEvents = {{jsonEvents|safe}};
+        
+        allEvents.forEach(event => {
+            const tags = event.tags.split(",");
+            // Check if event's list of tags includes the selected/deselected tag being filtered
+            if (tags.includes(selectedTag)) {
+                const currentEventElement = document.getElementById("event" + event.iden);
+                // Check if checkbox is checked or unchecked
+                if (checkboxObject.checked) {
+                    // If checkbox checked, show event
+                    currentEventElement.classList.remove("hiddenByTagFilter");
+                    currentEventElement.style.display = "grid";
+                } else {
+                    // If checkbox not checked
+                    currentEventElement.classList.add("hiddenByTagFilter");
+                    currentEventElement.style.display = "none";
+                }
+            }
+        });
+
+        checkIfNoEvents();
+    }
+
+    function checkIfNoEvents() {
+        const allEvents = {{jsonEvents|safe}};
+        let hiddenCount = 0;
+        const noEventsElement = document.getElementById("noevents");
+
+        allEvents.forEach(event => {
+            // Check if each element is shown or hidden
+            const currentEventElement = document.getElementById("event" + event.iden);
+            if (currentEventElement.style.display === "none") {
+                hiddenCount++;
+            }
+        });
+
+        if (hiddenCount === allEvents.length) {
+            // If all elements hidden, show the 'no events' text
+            noEventsElement.style.display = "flex";
+        } else {
+            // If not all elements are hidden, hide the text
+            noEventsElement.style.display = "none";
+        }
+    }
+</script>
+
     <div style="left: 240px; top: 113px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex;">
     
     
@@ -39,8 +88,18 @@
     <div class="eventContatiner">
          {% if hasSavedEvents %}
         <div class="eventGrid">
+            {% if events|length == 0 %}
+            <div id="noevents" style="display: flex; justify-content: center; align-items: center; height: 100%; margin-bottom: 30px">
+                <h2>No Events</h2>
+            </div>
+            {% else %}
+            <div id="noevents" style="display: none; justify-content: center; align-items: center; height: 100%; margin-bottom: 30px">
+                <h2>No Events</h2>
+            </div>
+            {% endif %}
+
             {% for event in events %} 
-            <div class="eventPost">
+            <div id="{{'event' ~ event.iden}}" class="eventPost">
                 <div style=" height: 508px; position: relative; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 30px; overflow: hidden">
                     <div style="width: 623px; height: 98px; left: 0px; top: 0px; position: relative; background: #061945"></div>
                     <div style="width: 356px; height: 39px; left: 15px; top: 27px; position: absolute; color: white; font-size: 28px; font-family: system-ui; font-weight: 400; word-wrap: break-word">{{ event.name }}</div>
@@ -321,7 +380,7 @@
 
  <!-- Filters sidebar -->
 
- <div id="filtersContainer" style="width: 210px; height: calc(100vh - 55px); left: 0px; top: 55px; position: fixed; overflow-y: hidden;">
+ <div id="filtersContainer" style="background-color:#5078a9;width: 210px; height: calc(100vh - 55px); left: 0px; top: 55px; position: fixed; overflow-y: hidden;">
 
     <div style="height: 100%; left: 53px; top: 30px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 1px; display: inline-flex">
         <div style="color: white; font-size: 24px; font-family: system-ui; font-weight: 500; word-wrap: break-word">Filters</div>
@@ -341,7 +400,7 @@
                 position: relative; 
                 margin-bottom: 0px;
             }
-          
+
             .facultyFilter a 
             {
                 color: white;
@@ -392,37 +451,13 @@
             <a href="#"><span>Faculty</span></a>
         </div>
         <div class="facultyDropdown" id="facultyDrop">
+            {% for faculty in facultyTags %}
             <label class="checkbox-label">
-                <input type="checkbox"> Option 1
+                <input id="{{faculty|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{faculty}}')">{{faculty}}
             </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 2
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 3
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 4
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 5
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 6
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 7
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 8
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 9
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 10
-            </label>
+            {% endfor %}
         </div>
+    
         <br>
         
         <!-- Functions for Faculty Filter -->
@@ -441,6 +476,8 @@
                     document.getElementById("facultyArrowIcon").classList.add("down-arrow");
                 }
             }
+
+            
         </script>
 
         <!-- Styling for Topics Filter -->
@@ -497,36 +534,11 @@
             <a href="#"><span>Topics</span></a>
         </div>
         <div class="topicsDropdown" id="topicsDrop">
+            {% for topic in topicTags %}
             <label class="checkbox-label">
-                <input type="checkbox"> Option 1
+                <input id="{{topic|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{topic}}')">{{topic}}
             </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 2
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 3
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 4
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 5
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 6
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 7
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 8
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 9
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 10
-            </label>
+            {% endfor %}
         </div>
         <br>
 
@@ -596,47 +608,19 @@
                 color: white;
             }
         </style>
-
+    
         <div id="priFilter" class="priceFilter" onclick="priceDropdown()">
             <span class="right-arrow" id="priceArrowIcon"></span>
             <a href="#"><span>Price</span></a>
         </div>
         <div class="priceDropdown" id="priceDrop">
+            {% for price in priceTags %}
             <label class="checkbox-label">
-                <input type="checkbox"> Option 1
+                <input id="{{price|lower|replace(' ', '-')}}" type="checkbox" checked onchange="updateTag(this, '{{price}}')">{{price}}
             </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 2
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 3
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 4
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 5
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 6
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 7
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 8
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 9
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox"> Option 10
-            </label>
+            {% endfor %}
         </div>
         <br>
-
-        <br>
-        <!-- Functions for Price Filter -->
         <script>
             // Define the function to be called
             function priceDropdown() 
