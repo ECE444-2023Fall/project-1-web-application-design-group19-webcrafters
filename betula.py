@@ -180,6 +180,7 @@ def join():
     return render_template('join.html', form=form, email=email, username=username, password=password, rePassword=rePassword, accountType=accountType)
 
 
+
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     facultyTags = ["Faculty of Applied Science and Engineering", "Trinity College", "University College", "St. Michael's College", "Victoria College"]
