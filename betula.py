@@ -183,7 +183,7 @@ def join():
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
-    facultyTags = ["Faculty of Applied Science and Engineering", "Trinity College", "University College", "St. Michael's College", "Victoria College"]
+    facultyTags = ["Faculty of Applied Science and Engineering", "Trinity College", "University College", "St. Michaels College", "Victoria College"]
     topicTags = ["Professional", "Cultural", "Social Work/Charity", "Fitness", "Social", "Sports"]
     priceTags = ["Free", "Paid", "Free Food"]
     # Link form to User_Data Table in DB
@@ -458,11 +458,12 @@ possible_event_tags = ["Faculty of Applied Science and Engineering","Trinity Col
                        "Victoria College","Professional","Cultural","Social Work/Charity","Fitness","Social","Sports","Free",
                        "Paid","Free Food"]
 
-# NEW
+
 @app.route('/print-tags', methods=['POST'])
 def print_tags():
     data = request.json
     new_event_tags = data.get('tags', [])  # New event tags to replace existing event tags
+    print("These are the new event tags: ", new_event_tags)
 
     # Link form to User_Data Table in DB
     connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:betula-server.database.windows.net,1433;Database=BetulaDB;Uid=betula_admin;Pwd="+db_password+";Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
@@ -472,24 +473,36 @@ def print_tags():
     # Retrieve the current user tags from the database
     select_tags_query = f"SELECT user_tags FROM USER_DATA WHERE User_Email = \'{session['email']}\'"
     select_user_cursor.execute(select_tags_query)
-    current_tags = set(select_user_cursor.fetchone()[0].split(","))  # Assuming tags are stored as a comma-separated string
+    result = select_user_cursor.fetchone()
+
+    if result is not None:
+        user_tags_str = result[0]
+        if user_tags_str:
+            current_tags = set(user_tags_str.split(","))
+            print("User tags:", current_tags)
+        else:
+            #  empty set
+            current_tags = set()
+            print("User has no tags yet.")
+    else:
+        print("User not found in the database.")
 
     # Determine the existing event tags
     existing_event_tags = current_tags.intersection(set(possible_event_tags))
+    print("These are the existing event tags: ", existing_event_tags)
 
     # Determine the club tags by subtracting the existing event tags from the current tags
     club_tags = list(current_tags - existing_event_tags)
+    print("These are the club tags: ", club_tags)
 
-    # Replace existing event tags with new event tags
-    new_event_tags_str = ",".join(new_event_tags)
-    updated_tags = [tag if tag not in existing_event_tags else new_event_tags_str for tag in current_tags]
-
-    # Combine the updated tags with the club tags
-    final_tags = list(set(updated_tags + club_tags))
+    # Combine the new event tags with the club tags
+    final_tags = list(set(new_event_tags + club_tags))
+    print("These are the final tags: ", final_tags)
 
     final_tags_string = ','.join(final_tags)
     final_tags_string = final_tags_string.replace("\'", "")
     final_tags_string = final_tags_string.replace("\"", "")
+    print("These are the final tags in string form: ", final_tags_string)
 
     # Update the user's tags in the database
     update_table_query = f"UPDATE USER_DATA SET user_tags = \'" + final_tags_string + f"\' WHERE User_Email = \'{session['email']}\'"
@@ -734,7 +747,7 @@ def save_to_csv_endpoint():
 @app.route('/myEvents', methods=['GET', 'POST'])
 def myEvents():
     
-    facultyTags = ["Faculty of Applied Science and Engineering", "Trinity College", "University College", "St. Michael's College", "Victoria College"]
+    facultyTags = ["Faculty of Applied Science and Engineering", "Trinity College", "University College", "St. Michaels College", "Victoria College"]
     topicTags = ["Professional", "Cultural", "Social Work/Charity", "Fitness", "Social", "Sports"]
     priceTags = ["Free", "Paid", "Free Food"]
 

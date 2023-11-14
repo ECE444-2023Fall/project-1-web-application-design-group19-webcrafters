@@ -414,6 +414,7 @@
       function updateTagDisplay() {
         const tagSelect = document.getElementById('filter');
         const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.text).join(', ');
+        console.log("SELECTED TAGS FROM UI: ", selectedTags)
 
         const displayElement = document.getElementById('tagDisplay');
 
@@ -439,7 +440,7 @@
         const tagSelect = document.getElementById('filter');
         const tagDisplay = document.getElementById('tagDisplay');
 
-        console.log("SELECTED TAGS: ", selectedTags)
+        console.log("SELECTED TAGS FROM DATABASE: ", selectedTags)
 
         if (selectedTags && selectedTags.length) {
           selectedTags.forEach(tag => {
